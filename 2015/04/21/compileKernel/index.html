@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>Linux编译内核步骤 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Linux," />
+  
+
+  <meta name="description" content="题记：如果你想了解关于编译内核的基础知识：内核的定义、内核编译、内核编译的目的、内核版本的选择，请参考我的另一篇博客 编译内核基础知识">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux编译内核步骤">
+<meta property="og:url" content="http://huirong.github.io/2015/04/21/compileKernel/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="题记：如果你想了解关于编译内核的基础知识：内核的定义、内核编译、内核编译的目的、内核版本的选择，请参考我的另一篇博客 编译内核基础知识">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1ereo9ppwjcj30ke0dmwg9.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCjw1ereo9y7ugkj30i70es760.jpg">
+<meta property="og:updated_time" content="2016-04-16T10:54:27.311Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux编译内核步骤">
+<meta name="twitter:description" content="题记：如果你想了解关于编译内核的基础知识：内核的定义、内核编译、内核编译的目的、内核版本的选择，请参考我的另一篇博客 编译内核基础知识">
+<meta name="twitter:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1ereo9ppwjcj30ke0dmwg9.jpg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#I、准备工作"><span class="toc-text">I、准备工作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#II、下载内核"><span class="toc-text">II、下载内核</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#III、编译内核"><span class="toc-text">III、编译内核</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-清理内核中的残渣"><span class="toc-text">① 清理内核中的残渣</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-配置内核"><span class="toc-text">② 配置内核</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#③-配置完之后，开始编译内核"><span class="toc-text">③ 配置完之后，开始编译内核</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#④-编译内核模块"><span class="toc-text">④ 编译内核模块</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#IV、修改启动程序配置"><span class="toc-text">IV、修改启动程序配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#V、参考文献"><span class="toc-text">V、参考文献</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-compileKernel" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Linux编译内核步骤</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2015.04.21</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2015/04/21/compileKernel/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>题记：如果你想了解关于编译内核的基础知识：内核的定义、内核编译、内核编译的目的、内核版本的选择，请参考我的另一篇博客 <a href="http://localhost:4000/2015/04/22/Kernel/" target="_blank" rel="external">编译内核基础知识</a><br><a id="more"></a></p>
+<h1 id="I、准备工作"><a href="#I、准备工作" class="headerlink" title="I、准备工作"></a>I、准备工作</h1><p>由于系统中没有图形界面配置工具ncurses，因此首先下载此工具安装包，然后在终端打开工具所在目录，切换到root用户下，输入以下命令：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">tar zxvf ncurses-<span class="number">5.9</span><span class="selector-class">.tar</span><span class="selector-class">.gz</span></div><div class="line">cd ncurses-<span class="number">5.9</span></div><div class="line">./configure</div><div class="line">make</div><div class="line">make install</div></pre></td></tr></table></figure></p>
+<p>这样就安装好了ncurses，可以使用了</p>
+<h1 id="II、下载内核"><a href="#II、下载内核" class="headerlink" title="II、下载内核"></a>II、下载内核</h1><ul>
+<li>到官网下载内核版本 <a href="http://www.kernel.org" target="_blank" rel="external">http://www.kernel.org</a>，我下载的是 linux-3.14.39</li>
+<li>打开终端，切换到root用户，输入 su ，然后输入密码即可</li>
+<li><p>将下载的linux-3.14.39.tar.xz 移动到/usr/src/ 目录下</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mv linux-<span class="number">3.14</span>.<span class="number">39</span><span class="selector-class">.tar</span><span class="selector-class">.xz</span> /usr/src</div></pre></td></tr></table></figure>
+</li>
+<li><p>进入/usr/src/目录下，解压缩内核压缩包</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">xz</span> <span class="selector-tag">-d</span> <span class="selector-tag">linux-3</span><span class="selector-class">.14</span><span class="selector-class">.39</span><span class="selector-class">.tar</span><span class="selector-class">.xz</span></div><div class="line"><span class="selector-tag">tar</span> <span class="selector-tag">-xvf</span> <span class="selector-tag">linux-3</span><span class="selector-class">.14</span><span class="selector-class">.39</span><span class="selector-class">.tar</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="III、编译内核"><a href="#III、编译内核" class="headerlink" title="III、编译内核"></a>III、编译内核</h1><h2 id="①-清理内核中的残渣"><a href="#①-清理内核中的残渣" class="headerlink" title="① 清理内核中的残渣"></a>① 清理内核中的残渣</h2><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd /usr/src/linux<span class="number">-3.14</span><span class="number">.39</span></div><div class="line">make mrproper</div></pre></td></tr></table></figure>
+<h2 id="②-配置内核"><a href="#②-配置内核" class="headerlink" title="② 配置内核"></a>② 配置内核</h2><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">make menuconfig</span></div></pre></td></tr></table></figure>
+<p>出现图形化界面<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCjw1ereo9ppwjcj30ke0dmwg9.jpg" alt=""><br>说一下配置：<br>对每一个配置选项，用户有三种选择，它们分别代表的含义如下：<br>&lt;<em>&gt;或[</em>]——将该功能编译进内核<br>[]——不将该功能编译进内核<br>[M]——将该功能编译成可以在需要时动态插入到内核中的代码</p>
+<p>使用空格键进行切换<br>配置完之后，保存退出</p>
+<h2 id="③-配置完之后，开始编译内核"><a href="#③-配置完之后，开始编译内核" class="headerlink" title="③ 配置完之后，开始编译内核"></a>③ 配置完之后，开始编译内核</h2><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">make</span></div></pre></td></tr></table></figure>
+<p>这一步需要很长时间，请耐心等待。。。。。。。。</p>
+<h2 id="④-编译内核模块"><a href="#④-编译内核模块" class="headerlink" title="④ 编译内核模块"></a>④ 编译内核模块</h2><figure class="highlight gauss"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">make</span> modules_install</div><div class="line"><span class="built_in">make</span> install</div></pre></td></tr></table></figure>
+<h1 id="IV、修改启动程序配置"><a href="#IV、修改启动程序配置" class="headerlink" title="IV、修改启动程序配置"></a>IV、修改启动程序配置</h1><ol>
+<li><p>将生成的bzImage文件和System.map文件拷贝到/boot/目录下</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cp <span class="regexp">/usr/</span>src<span class="regexp">/linux-3.12.6/</span>arch<span class="regexp">/x86/</span>boot<span class="regexp">/bzImage /</span>boot/</div><div class="line">cp <span class="regexp">/usr/</span>src<span class="regexp">/linux-3.12.6/</span>System.map <span class="regexp">/boot/</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>查看启动项</p>
+<ul>
+<li>更新系统引导配置，不同系统命令不一样，大家自行google</li>
+<li>查看配置文件<br>配置文件在/boot/grub2/grub.cfg<br>gedit /boot/grub2/grub.cfg<br>看到配置文件中有如下内容，说明内核已经添加到启动项了<br><img src="http://ww2.sinaimg.cn/large/005CA6ZCjw1ereo9y7ugkj30i70es760.jpg" alt=""></li>
+</ul>
+<p>OK，编译内核已经全部完成，可以重启电脑了。。。。。<br>如果没有必要不要编译内核，需要很久啊O(∩_∩)O</p>
+</li>
+</ol>
+<h1 id="V、参考文献"><a href="#V、参考文献" class="headerlink" title="V、参考文献"></a>V、参考文献</h1><p><a href="http://mzqthu.iteye.com/blog/2001167" target="_blank" rel="external">linux内核编译步骤（详细全过程）</a></p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2015/04/21/compileKernel/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2015/04/21/compileKernel/index.html" data-title="Linux编译内核步骤" data-url="http://huirong.github.io/2015/04/21/compileKernel/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

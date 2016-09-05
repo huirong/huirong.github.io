@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>Intel Pin 5 ：Pin 高级调试扩展命令 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Pin," />
+  
+
+  <meta name="description" content="写在前面：Advanced Debugger Extensions，我翻译为 “高级调试扩展命令”，如果大家对此有什么异议，欢迎指正。
+
+Pin的高级调试扩展命令允许程序员调试应用程序，即使程序在Pin下运行。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Intel Pin 5 ：Pin 高级调试扩展命令">
+<meta property="og:url" content="http://huirong.github.io/2016/01/12/Intel-Pin-Advanced-Debugging-Extensions/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="写在前面：Advanced Debugger Extensions，我翻译为 “高级调试扩展命令”，如果大家对此有什么异议，欢迎指正。
+
+Pin的高级调试扩展命令允许程序员调试应用程序，即使程序在Pin下运行。">
+<meta property="og:updated_time" content="2016-01-12T13:23:57.539Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Intel Pin 5 ：Pin 高级调试扩展命令">
+<meta name="twitter:description" content="写在前面：Advanced Debugger Extensions，我翻译为 “高级调试扩展命令”，如果大家对此有什么异议，欢迎指正。
+
+Pin的高级调试扩展命令允许程序员调试应用程序，即使程序在Pin下运行。">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Advanced-Debugging-Extensions-on-Linux"><span class="toc-text">Advanced Debugging Extensions on Linux</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、基本使用方法"><span class="toc-text">1、基本使用方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、Adding-New-Debugger-Commands"><span class="toc-text">2、Adding New Debugger Commands</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3、Semantic-Breakpoints-语义断点"><span class="toc-text">3、Semantic Breakpoints 语义断点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4、Connecting-the-Debugger-Later"><span class="toc-text">4、Connecting the Debugger Later</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考文献"><span class="toc-text">参考文献</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-Intel-Pin-Advanced-Debugging-Extensions" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Intel Pin 5 ：Pin 高级调试扩展命令</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2016.01.12</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2016/01/12/Intel-Pin-Advanced-Debugging-Extensions/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <font color="blue">写在前面：Advanced Debugger Extensions，我翻译为 “高级调试扩展命令”，如果大家对此有什么异议，欢迎指正。</font>
+
+<p>Pin的高级调试扩展命令允许程序员调试应用程序，即使程序在Pin下运行。<br><a id="more"></a><br>Pin tool可以在不修改 GDB 或 Visual Studio的情况下，添加对 新调试命令 的支持，这允许程序员通过 live debugger seesion 控制 Pin tool。最后 Pin tools 可通过 instrumentation 增加强大的调试功能。</p>
+<p>如，Pin tools 可使用 instrumentation 查找感兴趣的条件（如，内存缓冲区覆盖），在 live debugger session 中满足此条件时，停止调试。</p>
+<p>Linux（使用 GDB ）和 Windows（使用 Visual Studio ）都支持此功能，并且两个平台的 API 相同，但每个调试器的 UI 不同，使用方法不相同。<br>原教程主要分两部分：</p>
+<ul>
+<li>Linux 平台教程</li>
+<li>Windows平台教程</li>
+</ul>
+<p>两个教程都使用了同一个例子，读者只用阅读其中之一即可，本文只介绍了Linux平台下的使用方法。</p>
+<font color="red">注意：高级调试扩展命令和调试 Pintool 一点关系都没有，如果 Pintool 存在 bug，需要调试，请参见<a href="https://software.intel.com/sites/landingpage/pintool/docs/67254/Pin/html/index.html#DEBUGGING" target="_blank" rel="external">Tips for Debugging a Pintool</a></font> 
+
+<h1 id="Advanced-Debugging-Extensions-on-Linux"><a href="#Advanced-Debugging-Extensions-on-Linux" class="headerlink" title="Advanced Debugging Extensions on Linux"></a>Advanced Debugging Extensions on Linux</h1><h2 id="1、基本使用方法"><a href="#1、基本使用方法" class="headerlink" title="1、基本使用方法"></a>1、基本使用方法</h2><p>Linux 下几乎所有 GDB 版本都支持 Pin 调试扩展命令，但是 Pin 需使用 GDB 的 远程调试功能，因此你可以使用任何支持此功能的 GDB 版本。</p>
+<p>本节使用 “source/tools/ManualExamples” 目录下的 “stack-debugger.cpp” 例子说明 Pin 调试扩展命令。</p>
+<p>使用如下命令：<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">cd</span> source/tools/ManualExamples</div><div class="line">$ make DEBUG=1 <span class="keyword">stack</span>-debugger.<span class="keyword">test</span></div></pre></td></tr></table></figure></p>
+<p>tool 及其相关测试程序  “fibonacci” 在 “obj-ia32”（x86）/ “obj-intel64”(x64) 目录中。</p>
+<p>Pin 命令添加 <font color="blue">-appdebug</font> 选项，开启调试扩展。<br>执行命令后， Pin 会启动应用程序并停在第一条指令前，然后输出“开启GDB”提示信息，。</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ ..<span class="regexp">/../</span>../pin -appdebug -t obj-intel64/stack-<span class="keyword">debugger</span>.so -- obj-intel64/fibonacci <span class="number">1000</span></div><div class="line">Application stopped <span class="keyword">until</span> continued <span class="keyword">from</span> <span class="keyword">debugger</span>.</div><div class="line">Start GDB, <span class="keyword">then</span> issue <span class="keyword">this</span> command at the (gdb) prompt:</div><div class="line">  target remote :<span class="number">33030</span></div></pre></td></tr></table></figure>
+<p>在另一个终端中开启 GDB，输入 提示信息中的命令。<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ gdb fibonacci</div><div class="line">(gdb) <span class="keyword">target</span> remote :33030</div></pre></td></tr></table></figure></p>
+<p>此时，调试器已经附加了在 Pin 下运行的应用程序，你可以设置断点，继续执行，打印变量，反汇编代码等。<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">(gdb) <span class="keyword">break</span> main</div><div class="line">Breakpoint 1 at 0x401194: <span class="keyword">file</span> fibonacci.cpp, <span class="keyword">line</span> 12.</div><div class="line">(gdb) cont</div><div class="line">Continuing.</div><div class="line"></div><div class="line">Breakpoint 1, main (argc=2, argv=0x7fbffff3c8) at fibonacci.cpp:12</div><div class="line">12          <span class="keyword">if</span> (argc &gt; 2)</div><div class="line">(gdb) <span class="keyword">print</span> argc</div><div class="line"><span class="variable">$1</span> = 2</div><div class="line">(gdb) x/4i <span class="variable">$pc</span></div><div class="line">0x401194 &lt;main+27&gt;:     cmpl   <span class="variable">$0x2</span>,0xfffffffffffffe5c(%rbp)</div><div class="line">0x40119b &lt;main+34&gt;:     je     0x4011c8 &lt;main+79&gt;</div><div class="line">0x40119d &lt;main+36&gt;:     <span class="keyword">mov</span>    <span class="variable">$0x402080</span>,%esi</div><div class="line">0x4011a2 &lt;main+41&gt;:     <span class="keyword">mov</span>    <span class="variable">$0x603300</span>,%<span class="keyword">edi</span></div></pre></td></tr></table></figure></p>
+<p>当然，你在调试器中观察到的所有信息都是应用程序的原始状态，Pin 和 tool 的 instrumentation 细节都隐藏了。<br>如，上面显示的汇编代码都是应用程序的指令，没有 tool 插入的指令。但是当使用 “cont” 或 “step” 命令执行程序时，Pin 下的 tool instrumentation 会正常运行。</p>
+<font color="red">注意：使用 “target remote”  命令连接 GDB 后，不能使用 “run” 命令，因为程序已经运行并停在第一条指令前，只需使用 “cont” 命令继续执行程序。</font>
+
+<h2 id="2、Adding-New-Debugger-Commands"><a href="#2、Adding-New-Debugger-Commands" class="headerlink" title="2、Adding New Debugger Commands"></a>2、Adding New Debugger Commands</h2><p>本节主要讲述在不修改 GDB 的情况下，为 Pintool 增加自定义调试命令，此命令允许程序员通过 live debugger session 控制 Pintool，比如，设置 Pintool输出收集到的信息，或只在程序的特定阶段开启 instrumentation。</p>
+<p>详细参见  PIN_AddDebugInterpreter() ，该 API 的回调函数如下：<br><figure class="highlight zephir"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="keyword">BOOL</span> DebugInterpreter(THREADID tid, CONTEXT *ctxt, <span class="keyword">const</span> string &amp;cmd, string *result, VOID *)</div><div class="line">&#123;</div><div class="line">    TINFO_MAP::iterator it = ThreadInfos.find(tid);</div><div class="line">    <span class="keyword">if</span> (it == ThreadInfos.end())</div><div class="line">        <span class="keyword">return</span> <span class="keyword">FALSE</span>;</div><div class="line">    TINFO *tinfo = it-&gt;second;</div><div class="line"></div><div class="line">    std::string line = TrimWhitespace(cmd);</div><div class="line">    *result = <span class="string">""</span>;</div><div class="line"></div><div class="line">    <span class="comment">// [...]</span></div><div class="line"></div><div class="line">    <span class="keyword">if</span> (line == <span class="string">"stats"</span>)</div><div class="line">    &#123;</div><div class="line">        ADDRINT sp = PIN_GetContextReg(ctxt, REG_STACK_PTR);</div><div class="line">        tinfo-&gt;_os.str(<span class="string">""</span>);</div><div class="line">        <span class="keyword">if</span> (sp &lt;= tinfo-&gt;_stackBase)</div><div class="line">            tinfo-&gt;_os &lt;&lt; <span class="string">"Current stack usage: "</span> &lt;&lt; std::dec &lt;&lt; (tinfo-&gt;_stackBase - sp) &lt;&lt; <span class="string">" bytes.\n"</span>;</div><div class="line">        <span class="keyword">else</span></div><div class="line">            tinfo-&gt;_os &lt;&lt; <span class="string">"Current stack usage: -"</span> &lt;&lt; std::dec &lt;&lt; (sp - tinfo-&gt;_stackBase) &lt;&lt; <span class="string">" bytes.\n"</span>;</div><div class="line">        tinfo-&gt;_os &lt;&lt; <span class="string">"Maximum stack usage: "</span> &lt;&lt; tinfo-&gt;_max &lt;&lt; <span class="string">" bytes.\n"</span>;</div><div class="line">        *result = tinfo-&gt;_os.str();</div><div class="line">        <span class="keyword">return</span> <span class="keyword">TRUE</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (line == <span class="string">"stacktrace on"</span>)</div><div class="line">    &#123;</div><div class="line">        <span class="keyword">if</span> (!EnableInstrumentation)</div><div class="line">        &#123;</div><div class="line">            PIN_RemoveInstrumentation();</div><div class="line">            EnableInstrumentation = <span class="keyword">true</span>;</div><div class="line">            *result = <span class="string">"Stack tracing enabled.\n"</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">TRUE</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// [...]</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="keyword">FALSE</span>;  <span class="comment">// Unknown command</span></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p> PIN_AddDebugInterpreter() API 允许 Pintool 为 扩展 GDB 命令创建句柄（handler），如上面的代码段实现了新命令 “stats” 和 “stacktrace on”。<br> 在 GDB 中使用 “monitor” 命令执行上述命令:<br> <figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"> (gdb)<span class="built_in"> monitor </span>stats</div><div class="line">Current stack usage: 688 bytes.</div><div class="line">Maximum stack usage: 0 bytes.</div></pre></td></tr></table></figure></p>
+<p>当用户输入一个扩展调试命令时，Pintool可以做很多事情，如，”stats” 命令打印 tool 收集到的信息，任何 tool 写入“结果”参数中的文本会输出到 GDB 控制台。</p>
+<p>程序员还可以使用 调试扩展命令 启用/禁止 Pintool instrumentation，比如，”stacktrace on” 命令。如果想要在应用的程序初始启动阶段快速启动 Pintool，可以禁用 Pintool instrumentation，直到触发一个断点，然后使用扩展命令，只在程序员感兴趣的应用程序执行阶段开启 instrumentation 。在上面的 stack-debugger 示例中，PIN_RemoveInstrumentation() 函数移除所有的 instrumentation，然后当调试器继续执行应用程序时，tool 重新 instrument 代码。稍后会介绍，tool 的全局变量 “EnableInstrumentation” 调整插入过的 instrumentation 。</p>
+<h2 id="3、Semantic-Breakpoints-语义断点"><a href="#3、Semantic-Breakpoints-语义断点" class="headerlink" title="3、Semantic Breakpoints 语义断点"></a>3、Semantic Breakpoints 语义断点</h2><p>高级调试扩展的最后一个功能为：调用 tool analysis 中的 API 使程序停在断点处，此功能虽然简单，但很强大。Pintool 通过 instrumentation 查找复杂的条件，当满足条件时，停在断点处。</p>
+<p>“stack-debugger” tool 对所有分配栈空间的指令进行插装，一旦应用程序的栈空间达到某一阈值，程序停在断点处。传统调试器并不能实现此功能，因为传统调试器不可能找到所有分配栈空间的指令。</p>
+<p>以下是 “stack-debugger” tool 中的部分代码，功能为：使用 Pin instrumentation 检索所有分配栈空间的指令。<br><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">static VOID <span class="keyword">Instruction(INS </span><span class="keyword">ins, </span>VOID *)</div><div class="line">&#123;</div><div class="line">    if (!EnableInstrumentation)</div><div class="line">        return<span class="comment">;</span></div><div class="line"></div><div class="line">    if (<span class="keyword">INS_RegWContain(ins, </span>REG_STACK_PTR))</div><div class="line">    &#123;</div><div class="line">        IPOINT where = IPOINT_AFTER<span class="comment">;</span></div><div class="line">        if (!<span class="keyword">INS_HasFallThrough(ins))</span></div><div class="line">            where = IPOINT_TAKEN_BRANCH<span class="comment">;</span></div><div class="line"></div><div class="line">        <span class="keyword">INS_InsertIfCall(ins, </span>where, (AFUNPTR)OnStackChangeIf, IARG_REG_VALUE, REG_STACK_PTR,</div><div class="line">            IARG_REG_VALUE, RegTinfo, IARG_END)<span class="comment">;</span></div><div class="line">        <span class="keyword">INS_InsertThenCall(ins, </span>where, (AFUNPTR)DoBreakpoint, IARG_CONST_CONTEXT, IARG_THREAD_ID, IARG_END)<span class="comment">;</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p> INS_RegWContain() 判断指令是否修改栈指针，如果是，在此条指令后插入 analysis 函数，检查应用程序的栈空间是否超过某一阈值。</p>
+<p> <font color="red">注意：</font>所有 instrumentation 的开启/禁用由全局标识变量 “EnableInstrumentation” 设置。因此，在不感兴趣的应用程序执行阶段，禁用 instrumentation（使用 “stacktrace off” 设置），快速执行程序；然后在感兴趣阶段开启 instrumentation （使用 “stacktrace on” 设置）。</p>
+<p>如果应用程序的栈空间超过某一阈值， OnStackChangeIf() 返回 TRUE，如果返回值为 TRUE，调用 DoBreakpoint() 停在断点处。</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> ADDRINT OnStackChangeIf(ADDRINT sp, ADDRINT addrInfo)</div><div class="line">&#123;</div><div class="line">    TINFO *tinfo = <span class="keyword">reinterpret_cast</span>&lt;TINFO *&gt;(addrInfo);</div><div class="line"></div><div class="line">    <span class="comment">// The stack pointer may go above the base slightly.  (For example, the application's dynamic</span></div><div class="line">    <span class="comment">// loader does this briefly during start-up.)</span></div><div class="line">    <span class="comment">//</span></div><div class="line">    <span class="built_in">if</span> (sp &gt; tinfo-&gt;_stackBase)</div><div class="line">        <span class="built_in">return</span> <span class="number">0</span>;</div><div class="line"></div><div class="line">    <span class="comment">// Keep track of the maximum stack usage.</span></div><div class="line">    <span class="comment">//</span></div><div class="line">    size_t <span class="built_in">size</span> = tinfo-&gt;_stackBase - sp;</div><div class="line">    <span class="built_in">if</span> (<span class="built_in">size</span> &gt; tinfo-&gt;_max)</div><div class="line">        tinfo-&gt;_max = <span class="built_in">size</span>;</div><div class="line"></div><div class="line">    <span class="comment">// See if we need to trigger a breakpoint.</span></div><div class="line">    <span class="comment">//</span></div><div class="line">    <span class="built_in">if</span> (BreakOnNewMax &amp;&amp; <span class="built_in">size</span> &gt; tinfo-&gt;_maxReported)</div><div class="line">        <span class="built_in">return</span> <span class="number">1</span>;</div><div class="line">    <span class="built_in">if</span> (BreakOnSize &amp;&amp; <span class="built_in">size</span> &gt;= BreakOnSize)</div><div class="line">        <span class="built_in">return</span> <span class="number">1</span>;</div><div class="line">    <span class="built_in">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">static</span> VOID DoBreakpoint(<span class="keyword">const</span> CONTEXT *ctxt, THREADID tid)</div><div class="line">&#123;</div><div class="line">    TINFO *tinfo = <span class="keyword">reinterpret_cast</span>&lt;TINFO *&gt;(PIN_GetContextReg(ctxt, RegTinfo));</div><div class="line"></div><div class="line">    <span class="comment">// Keep track of the maximum reported stack usage for "stackbreak newmax".</span></div><div class="line">    <span class="comment">//</span></div><div class="line">    size_t <span class="built_in">size</span> = tinfo-&gt;_stackBase - PIN_GetContextReg(ctxt, REG_STACK_PTR);</div><div class="line">    <span class="built_in">if</span> (<span class="built_in">size</span> &gt; tinfo-&gt;_maxReported)</div><div class="line">        tinfo-&gt;_maxReported = <span class="built_in">size</span>;</div><div class="line"></div><div class="line">    ConnectDebugger();  <span class="comment">// Ask the user to connect a debugger, if it is not already connected.</span></div><div class="line"></div><div class="line">    <span class="comment">// Construct a string that the debugger will print when it stops.  If a debugger is</span></div><div class="line">    <span class="comment">// not connected, no breakpoint is triggered and execution resumes immediately.</span></div><div class="line">    <span class="comment">//</span></div><div class="line">    tinfo-&gt;_os.str(<span class="string">""</span>);</div><div class="line">    tinfo-&gt;_os &lt;&lt; <span class="string">"Thread "</span> &lt;&lt; std::dec &lt;&lt; tid &lt;&lt; <span class="string">" uses "</span> &lt;&lt; <span class="built_in">size</span> &lt;&lt; <span class="string">" bytes of stack."</span>;</div><div class="line">    PIN_ApplicationBreakpoint(ctxt, tid, FALSE, tinfo-&gt;_os.str());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>OnStackChangeIf() 跟踪栈使用情况，并判断栈空间是否达到阈值。如果时，返回非0（即 TRUE ），Pin执行 DoBreakpoint()。</p>
+<p>DoBreakpoint() 的最后调用  PIN_ApplicationBreakpoint() ，停止所有线程的执行，并触发调试器中断。当中断触发时，GDB 的控制台输出  PIN_ApplicationBreakpoint() 的字符串参数，此参数告诉用户为什么会触发中断，本例中，此字符串为 “Thread 10 uses 4000 bytes of stack” 。</p>
+<figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">(gdb)<span class="built_in"> monitor </span>stackbreak 4000</div><div class="line">Will break when thread uses more than 4000 bytes of stack.</div><div class="line">(gdb) c</div><div class="line">Continuing.</div><div class="line">Thread 0 uses 4000 bytes of stack.</div><div class="line">Program received signal SIGTRAP, Trace/breakpoint trap.</div><div class="line">0x0000000000400e27 in Fibonacci (num=0) at fibonacci.cpp:34</div><div class="line">(gdb)</div></pre></td></tr></table></figure>
+<p>此时，你可以继续执行程序，或终止程序：<br><figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">(gdb) <span class="built_in">quit</span></div><div class="line">The <span class="built_in">program</span> <span class="built_in">is</span> running.  Exit anyway? (y <span class="keyword">or</span> n) y</div></pre></td></tr></table></figure></p>
+<h2 id="4、Connecting-the-Debugger-Later"><a href="#4、Connecting-the-Debugger-Later" class="headerlink" title="4、Connecting the Debugger Later"></a>4、Connecting the Debugger Later</h2><p>上例使用 “ -appdebug” 停止程序并从第一条指令开始调试，本小节将介绍程序不停在第一条指令之后，而是其他位置。<br>下例说明了如何使用 stack-debugger tool 启动应用程序，并只在触发“栈上限”断点时，调试器才附加程序。<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ..<span class="regexp">/../</span>..<span class="regexp">/pin -appdebug_enable -appdebug_silent -t obj-intel64/</span>stack-debugger.so -stackbreak <span class="number">4000</span> -- obj-intel64<span class="regexp">/fibonacci 1000</span></div></pre></td></tr></table></figure></p>
+<ul>
+<li>-appdebug_enable选项，开始调试程序的位置不为第一条指令</li>
+<li>-appdebug_silent，自定义 GDB 控制台提示信息，详见下例</li>
+<li>-stackbreak 4000，当栈空间超过 4000 时，触发断点。当触发断点时，输出如下消息：<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Triggered stack-limit <span class="built_in">breakpoint</span>.</div><div class="line">Start GDB <span class="keyword">and</span> enter this <span class="keyword">command</span>:</div><div class="line">  target remote :<span class="number">45462</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>连接 GDB 的方式和之前一样，只是 GDB 停在“栈上限”断点处。<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">gdb fibonacci</div><div class="line">(gdb) target <span class="string">remote :</span><span class="number">45462</span></div><div class="line"><span class="number">0x0000000000400e27</span> <span class="keyword">in</span> Fibonacci (num=<span class="number">0</span>) at fibonacci.<span class="string">cpp:</span><span class="number">37</span></div><div class="line">(gdb)</div></pre></td></tr></table></figure></p>
+<p>以下是 连接调试器的代码：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">ConnectDebugger</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">if</span> (PIN_GetDebugStatus() != DEBUG_STATUS_UNCONNECTED)</div><div class="line">        <span class="keyword">return</span>;</div><div class="line"></div><div class="line">    DEBUG_CONNECTION_INFO info;</div><div class="line">    <span class="keyword">if</span> (!PIN_GetDebugConnectionInfo(&amp;info) || info<span class="number">._</span>type != DEBUG_CONNECTION_TYPE_TCP_SERVER)</div><div class="line">        <span class="keyword">return</span>;</div><div class="line"></div><div class="line">    *Output &lt;&lt; <span class="string">"Triggered stack-limit breakpoint.\n"</span>;</div><div class="line">    *Output &lt;&lt; <span class="string">"Start GDB and enter this command:\n"</span>;</div><div class="line">    *Output &lt;&lt; <span class="string">"  target remote :"</span> &lt;&lt; <span class="built_in">std</span>::dec &lt;&lt; info<span class="number">._</span>tcpServer<span class="number">._</span>tcpPort &lt;&lt; <span class="string">"\n"</span>;</div><div class="line">    *Output &lt;&lt; <span class="built_in">std</span>::flush;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (PIN_WaitForDebuggerToConnect(<span class="number">1000</span>*KnobTimeout.Value()))</div><div class="line">        <span class="keyword">return</span>;</div><div class="line"></div><div class="line">    *Output &lt;&lt; <span class="string">"No debugger attached after "</span> &lt;&lt; KnobTimeout.Value() &lt;&lt; <span class="string">" seconds.\n"</span>;</div><div class="line">    *Output &lt;&lt; <span class="string">"Resuming application without stopping.\n"</span>;</div><div class="line">    *Output &lt;&lt; <span class="built_in">std</span>::flush;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>每当 tool 需停在断点处，会调用 ConnectDebugger() 函数，它首先调用 PIN_GetDebugStatus() 判断是否和调试器连接。如果没有，使用 PIN_GetDebugConnectionInfo() 获取 TCP 端口号，用于连接 GDB，本例中的端口号为 “45462”，在 “target remote” 命令中使用。<br> PIN_WaitForDebuggerToConnect() 等待连接 GDB，如果一段时间后，用户没有开启GBD并附加进程，tool 输出一条提示信息，然后继续执行程序。</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p><a href="https://software.intel.com/sites/landingpage/pintool/docs/67254/Pin/html/index.html#APPDEBUG" target="_blank" rel="external">Pin 用户手册：The Pin Advanced Debugging Extensions</a></p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2016/01/12/Intel-Pin-Advanced-Debugging-Extensions/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2016/01/12/Intel-Pin-Advanced-Debugging-Extensions/index.html" data-title="Intel Pin 5 ：Pin 高级调试扩展命令" data-url="http://huirong.github.io/2016/01/12/Intel-Pin-Advanced-Debugging-Extensions/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

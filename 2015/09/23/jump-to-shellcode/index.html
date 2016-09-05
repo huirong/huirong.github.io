@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>跳转到 shellcode 方法 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="缓冲区溢出,exploit 编写," />
+  
+
+  <meta name="description" content="假设：假设shellcode已经在栈中，并且没有开启DEP本文将就此讲述关于执行/跳转至shellcode的其它方法，最后你要面临的问题就是缓冲区是否足够大。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="跳转到 shellcode 方法">
+<meta property="og:url" content="http://huirong.github.io/2015/09/23/jump-to-shellcode/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="假设：假设shellcode已经在栈中，并且没有开启DEP本文将就此讲述关于执行/跳转至shellcode的其它方法，最后你要面临的问题就是缓冲区是否足够大。">
+<meta property="og:updated_time" content="2016-04-16T11:57:29.547Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="跳转到 shellcode 方法">
+<meta name="twitter:description" content="假设：假设shellcode已经在栈中，并且没有开启DEP本文将就此讲述关于执行/跳转至shellcode的其它方法，最后你要面临的问题就是缓冲区是否足够大。">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#I、jump-call-到一个指向shellcode-的寄存器。"><span class="toc-text">I、jump/call 到一个指向shellcode 的寄存器。</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#II、pop-return"><span class="toc-text">II、pop return</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#III、push-return"><span class="toc-text">III、push return</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ⅳ、jmp-reg-offset"><span class="toc-text">Ⅳ、jmp [reg + offset]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#V、blind-return"><span class="toc-text">V、blind return</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ⅵ、SHE"><span class="toc-text">Ⅵ、SHE</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-jump-to-shellcode" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">跳转到 shellcode 方法</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2015.09.23</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/exploit-编写/">exploit 编写</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2015/09/23/jump-to-shellcode/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>假设：假设shellcode已经在栈中，并且没有开启DEP<br>本文将就此讲述关于执行/跳转至shellcode的其它方法，最后你要面临的问题就是缓冲区是否足够大。<br><a id="more"></a></p>
+<h1 id="I、jump-call-到一个指向shellcode-的寄存器。"><a href="#I、jump-call-到一个指向shellcode-的寄存器。" class="headerlink" title="I、jump/call 到一个指向shellcode 的寄存器。"></a>I、jump/call 到一个指向shellcode 的寄存器。</h1><p>利用这种技术，你可以利用这个包含shellcode地址的寄存器，将该地址置入EIP中来实现。</p>
+<p>你可以利用程序运行时加载的DLL，去搜索”jump/call register”等操作指令所在的内存地址。当构造payload时，我们就可以利用该内存地址去覆盖EIP。当然，如果有一个直接指向shellcode 的寄存器可以利用，那也不是不可以的。</p>
+<h1 id="II、pop-return"><a href="#II、pop-return" class="headerlink" title="II、pop return"></a>II、pop return</h1><p>如果栈顶并没有指向攻击者指定的缓冲区，但此缓冲区又起始于栈顶下方的数字节处，那么你就可以使程序执行一系列的POP指令和一个RET指令，以此将这些字节弹出栈（每POP 一次，ESP 指针就更接近shellcode 入口一步），直至正确的缓冲区入口处。执行RET指令后，ESP 中的当前栈值将放入EIP 中。</p>
+<p>因此当ESP+x 包含我们的shellcode所在的缓冲区地址时（当在调试器中执行命令“d esp”时，你就可以看到在ESP+offset 中的缓冲区地址，但由于Intel x86 是属于小端法机器，因此数据可能是反序的），POP RET 方法还是可行的。</p>
+<h1 id="III、push-return"><a href="#III、push-return" class="headerlink" title="III、push return"></a>III、push return</h1><p> 这种方法明显不同于“call register”技术。如果你找不到<jump register="">或者<call register="">的机器码，那么你可以简单将一个地址压栈，然后执行ret，因此你只需搜索ret 之后的push <register>指令即可。先查找这一串操作指令，再查找执行这串指令的地址，最后利用该地址覆盖EIP。</register></call></jump></p>
+<h1 id="Ⅳ、jmp-reg-offset"><a href="#Ⅳ、jmp-reg-offset" class="headerlink" title="Ⅳ、jmp [reg + offset]"></a>Ⅳ、jmp [reg + offset]</h1><p> 如果寄存器指向包含shellcode 地址的缓冲区，但其并没有指向shellcode 入口，那么你可以通过搜索操作系统或者应用程序加载的DLL 中的指令，并向该指令中的寄存器添加上所需的字节偏移量，然后跳转至寄存器所指向的地址。笔者将此种方法称为jmp [reg+ offset]。</p>
+<h1 id="V、blind-return"><a href="#V、blind-return" class="headerlink" title="V、blind return"></a>V、blind return</h1><p>假设ESP 指向当前栈基址。RET 指令将从栈中‘pop’新值（4 字节），然后将那地址放入ESP 中。因此如果用RET 指令所在地址去覆盖EIP，那么你将会把ESP 中的值置入ESI。</p>
+<p>如果缓冲区中的可用空间被限制了（EIP 被覆盖之后），但是在覆写EIP 之前还有不少空间可利用，那么你可以先在小空间的缓冲区中执行jump code，以跳转至缓冲区首部的关键shellcode。</p>
+<h1 id="Ⅵ、SHE"><a href="#Ⅵ、SHE" class="headerlink" title="Ⅵ、SHE"></a>Ⅵ、SHE</h1><p>每一程序中均有默认的异常处理程序，这是由操作系统提供的。因此即使程序原本就没有使用异常处理，但你也可以用自己的地址去覆盖SHE handler，以使其跳转至shellcode。</p>
+<p>利用SHE 可以使exploit 在windows 平台下运行得更为稳定，但在利用SHE 编写exploit 之前，你需要先掌握一些知识。如果你编写的exploit 无法在被给的操作系统中运行，那么payload 可能会导致程序崩溃（触发异常）。因此你可以将“regular”exploit 配合覆盖SHE 的方式来编写exploit，以此编写出更为可靠的exploit。</p>
+<p>在一个被覆写EIP 的典型栈溢出中，也可以利用SHE 技术来编写exploit，以使其运行得更为稳定，同时获取更大可用空间的缓冲区（覆盖EIP 以触发SHE„„真可谓一箭双雕）。</p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2015/09/23/jump-to-shellcode/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2015/09/23/jump-to-shellcode/index.html" data-title="跳转到 shellcode 方法" data-url="http://huirong.github.io/2015/09/23/jump-to-shellcode/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

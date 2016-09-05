@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>Windows 溢出保护原理与绕过方法 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="缓冲区溢出," />
+  
+
+  <meta name="description" content="本文转载自windows溢出保护原理与绕过方法概览作者：riusksk（泉哥）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Windows 溢出保护原理与绕过方法">
+<meta property="og:url" content="http://huirong.github.io/2015/09/17/Win-overfolw-mitigation-and-bypass/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="本文转载自windows溢出保护原理与绕过方法概览作者：riusksk（泉哥）">
+<meta property="og:updated_time" content="2016-04-16T11:49:50.006Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Windows 溢出保护原理与绕过方法">
+<meta name="twitter:description" content="本文转载自windows溢出保护原理与绕过方法概览作者：riusksk（泉哥）">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#I、GS编译选项"><span class="toc-text">I、GS编译选项</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-原理"><span class="toc-text">① 原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-绕过方法"><span class="toc-text">② 绕过方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-猜测-计算cookie"><span class="toc-text">(1)猜测/计算cookie</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-覆盖SEH"><span class="toc-text">(2)覆盖SEH</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-覆盖虚表指针"><span class="toc-text">(3)覆盖虚表指针</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#II、SafeSEH"><span class="toc-text">II、SafeSEH</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-原理-1"><span class="toc-text">① 原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-绕过方法-1"><span class="toc-text">② 绕过方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#III、DEP"><span class="toc-text">III、DEP</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-原理-2"><span class="toc-text">① 原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-绕过方法-2"><span class="toc-text">② 绕过方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-ret2lib"><span class="toc-text">(1)ret2lib</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-利用TEB突破DEP"><span class="toc-text">(2)利用TEB突破DEP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-关闭DEP"><span class="toc-text">(3)关闭DEP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-利用WPN与ROP技术"><span class="toc-text">(4) 利用WPN与ROP技术</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-利用SEH-绕过DEP"><span class="toc-text">(5) 利用SEH 绕过DEP</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#IV、ASLR"><span class="toc-text">IV、ASLR</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-原理-3"><span class="toc-text">① 原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-绕过方法-3"><span class="toc-text">② 绕过方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-覆盖部分返回地址"><span class="toc-text">(1)覆盖部分返回地址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-利用未启用ASLR的模块地址"><span class="toc-text">(2)利用未启用ASLR的模块地址</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#V、SEHOP"><span class="toc-text">V、SEHOP</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-原理-4"><span class="toc-text">① 原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-绕过方法-4"><span class="toc-text">② 绕过方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ⅵ、结论"><span class="toc-text">Ⅵ、结论</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-Win-overfolw-mitigation-and-bypass" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Windows 溢出保护原理与绕过方法</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2015.09.17</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/缓冲区溢出/">缓冲区溢出</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2015/09/17/Win-overfolw-mitigation-and-bypass/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>本文转载自<a href="http://www.blogbus.com/riusksk-logs/80935313.html" target="_blank" rel="external">windows溢出保护原理与绕过方法概览</a><br>作者：riusksk（泉哥）<br><a id="more"></a></p>
+<p>本篇文章主要揭露Windows平台上的各种溢出保护机制原理及绕过方法</p>
+<h1 id="I、GS编译选项"><a href="#I、GS编译选项" class="headerlink" title="I、GS编译选项"></a>I、GS编译选项</h1><h2 id="①-原理"><a href="#①-原理" class="headerlink" title="① 原理"></a>① 原理</h2><p>通过VC++编译器在函数前后添加额外的处理代码，前部分用于由伪随机数生成的cookie并放入.data节段，当本地变量初始化，就会向栈中插入cookie，它位于局部变量和返回地址之间：</p>
+<p>经GS编译后栈中的巨变变量空间分配情况：<br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">sub</span> <span class="built_in">esp</span> <span class="number">24h</span></div><div class="line"><span class="keyword">mov</span> <span class="built_in">eax</span>,<span class="built_in">dword</span> <span class="built_in">ptr</span> [__security_cookie(<span class="number">408040h</span>)]</div><div class="line"><span class="keyword">xor</span> <span class="built_in">eax</span>,<span class="built_in">dword</span> <span class="built_in">ptr</span> [<span class="built_in">esp</span>+<span class="number">24h</span>]</div><div class="line"><span class="keyword">mov</span> <span class="built_in">dword</span> <span class="built_in">ptr</span> [<span class="built_in">esp</span>+<span class="number">20h</span>],<span class="built_in">eax</span></div></pre></td></tr></table></figure></p>
+<p>在函数尾部的额外代码用于函数返回时，调用security_check_cookie()函数，以判断cookie是否被修改过，当函数返回时的情况如下：<br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">mov</span> <span class="built_in">ecx</span>,<span class="built_in">dword</span> <span class="built_in">ptr</span> [<span class="built_in">esp</span>+<span class="number">20h</span>]</div><div class="line"><span class="keyword">xor</span> <span class="built_in">ecx</span>,<span class="built_in">dword</span> <span class="built_in">ptr</span> [<span class="built_in">esp</span>+<span class="number">24h</span>]</div><div class="line"><span class="keyword">add</span> <span class="built_in">esp</span>,<span class="number">24h</span></div><div class="line"><span class="keyword">jmp</span> __security_check_cookie(<span class="number">4010B2h</span>)</div></pre></td></tr></table></figure></p>
+<p>在缓冲区溢出利用时，如果将恶意代码从局部变量覆盖到返回地址，那么自然就会覆写cookie，当检测到与原始cookie不同时（也就是比较上面408040h 与 4010B2h 两处的cookie值），就会触发异常，最后终止进程。</p>
+<h2 id="②-绕过方法"><a href="#②-绕过方法" class="headerlink" title="② 绕过方法"></a>② 绕过方法</h2><h3 id="1-猜测-计算cookie"><a href="#1-猜测-计算cookie" class="headerlink" title="(1)猜测/计算cookie"></a>(1)猜测/计算cookie</h3><p>Reducing the Effective Entropy of GS Cookie:<a href="http://www.uninformed.org/?v=7&amp;a=2&amp;t=html" target="_blank" rel="external">http://www.uninformed.org/?v=7&amp;a=2&amp;t=html</a><br>自从覆盖SEH的方法出现后，这种方法已基本不用了，它没有后面的方法来得简便。</p>
+<h3 id="2-覆盖SEH"><a href="#2-覆盖SEH" class="headerlink" title="(2)覆盖SEH"></a>(2)覆盖SEH</h3><p>由于当security_check_cookie()函数检测到cookie被更改后，会检查是否安装了安全处理例程，也就是SEH结点中保存的指针，如果没有，那么由系统的异常处理器接管，因为我们可以通过（pop pop ret）覆盖SEH来达到溢出的目的。<br>但对于SafeSEH保护的模块，就可能会导致exploit失效，关于它的绕过在后续部分在述。</p>
+<p>辅助工具：OD插件safeSEH、pattern_create、pattern_offset、msfpescan、memdump</p>
+<h3 id="3-覆盖虚表指针"><a href="#3-覆盖虚表指针" class="headerlink" title="(3)覆盖虚表指针"></a>(3)覆盖虚表指针</h3><p>堆栈布局：[局部变量][cookie][入栈寄存器][返回地址][参数][虚表指针]<br>当把虚表指针覆盖后，由于要执行虚函数得通过虚表指针来搜索，即可借此劫持eip。</p>
+<h1 id="II、SafeSEH"><a href="#II、SafeSEH" class="headerlink" title="II、SafeSEH"></a>II、SafeSEH</h1><h2 id="①-原理-1"><a href="#①-原理-1" class="headerlink" title="① 原理"></a>① 原理</h2><p>为了防止 SEH 结点被攻击者恶意利用，微软在 .net 编译器中加入 /sdeseh 编译选项引入 SafeSEH 技术。<br>编译器在编译时，将PE文件所有合法的异常处理例程的地址解析出来制成一张表，放在PE文件的数据块 (LQAJ-CON-FIG)中，并使用 shareuse 内存中的一个随机数加密，用于匹配检查。如果该 PE 文件不支持 SafeSEH ，则表中的地址为0。当 PE 文件被系统加载后，表中的内容被加密保存到 ntdll.dll 模块的某个数据区。在PE文件运行期间，如果发生异常需要调用异常处理例程，系统会逐个该例程在表中是否有记录：如果没有，则说明该例程非法，进而不执行该异常例程。</p>
+<h2 id="②-绕过方法-1"><a href="#②-绕过方法-1" class="headerlink" title="② 绕过方法"></a>② 绕过方法</h2><p>利用SafeSEH保护模块之外的地址<br>对于目前的大部分Windows操作系统，其系统模块都受SafeSEH保护，可以选用未开启SafeSEH保护的模块来利用。<br>比如漏洞软件本身自带的dll文件，这个可以借助OD插件SafeSEH来查看进程中各模块是否开启SafeSEH保护。除此之外，也可以通过直接覆盖返回地址 ( jmp/call esp ) 来利用。另一种方法，如果 esp + 8 指向EXCEPTION_REGISTRATION结构，那么你仍然可以宣召一个 pop/pop/ret 指令组合（在加载模块的地址范围之外的空间），也可以正常工作。但如果你在程序的加载模块中找不到 pop/pop/ret 指令，你可以观察下 esp/ebp，查看下这些寄存器距离 nesp 的编译，接下来就是查找这样的指令：<br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">call</span> <span class="built_in">dword</span> <span class="built_in">ptr</span>[<span class="built_in">esp</span>+nn] / <span class="keyword">jmp</span> <span class="built_in">dword</span> <span class="built_in">ptr</span>[<span class="built_in">esp</span>+nn] </div><div class="line"><span class="keyword">call</span> <span class="built_in">dword</span> <span class="built_in">ptr</span>[<span class="built_in">ebp</span>+nn] / <span class="keyword">jmp</span> <span class="built_in">dword</span> <span class="built_in">ptr</span>[<span class="built_in">ebp</span>+nn] </div><div class="line"><span class="keyword">call</span> <span class="built_in">dword</span> <span class="built_in">ptr</span>[<span class="built_in">ebp</span>-nn] / <span class="keyword">jmp</span> <span class="built_in">dword</span> <span class="built_in">ptr</span>[<span class="built_in">ebp</span>-nn]</div></pre></td></tr></table></figure></p>
+<p>（其中的 nn 就是寄存器的值到 nseh 的偏移，偏移 nn 可能是：esp+8，esp+14，esp+1c,esp+2c,esp+44,esp+50,ebp+0c,ebp+24,ebp+30,ebp-04,ebp-0c,ebp-18）.</p>
+<p>如果遇到以上指令是以NULL字节结尾的，可将shellcode放置在SEH之前：</p>
+<ul>
+<li>在nseh上放置后的跳转指令（跳转7字节：jmp 0xfffffff9）;</li>
+<li>向后跳转足够长的地址以存放shellcode，并借此执行只shellcode；</li>
+<li>把shellcode放在用于覆盖异常处理结构的指令地址之前</li>
+</ul>
+<h1 id="III、DEP"><a href="#III、DEP" class="headerlink" title="III、DEP"></a>III、DEP</h1><h2 id="①-原理-2"><a href="#①-原理-2" class="headerlink" title="① 原理"></a>① 原理</h2><p>数据执行保护(DEP)是一套软硬件技术，能够在内存上执行额外检查以防止在不可运行的内存区域上执行代码。在Microsoft Windows XP Service Pack 2、Microsoft Windows 2003 Service Pack 1、Microsoft Windows XP Edition 2005、Microsoft Windows Vista 和 Windows 7中，由硬件和软件一起强制实施DEP。DEP有两种模式，吐过CPU支持内存页NX属性，就是硬件支持DEP。只有当处理器/系统支持NX/XD(禁止执行)时，Windows才能拥有硬件DEP，否则只能支持软件DEP，详单与只有SafeSEH保护。</p>
+<h2 id="②-绕过方法-2"><a href="#②-绕过方法-2" class="headerlink" title="② 绕过方法"></a>② 绕过方法</h2><h3 id="1-ret2lib"><a href="#1-ret2lib" class="headerlink" title="(1)ret2lib"></a>(1)ret2lib</h3><p>思路：将返回地址指向lib库中的代码，而不是直接跳转到shellcode中去执行，进而实现恶意代码的运行。</p>
+<p>可以在库中找到一段执行系统命令的大妈，比如system()函数，用它的地址覆盖返回地址，此时即使NX/XD禁止在堆栈上执行代码，但库中的代码依然是可以执行的。</p>
+<ul>
+<li>函数system()可通过运行环境来执行其它程序，例如启动Shell等等。</li>
+<li>另外，还可以通过VirtualProtect函数来修改恶意代码所在内存页面 的执行权限，然后再将控制转移到恶意代码，其堆栈布局如下所示：</li>
+</ul>
+<h3 id="2-利用TEB突破DEP"><a href="#2-利用TEB突破DEP" class="headerlink" title="(2)利用TEB突破DEP"></a>(2)利用TEB突破DEP</h3><p>在之前的《黑客防线》中有篇文章《SP2下利用TEB执行ShellCode》，有兴趣的读者可以翻看黑防出版的《缓冲区溢出攻击与防范专辑》，上面有这 篇文章。该作者在文中提到一种利用TEB（线程环境块）来突破DEP的方法，不过它受系统版本限制，只能在XP sp2及其以下版本的windows系统 上使用，因为更高版本的系统，其TEB地址是不固定的，每次都是动态生成的。<br>该方法的具体实现方法如下：</p>
+<ul>
+<li>将返回地址覆盖成字符串复制函数的地址，比如lstrcpy，memcpy等等；</li>
+<li>在返回地址之后用目标内存地址和shellcode地址覆盖，当执行复制操作时，就会将shellcode复制到目标内存地址，该目标内存地址位于TEB偏移0xC00的地方，它有520字节缓存用于ANSI-to-Unicode函数的转换；</li>
+<li>复制操作结束后返回到shellcode地址并执行它。<br>此时其堆栈布局如下：<br>【shellcode】【save ebp】【lstrcpy】【TEB缓存地址，用于复制结束后返回到shellcode】【TEB缓存地址】【ShellCode地址】</li>
+</ul>
+<h3 id="3-关闭DEP"><a href="#3-关闭DEP" class="headerlink" title="(3)关闭DEP"></a>(3)关闭DEP</h3><p>关于此方法最原始的资料应该是黑客杂志《uninformed》上的文章《Bypassing Windows Hardware- enforced Data Execution Prevention》（<a href="http://www.uninformed.org/?v=2&amp;" target="_blank" rel="external">http://www.uninformed.org/?v=2&amp;</a> a=4），另外也可以看下本人之前翻译的《突破win2003 sp2中基于硬件的DEP》（<a href="http://bbs.pediy.com/showthread.php?t=99045" target="_blank" rel="external">http://bbs.pediy.com/showthread.php?t=99045</a>.），此方法的主要原理就是利用NtSetInformationProcess()函数来设置 KPROCESS 结构中的相关标志位，进而关闭DEP，KPROCESS结构中相关标志位情况如下：<br><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">0</span>:<span class="number">000</span>&gt; dt nt!_KPROCESS -r</div><div class="line">ntdll!_KPROCESS</div><div class="line">. . .</div><div class="line">+<span class="number">0</span>x06b <span class="attribute">Flags       </span>: _KEXECUTE_OPTIONS</div><div class="line">  +<span class="number">0</span>x000 <span class="attribute">ExecuteDisable     </span>: Pos <span class="number">0</span>, <span class="number">1</span> Bit</div><div class="line">  +<span class="number">0</span>x000 <span class="attribute">ExecuteEnable     </span>: Pos <span class="number">1</span>, <span class="number">1</span> Bit</div><div class="line">  +<span class="number">0</span>x000 <span class="attribute">DisableThunkEmulation   </span>: Pos <span class="number">2</span>, <span class="number">1</span> Bit</div><div class="line">  +<span class="number">0</span>x000 <span class="attribute">Permanent     </span>: Pos <span class="number">3</span>, <span class="number">1</span> Bit</div><div class="line">  +<span class="number">0</span>x000 <span class="attribute">ExecuteDispatchEnable   </span>: Pos <span class="number">4</span>, <span class="number">1</span> Bit</div><div class="line">  +<span class="number">0</span>x000 <span class="attribute">ImageDispatchEnable   </span>: Pos <span class="number">5</span>, <span class="number">1</span> Bit</div><div class="line">  +<span class="number">0</span>x000 <span class="attribute">Spare       </span>: Pos <span class="number">6</span>, <span class="number">2</span> Bits</div></pre></td></tr></table></figure></p>
+<p>当DEP 被启用时，ExecuteDisable 被置位，当DEP 被禁用，ExecuteEnable 被置位，当Permanent 标志置位时表示这些设置是最终设置，不可更改。代码实现：<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">ULONG ExecuteFlags = MEM_EXECUTE_OPTION_ENABLE<span class="comment">;</span></div><div class="line">NtSetInformationProcess(</div><div class="line">  <span class="name">NtCurrentProcess</span>(),   // ProcessHandle = <span class="number">-1</span></div><div class="line">  ProcessExecuteFlags,   // ProcessInformationClass = <span class="number">0</span>x22（ProcessExecuteFlags）</div><div class="line">  <span class="symbol">&amp;ExecuteFlags</span>,     // ProcessInformation = <span class="number">0</span>x2（MEM_EXECUTE_OPTION_ENABLE）</div><div class="line">  sizeof(<span class="name">ExecuteFlags</span>))<span class="comment">;   // ProcessInformationLength = 0x4</span></div></pre></td></tr></table></figure></p>
+<p>具体实现思路（以我电脑上VirtualBox虚拟机下的xp sp3为例）：<br><strong>1) 将al设置为1</strong><br>比如指令mov al,1 / ret，然后用该指令地址覆盖返回地址：<br><figure class="highlight tap"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">0:000&gt; lmm ntdll</div><div class="line">start    end        module name</div><div class="line">7c920000 7c9b3000   ntdll      (pdb symbols)          c:\symbollocal\ntdll.pdb\1751003260CA42598C0FB326585000ED2\ntdll.pdb</div><div class="line">0:000&gt; s 7c920000 l<span class="number"> 93000 </span>b0<span class="number"> 01 </span>c2 04</div><div class="line">7c9718ea  b0<span class="number"> 01 </span>c2<span class="number"> 04 </span>00<span class="number"> 90 </span>90 90-90<span class="number"> 90 </span>8b ff<span class="number"> 55 </span>8b ec<span class="number"> 56 </span> ............U..V</div><div class="line">0:000&gt; u 7c9718ea</div><div class="line">ntdll!NtdllOkayToLockRoutine:</div><div class="line">7c9718ea b001            mov     al,1</div><div class="line">7c9718ec c20400          ret     4</div></pre></td></tr></table></figure></p>
+<p>由于上面的ret 4，因此要再向栈中填充4字节（比如0xffffffff）以抵消多弹出的4字节，如果选择的指令刚好是ret则无须再多填充4字节。</p>
+<p><strong>2)跳转到ntdll!LdrpCheckNXCompatibility</strong><br>跳转到ntdll!LdrpCheckNXCompatibility中的部分代码（从cmp al,1 开始，可通过windbg下的命令 uf ntdll!LdrpCheckNXCompatibility来查看其反汇编代码），比如以下地址就需要用0x7c93cd24来覆写堆栈上的第 二个地址：<br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">ntdll!LdrpCheckNXCompatibility+<span class="number">0x13</span>:</div><div class="line">7c93cd24 3c01            <span class="keyword">cmp</span>     <span class="built_in">al</span>,<span class="number">1</span></div><div class="line">7c93cd26 6a02            <span class="keyword">push</span>    <span class="number">2</span></div><div class="line">7c93cd28 5e              <span class="keyword">pop</span>     <span class="built_in">esi</span></div><div class="line">7c93cd29 0f84df290200    <span class="keyword">je</span>      ntdll!LdrpCheckNXCompatibility+<span class="number">0x1a</span> (7c95f70e)  <span class="comment">; 之前已将al置1，故此处实现跳转</span></div></pre></td></tr></table></figure></p>
+<p><strong>3)上面跳转后来到这里：</strong><br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="number">0</span>:<span class="number">000</span>&gt; u 7c95f70e</div><div class="line">ntdll!LdrpCheckNXCompatibility+<span class="number">0x1a</span>:</div><div class="line">7c95f70e 8975fc          <span class="keyword">mov</span>     <span class="built_in">dword</span> <span class="built_in">ptr</span> [<span class="built_in">ebp</span>-<span class="number">4</span>],<span class="built_in">esi</span>  <span class="comment">; [ebp-0x4]= esi = 2</span></div><div class="line">7c95f711 e919d6fdff      <span class="keyword">jmp</span>     ntdll!LdrpCheckNXCompatibility+<span class="number">0x1d</span> (7c93cd2f)</div></pre></td></tr></table></figure></p>
+<p><strong>4)上面跳转后来到：</strong><br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="number">0</span>:<span class="number">000</span>&gt; u 7c93cd2f</div><div class="line">ntdll!LdrpCheckNXCompatibility+<span class="number">0x1d</span>:</div><div class="line">7c93cd2f 837dfc00        <span class="keyword">cmp</span>     <span class="built_in">dword</span> <span class="built_in">ptr</span> [<span class="built_in">ebp</span>-<span class="number">4</span>],<span class="number">0</span></div><div class="line">7c93cd33 0f85f89a0100    <span class="keyword">jne</span>     ntdll!LdrpCheckNXCompatibility+<span class="number">0x4d</span> (7c956831) <span class="comment">; 不相等再次实现跳转</span></div></pre></td></tr></table></figure></p>
+<p><strong>5)上面跳转后来到：</strong><br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="number">0</span>:<span class="number">000</span>&gt; u 7c956831</div><div class="line">ntdll!LdrpCheckNXCompatibility+<span class="number">0x4d</span>:</div><div class="line">7c956831 6a04            <span class="keyword">push</span>    <span class="number">4</span>     <span class="comment">;ProcessInformationLength = 4</span></div><div class="line">7c956833 8d45fc          <span class="keyword">lea</span>     <span class="built_in">eax</span>,[<span class="built_in">ebp</span>-<span class="number">4</span>]</div><div class="line">7c956836 <span class="number">50</span>              <span class="keyword">push</span>    <span class="built_in">eax</span>      <span class="comment">;ProcessInformation = 2（MEM_EXECUTE_OPTION_ENABLE）</span></div><div class="line">7c956837 6a22            <span class="keyword">push</span>    <span class="number">22h</span>       <span class="comment">;ProcessInformationClass = 0x22（ProcessExecuteFlags）</span></div><div class="line">7c956839 6aff            <span class="keyword">push</span>    <span class="number">0FFFFFFFFh</span></div><div class="line">7c95683b e84074fdff      <span class="keyword">call</span>    ntdll!ZwSetInformationProcess (7c92dc80)</div><div class="line">7c956840 e92865feff      <span class="keyword">jmp</span>     ntdll!LdrpCheckNXCompatibility+<span class="number">0x5c</span> (7c93cd6d)</div><div class="line">7c956845 <span class="number">90</span>              <span class="keyword">nop</span></div></pre></td></tr></table></figure></p>
+<p>在这里调用函数ZwSetInformationProcess（），而其参数也刚好达到我们关闭DEP的各项要求.</p>
+<p><strong>6)最后跳转到函数结尾：</strong><br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="number">0</span>:<span class="number">000</span>&gt; u 7c93cd6d</div><div class="line">ntdll!LdrpCheckNXCompatibility+<span class="number">0x5c</span>:</div><div class="line">7c93cd6d 5e              <span class="keyword">pop</span>     <span class="built_in">esi</span></div><div class="line">7c93cd6e c9              <span class="keyword">leave</span></div><div class="line">7c93cd6f c20400          <span class="keyword">ret</span>     <span class="number">4</span></div></pre></td></tr></table></figure></p>
+<p>最后的堆栈布局应为：<br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">【<span class="keyword">AAA</span>……】【<span class="built_in">al</span>=<span class="number">1</span>地址】【<span class="number">0xffffffff</span>】【LdrpCheckNXCompatibility指令地址】【<span class="number">0xffffffff</span>】【<span class="string">"A"</span> x <span class="number">54</span>】【<span class="keyword">call</span>/<span class="keyword">jmp</span> <span class="built_in">esp</span>】【shellcode】  </div><div class="line">  ▲ 　　　　  ▲            ▲                       ▲                      ▲            ▲</div><div class="line">填充数据　 返回地址 　 抵消<span class="keyword">ret</span> <span class="number">4</span>的<span class="number">4</span>字节     指令<span class="keyword">cmp</span> <span class="built_in">al</span>,<span class="number">0x1</span> 的起始地址      平衡堆栈   调整NX禁用后的堆栈</div></pre></td></tr></table></figure></p>
+<p>如果在禁用NX后，又需要读取esi或ebp，但此时它们又被我们填充的数据覆盖掉了，那么我们可以使用诸如push esp/pop esi/ret或者push esp/pop ebp/ret这样的指令来调整esi和ebp，以使关闭DEP后还能够正常执行。<br>辅助工具：ImmDbg pycommand插件（!pvefindaddr depxpsp3  + !findantidep）</p>
+<h3 id="4-利用WPN与ROP技术"><a href="#4-利用WPN与ROP技术" class="headerlink" title="(4) 利用WPN与ROP技术"></a>(4) 利用WPN与ROP技术</h3><p>ROP（Return Oriented Programming）:连续调用程序代码本身的内存地址，以逐步地创建一连串欲执行的指令序列。<br>WPM（Write Process Memory）：利用微软在kernel32.dll中定义的函数比如：WriteProcess Memory函数可将数据写入到指定进程的内存中。但整个内存区域必须是可访问的，否则将操作失败。<br>具体实现方法参见我之前翻译的文章《利用WPN与ROP技术绕过DEP》：<a href="http://bbs.pediy.com/showthread.php?t=119300" target="_blank" rel="external">http://bbs.pediy.com/showthread.php?t=119300</a></p>
+<h3 id="5-利用SEH-绕过DEP"><a href="#5-利用SEH-绕过DEP" class="headerlink" title="(5) 利用SEH 绕过DEP"></a>(5) 利用SEH 绕过DEP</h3><p>启用DEP后，就不能使用pop pop ret地址了，因而采用pop reg/pop reg/pop esp/ret 指令的地址，指令 pop esp 可以改变堆栈指针，ret将执行流转移到nseh 中的地址上（用关闭NX 例程的地址覆盖nseh，用指向pop/pop /pop esp/ret 指令的指针覆盖异常处理器）。<br>辅助工具：ImmDbg插件!pvefindaddr</p>
+<h1 id="IV、ASLR"><a href="#IV、ASLR" class="headerlink" title="IV、ASLR"></a>IV、ASLR</h1><h2 id="①-原理-3"><a href="#①-原理-3" class="headerlink" title="① 原理"></a>① 原理</h2><p>ASLR（地址空间布局随机化）技术的主要功能是通过对系统关键地址的随机化，防止攻击者在堆栈溢出后利用固定的地址定位到恶意代码并加以运行。它主要对以下四类地址进行随机化：</p>
+<ul>
+<li>堆地址的随机化；</li>
+<li>栈基址的随机化；</li>
+<li>PE文件映像基址的随机化；</li>
+<li>PEB(Process Environment Block，进程环境块)地址的随机化。</li>
+</ul>
+<p>它在vista,windows 2008 server,windows7下是默认启用的（IE7除外），非系统镜像也可以通过链接选项 /DYNAMICBASE(Visual Studio 2005 SP1 以上的版本，VS2008 都支持)启用这种保护,也可手动更改已编译库的 dynamicbase 位，使其支持ASLR 技术(把PE 头中的DllCharacteristics 设置成0x40 -可以<br>使用工具PE EXPLORER 打开库，查看DllCharacteristics 是否包含0x40 就可以知道是否支持ASLR 技术)。另外，也 可以使用Process Explorer来查看是否开启ASLR。启用ASLR后，即使你原先已经成功构造出exploit，但在系统重启后，你在 exploit中使用的一些固定地址就会被改变，进而导致exploit失效。</p>
+<h2 id="②-绕过方法-3"><a href="#②-绕过方法-3" class="headerlink" title="② 绕过方法"></a>② 绕过方法</h2><h3 id="1-覆盖部分返回地址"><a href="#1-覆盖部分返回地址" class="headerlink" title="(1)覆盖部分返回地址"></a>(1)覆盖部分返回地址</h3><p>对比下windows7系统启动前后OD中loaddll.exe的各模块基址，启动前：<br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">可执行模块</div><div class="line">基址       大小         入口       名称       文件版本          路径</div><div class="line">00400000   00060000   00410070   <span class="selector-tag">loaddll</span>                      <span class="selector-tag">D</span>:\<span class="selector-tag">riusksk</span>\<span class="selector-tag">TOOL</span>\<span class="selector-tag">Ollydbg</span>\<span class="selector-tag">loaddll</span><span class="selector-class">.exe</span></div><div class="line">6<span class="selector-tag">DDE0000</span>   0008<span class="selector-tag">C000</span>   6<span class="selector-tag">DDE1FFF</span>   <span class="selector-tag">AcLayers</span>   6<span class="selector-class">.1</span><span class="selector-class">.7600</span><span class="selector-class">.16385</span> (  <span class="selector-tag">C</span>:\<span class="selector-tag">Windows</span>\<span class="selector-tag">AppPatch</span>\<span class="selector-tag">AcLayers</span><span class="selector-class">.dll</span></div><div class="line">710<span class="selector-tag">E0000</span>   00012000   710<span class="selector-tag">E1200</span>   <span class="selector-tag">mpr</span>        6<span class="selector-class">.1</span><span class="selector-class">.7600</span><span class="selector-class">.16385</span> (  <span class="selector-tag">C</span>:\<span class="selector-tag">Windows</span>\<span class="selector-tag">System32</span>\<span class="selector-tag">mpr</span><span class="selector-class">.dll</span></div><div class="line">71<span class="selector-tag">C50000</span>   00051000   71<span class="selector-tag">C79834</span>   <span class="selector-tag">winspool</span>   6<span class="selector-class">.1</span><span class="selector-class">.7600</span><span class="selector-class">.16385</span> (  <span class="selector-tag">C</span>:\<span class="selector-tag">Windows</span>\<span class="selector-tag">System32</span>\<span class="selector-tag">winspool</span><span class="selector-class">.drv</span></div><div class="line">747<span class="selector-tag">F0000</span>   00017000   747<span class="selector-tag">F1C89</span>   <span class="selector-tag">userenv</span>    6<span class="selector-class">.1</span><span class="selector-class">.7600</span><span class="selector-class">.16385</span> (  <span class="selector-tag">C</span>:\<span class="selector-tag">Windows</span>\<span class="selector-tag">System32</span>\<span class="selector-tag">userenv</span><span class="selector-class">.dll</span></div><div class="line">750<span class="selector-tag">A0000</span>   0001<span class="selector-tag">A000</span>   750<span class="selector-tag">A2CCD</span>   <span class="selector-tag">sspicli</span>    6<span class="selector-class">.1</span><span class="selector-class">.7600</span><span class="selector-class">.16385</span> (  <span class="selector-tag">C</span>:\<span class="selector-tag">Windows</span>\<span class="selector-tag">System32</span>\<span class="selector-tag">sspicli</span><span class="selector-class">.dll</span></div><div class="line">750<span class="selector-tag">C0000</span>   0004<span class="selector-tag">B000</span>   750<span class="selector-tag">C2B6C</span>   <span class="selector-tag">apphelp</span>    6<span class="selector-class">.1</span><span class="selector-class">.7600</span><span class="selector-class">.16385</span> (  <span class="selector-tag">C</span>:\<span class="selector-tag">Windows</span>\<span class="selector-tag">System32</span>\<span class="selector-tag">apphelp</span><span class="selector-class">.dll</span></div><div class="line">75190000   0000<span class="selector-tag">B000</span>   75191992   <span class="selector-tag">profapi</span>    6<span class="selector-class">.1</span><span class="selector-class">.7600</span><span class="selector-class">.16385</span> (  <span class="selector-tag">C</span>:\<span class="selector-tag">Windows</span>\<span class="selector-tag">System32</span>\<span class="selector-tag">profapi</span><span class="selector-class">.dll</span></div><div class="line">75420000   0004<span class="selector-tag">A000</span>   75427<span class="selector-tag">A9D</span>   <span class="selector-tag">KERNELBA</span>   6<span class="selector-class">.1</span><span class="selector-class">.7600</span><span class="selector-class">.16385</span> (  <span class="selector-tag">C</span>:\<span class="selector-tag">Windows</span>\<span class="selector-tag">system32</span>\<span class="selector-tag">KERNELBASE</span><span class="selector-class">.dll</span></div><div class="line">75<span class="selector-tag">B50000</span>   0000<span class="selector-tag">A000</span>   75<span class="selector-tag">B5136C</span>   <span class="selector-tag">LPK</span>        6<span class="selector-class">.1</span><span class="selector-class">.7600</span><span class="selector-class">.16385</span> (  <span class="selector-tag">C</span>:\<span class="selector-tag">Windows</span>\<span class="selector-tag">system32</span>\<span class="selector-tag">LPK</span><span class="selector-class">.dll</span></div><div class="line">75<span class="selector-tag">B60000</span>   0004<span class="selector-tag">E000</span>   75<span class="selector-tag">B6EC49</span>   <span class="selector-tag">GDI32</span>      6<span class="selector-class">.1</span><span class="selector-class">.7600</span><span class="selector-class">.16385</span> (  <span class="selector-tag">C</span>:\<span class="selector-tag">Windows</span>\<span class="selector-tag">system32</span>\<span class="selector-tag">GDI32</span><span class="selector-class">.dll</span></div><div class="line">……</div></pre></td></tr></table></figure></p>
+<p>启动后：<br><figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">可执行模块</div><div class="line">基址         大小       入口       名称       文件版本          路径</div><div class="line"><span class="number">00400000</span>   <span class="number">00060000</span>   <span class="number">00410070</span>   loaddll                      D:\riusksk\TOOL\Ollydbg\loaddll.exe</div><div class="line">6F510000   <span class="number">0008C000</span>   6F511FFF   AcLayers   <span class="number">6.1</span>.7600.16385 (  C:\Windows\AppPatch\AcLayers.dll</div><div class="line"><span class="number">715B0000</span>   <span class="number">00012000</span>   <span class="number">715B1200</span>   mpr        <span class="number">6.1</span>.7600.16385 (  C:\Windows\System32\mpr.dll</div><div class="line"><span class="number">72170000</span>   <span class="number">00051000</span>   <span class="number">72199834</span>   winspool   <span class="number">6.1</span>.7600.16385 (  C:\Windows\System32\winspool.drv</div><div class="line">74C70000   <span class="number">00017000</span>   74C71C89   userenv    <span class="number">6.1</span>.7600.16385 (  C:\Windows\System32\userenv.dll</div><div class="line"><span class="number">75520000</span>   <span class="number">0001A000</span>   75522CCD   sspicli    <span class="number">6.1</span>.7600.16385 (  C:\Windows\System32\sspicli.dll</div><div class="line"><span class="number">75540000</span>   <span class="number">0004B000</span>   75542B6C   apphelp    <span class="number">6.1</span>.7600.16385 (  C:\Windows\System32\apphelp.dll</div><div class="line"><span class="number">75610000</span>   <span class="number">0000B000</span>   <span class="number">75611992</span>   profapi    <span class="number">6.1</span>.7600.16385 (  C:\Windows\System32\profapi.dll</div><div class="line"><span class="number">75690000</span>   <span class="number">0004A000</span>   75697A9D   KERNELBA   <span class="number">6.1</span>.7600.16385 (  C:\Windows\system32\KERNELBASE.dll</div><div class="line"><span class="number">759B0000</span>   <span class="number">000CC000</span>   759B168B   msctf      <span class="number">6.1</span>.7600.16385 (  C:\Windows\System32\msctf.dll</div><div class="line"><span class="number">75E60000</span>   <span class="number">000AC000</span>   75E6A472   msvcrt     <span class="number">7.0</span>.7600.16385 (  C:\Windows\system32\msvcrt.dll</div><div class="line">75F10000   <span class="number">0004E000</span>   75F1EC49   GDI32      <span class="number">6.1</span>.7600.16385 (  C:\Windows\system32\GDI32.dll</div><div class="line">……</div></pre></td></tr></table></figure></p>
+<p>由此可见，各模块基址的高位是随机变化的，而低位是固定不变的，这里loaddll.exe不受ADSL保护，所以其基址没有随机化，如果是 Notepad.exe就有启用ASLR，还有其它经链接选项/DYNAMICBASE编译的程序也会启用ASLR。因此我们可以让填充字符只覆盖到返回 地址的一半，由于小端法机器的缘故，其低位地址在前，因此覆盖到的一半地址刚好处于低位，而返回地址的高位我们让它保持不变，所以我们必须在返回地址之前 的地址范围内（相当于漏洞函数所在的255字节空间地址）查找出一个可跳转到shellcode的指令，比如jmp edx(关键看哪一寄存器指向 shellcode)。除此之外，我们还必须将shellcode放在返回地址之前，不然连返回地址的高位也覆盖掉了，这是不允许的。纵观此法，相当的有 局限性，如果漏洞函数过短，可能就没有我们需要的指令了，这时就得另寻他法了。</p>
+<h3 id="2-利用未启用ASLR的模块地址"><a href="#2-利用未启用ASLR的模块地址" class="headerlink" title="(2)利用未启用ASLR的模块地址"></a>(2)利用未启用ASLR的模块地址</h3><p>这与之前绕过SafeSEH的方法类似，直接在未受ASLR保护的模块中查找跳转指令的地址来覆盖返回地址或者SEH结构，可以通过 Process Explorer或者ImmDbg命令插件!ASLRdynamicbase或者(!pvefindaddr noaslr)：来查看哪 些进程模块启用ASLR保护。</p>
+<h1 id="V、SEHOP"><a href="#V、SEHOP" class="headerlink" title="V、SEHOP"></a>V、SEHOP</h1><h2 id="①-原理-4"><a href="#①-原理-4" class="headerlink" title="① 原理"></a>① 原理</h2><p>微软在Microsoft Windows 2008 SP0、Microsoft Windows Vista SP1和 Microsoft Windows 7中加入了另一种新的保护机制 SEHOP（Structured Exception Handling Overwrite Protection），它可作为SEH的扩展，用于检 测SEH是否被覆写。SEHOP的核心特性是用于检测程序栈中的所有SEH结构链表的完整性，特别是对最后一个SHE结构的检测。在最后一个SEH结构中 拥有一个特殊的异常处理函数指针，指向一个位于ntdll中的函数ntdll!FinalExceptHandler（）。当我们用 jmp 06 pop pop ret 来覆盖SEH结构后，由于SEH结构链表的完整性遭到破坏，SEHOP就能检测到异常从而阻止shellcode 的运行</p>
+<h2 id="②-绕过方法-4"><a href="#②-绕过方法-4" class="headerlink" title="② 绕过方法"></a>② 绕过方法</h2><p>伪造SEH链表<br>由于SEHOP会检测SEH链表的完整性，那么我们可以通过伪造SEH链表来替换原先的SEH链表，进而达到绕过的目的。具体实现方法：</p>
+<ul>
+<li>（1）查看SEH链表结构，可借助OD实现，然后记住最后一个SEH结构地址，以方便后面的利用；</li>
+<li>（2）用JE(0x74) + 最后一个SEH结构的地址（由于地址开头是00，故可省略掉，可由0x74替代，共同实现4字节对齐）去覆盖nexSEH；</li>
+<li>（3）用xor pop pop ret指令地址去覆盖SEH handle，其中的xor指令是用于将ZF置位，使前面的JE = JMP指令，进而实现跳转；</li>
+<li>（4）在这两个SEH结构之前写入一跳转指令（JMP+8），以避免数据段被执行；</li>
+<li>（5）在这两个SEH结构之间全部用NOP填充，如果两者之间还有其它SEH结构的话；（6）将shellcode放置在最后一个SEH结构之后，即ntdll!FinalExceptHandler（）函数之后。</li>
+</ul>
+<p>此时的堆栈布局如下：<br><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">【<span class="keyword">NOP</span>…】【<span class="keyword">JMP</span> <span class="number">08</span>】【JE XXXXXX】【xor <span class="keyword">pop</span> <span class="keyword">pop</span> <span class="keyword">ret</span>】【<span class="keyword">NOP</span>…】【<span class="keyword">JMP</span> <span class="number">08</span>】【<span class="number">0xFFFFFFFF</span>】【ntdll!FinalExceptHandler】【shellcode】</div><div class="line">                        ▲              ▲                                  ▲                   ▲ </div><div class="line">           next <span class="keyword">SEH</span>(指向<span class="number">0xffffffff</span>)  <span class="keyword">SEH</span> Handle                          next <span class="keyword">SEH</span>           <span class="keyword">SEH</span> Handle</div></pre></td></tr></table></figure></p>
+<p>更多信息可参见我之前翻译的《绕过SEHOP安全机制》：<a href="http://bbs.pediy.com/showthread.php?t=104707" target="_blank" rel="external">http://bbs.pediy.com/showthread.php?t=104707</a></p>
+<h1 id="Ⅵ、结论"><a href="#Ⅵ、结论" class="headerlink" title="Ⅵ、结论"></a>Ⅵ、结论</h1><p>本文简单地叙述了windows平台上的各类溢出保护机制及其绕过方法，但若结合实例分析的话，没有几万字是不可能完成的，因此这里概览一番，读者若想获 得相关的实例运用的资料，可参考文中提及一些paper，特别是由看雪论坛上dge兄弟翻译的《Exploit编写系列教程6》以及黑客杂志 《Phrack》、《Uninformed》上的相关论文。微软与黑客之间的斗争是永无休止的，我们期待着下一项安全机制的出现……</p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2015/09/17/Win-overfolw-mitigation-and-bypass/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2015/09/17/Win-overfolw-mitigation-and-bypass/index.html" data-title="Windows 溢出保护原理与绕过方法" data-url="http://huirong.github.io/2015/09/17/Win-overfolw-mitigation-and-bypass/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

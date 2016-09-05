@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>在Ubuntu上安装LAMP服务器并简单配置 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Ubuntu,LAMP," />
+  
+
+  <meta name="description" content="我在DigitalOcean上有个Linux服务器，想把下载的项目挂在上面，就得安装一个LAMP服务器，一个个安装Appach、MySql、PHP太麻烦了，就安装个集成的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在Ubuntu上安装LAMP服务器并简单配置">
+<meta property="og:url" content="http://huirong.github.io/2015/04/01/installLamp/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="我在DigitalOcean上有个Linux服务器，想把下载的项目挂在上面，就得安装一个LAMP服务器，一个个安装Appach、MySql、PHP太麻烦了，就安装个集成的。">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCjw1eqrk4ytavkj30ir0btwf0.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCjw1eqrk5ocd04j30ir0btjtb.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1eqrk5wgf77j30ir0bt0ts.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1eqrk8zquefj30i6038q3w.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCjw1eqrk7ntvbgj30ir0btq6u.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCjw1eqrkadel6gj30nx08btcs.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCjw1eqrk655v8wj30il04bwfm.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCjw1eqrk9sw2r9j30jc097myl.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCjw1eqrkar0vq0j30b501fjri.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCjw1eqrkb4yn7qj30du00ydfz.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCjw1eqrkbcj30zj30ir0bttaa.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCjw1eqrkbjqo3vj30ir0btn0o.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1eqrkbxvqrnj30hm0fk0tk.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCjw1eqrkc938j9j30o20ckwgf.jpg">
+<meta property="og:updated_time" content="2016-04-16T09:17:32.575Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在Ubuntu上安装LAMP服务器并简单配置">
+<meta name="twitter:description" content="我在DigitalOcean上有个Linux服务器，想把下载的项目挂在上面，就得安装一个LAMP服务器，一个个安装Appach、MySql、PHP太麻烦了，就安装个集成的。">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/005CA6ZCjw1eqrk4ytavkj30ir0btwf0.jpg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#I、在Ubuntu上安装LAMP"><span class="toc-text">I、在Ubuntu上安装LAMP</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#II、修改-Apache-根目录"><span class="toc-text">II、修改 Apache 根目录</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#III、测试"><span class="toc-text">III、测试</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-测试Apache"><span class="toc-text">① 测试Apache</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-测试php"><span class="toc-text">② 测试php</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#③-配置MySQL"><span class="toc-text">③ 配置MySQL</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#IV、安装phpMyAdmin"><span class="toc-text">IV、安装phpMyAdmin</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#V、配置Apache服务器"><span class="toc-text">V、配置Apache服务器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ⅵ、参考文献"><span class="toc-text">Ⅵ、参考文献</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-installLamp" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">在Ubuntu上安装LAMP服务器并简单配置</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2015.04.01</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/LAMP/">LAMP</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2015/04/01/installLamp/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>我在DigitalOcean上有个Linux服务器，想把下载的项目挂在上面，就得安装一个LAMP服务器，一个个安装Appach、MySql、PHP太麻烦了，就安装个集成的。<br><a id="more"></a></p>
+<h1 id="I、在Ubuntu上安装LAMP"><a href="#I、在Ubuntu上安装LAMP" class="headerlink" title="I、在Ubuntu上安装LAMP"></a>I、在Ubuntu上安装LAMP</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apt-get <span class="keyword">install</span> lamp-<span class="keyword">server</span>^</div></pre></td></tr></table></figure>
+<p>最后那个符号^不要少，不然不能正确执行</p>
+<p><img src="http://ww1.sinaimg.cn/large/005CA6ZCjw1eqrk4ytavkj30ir0btwf0.jpg" alt=""></p>
+<p>在安装的过程中，系统会提示你为MySQL的根用户输入密码<br><img src="http://ww1.sinaimg.cn/large/005CA6ZCjw1eqrk5ocd04j30ir0btjtb.jpg" alt=""><br><img src="http://ww3.sinaimg.cn/large/005CA6ZCjw1eqrk5wgf77j30ir0bt0ts.jpg" alt=""><br>密码设置成功后，会继续安装一部分文件，等待一会，就OK了</p>
+<h1 id="II、修改-Apache-根目录"><a href="#II、修改-Apache-根目录" class="headerlink" title="II、修改 Apache 根目录"></a>II、修改 Apache 根目录</h1><p>Ubuntu安装Apache后，默认的根目录是 /var/www/html，让我很不习惯，处女座的毛病犯了，就想修改配置文件<br>Apache有多个配置文件，设置根目录的配置文件，位于 /etc/apache2/sites-available下的 000-default.conf<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCjw1eqrk8zquefj30i6038q3w.jpg" alt=""></p>
+<p>将 DocumentRoot的值 由 /var/www/html  改为 /var/www/<br><img src="http://ww4.sinaimg.cn/large/005CA6ZCjw1eqrk7ntvbgj30ir0btq6u.jpg" alt=""></p>
+<font color="red">最后将/var/www/html/下的index.php文件移动到 /var/www/，这样才能正常显示主页了,因为根目录已经变了</font>
+
+<h1 id="III、测试"><a href="#III、测试" class="headerlink" title="III、测试"></a>III、测试</h1><h2 id="①-测试Apache"><a href="#①-测试Apache" class="headerlink" title="① 测试Apache"></a>① 测试Apache</h2><p>打开浏览器，输入网址<a href="http://localhost/或者http://YOUR_IP，会看到如下提示" target="_blank" rel="external">http://localhost/或者http://YOUR_IP，会看到如下提示</a><br><img src="http://ww1.sinaimg.cn/large/005CA6ZCjw1eqrkadel6gj30nx08btcs.jpg" alt=""><br>OK，Apache正常！！！！</p>
+<h2 id="②-测试php"><a href="#②-测试php" class="headerlink" title="② 测试php"></a>② 测试php</h2><p>在/var/www中创建一个testing.php文件，内容可以自定义，我使用的终端命令：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">echo "<span class="php"><span class="meta">&lt;?php</span> phpinfo(); <span class="meta">?&gt;</span></span>" | sudo tee /var/www/testing.php</div></pre></td></tr></table></figure></p>
+<p>然后重启Apache服务<br><figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">service apache2 <span class="built_in">restart</span></div></pre></td></tr></table></figure></p>
+<p><img src="http://ww1.sinaimg.cn/large/005CA6ZCjw1eqrk655v8wj30il04bwfm.jpg" alt=""><br>在浏览器中，输入网址<a href="http://localhost/testing.php或http://YOUR_IP/testing.php" target="_blank" rel="external">http://localhost/testing.php或http://YOUR_IP/testing.php</a>   可以看到安装的PHP信息<br><img src="http://ww4.sinaimg.cn/large/005CA6ZCjw1eqrk9sw2r9j30jc097myl.jpg" alt=""></p>
+<h2 id="③-配置MySQL"><a href="#③-配置MySQL" class="headerlink" title="③ 配置MySQL"></a>③ 配置MySQL</h2><p>需要将MySQL绑定到本地主机IP地址，默认情况下，这个地址应该是 127.0.0.1，为了以防万一，还是确认一下<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat <span class="regexp">/etc/</span>hosts | <span class="keyword">grep</span> localhost</div></pre></td></tr></table></figure></p>
+<p>会看到如下内容<br><img src="http://ww4.sinaimg.cn/large/005CA6ZCjw1eqrkar0vq0j30b501fjri.jpg" alt=""><br>然后确定MySQL的conf文件<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">cat</span> /etc/mysql/my.<span class="keyword">cnf</span> | <span class="keyword">grep</span> bind-address</div></pre></td></tr></table></figure></p>
+<p>会看到如下内容<br><img src="http://ww4.sinaimg.cn/large/005CA6ZCjw1eqrkb4yn7qj30du00ydfz.jpg" alt=""><br>MySQL配置OK了。。。</p>
+<h1 id="IV、安装phpMyAdmin"><a href="#IV、安装phpMyAdmin" class="headerlink" title="IV、安装phpMyAdmin"></a>IV、安装phpMyAdmin</h1><p>phpMyAdmin图形化的界面，帮助我们方便的管理数据库。<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apt-<span class="keyword">get</span> install libapache2-<span class="keyword">mod</span>-auth-mysql phpmyadmin</div></pre></td></tr></table></figure></p>
+<p>接下来，系统会提示你选择为phpMyAdmin配置的Web服务器，使用键盘上的箭头键。高亮apache2，然后回车<br><img src="http://ww1.sinaimg.cn/large/005CA6ZCjw1eqrkbcj30zj30ir0bttaa.jpg" alt=""><br>询问是否为phpMyAdmin配置一个名为dbconfig-common的数据库，选择 yes，回车<br><img src="http://ww1.sinaimg.cn/large/005CA6ZCjw1eqrkbjqo3vj30ir0btn0o.jpg" alt=""><br>然后输入之前设置的数据库密码，并确认密码</p>
+<h1 id="V、配置Apache服务器"><a href="#V、配置Apache服务器" class="headerlink" title="V、配置Apache服务器"></a>V、配置Apache服务器</h1><p>如果此时在浏览器中输入<a href="http://localhost/phpmyadmin，会提示404错误" target="_blank" rel="external">http://localhost/phpmyadmin，会提示404错误</a><br>此时应该进行简单的配置，将phpMyAdmin的配置文件，复制到Apache2下<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">cp</span> /etc/phpmyadmin/apache.<span class="keyword">conf</span> /etc/apache2/<span class="keyword">conf</span>-enabled/phpmyadmin.<span class="keyword">conf</span></div></pre></td></tr></table></figure></p>
+<p>然后重启Apache服务器<br><figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">service apache2 <span class="built_in">restart</span></div></pre></td></tr></table></figure></p>
+<p>现在可以正常访问<a href="http://localhost/phpmyadmin" target="_blank" rel="external">http://localhost/phpmyadmin</a> 页面了<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCjw1eqrkbxvqrnj30hm0fk0tk.jpg" alt=""><br>输入 root和之前设置的数据库密码进行登录<br><img src="http://ww4.sinaimg.cn/large/005CA6ZCjw1eqrkc938j9j30o20ckwgf.jpg" alt=""></p>
+<p>恭喜你，成功完成Ubuntu下安装和配置LAMP和phpMyAdmin了，现在可以在上面搭建自己的网站了。。。。。。</p>
+<h1 id="Ⅵ、参考文献"><a href="#Ⅵ、参考文献" class="headerlink" title="Ⅵ、参考文献"></a>Ⅵ、参考文献</h1><ul>
+<li><a href="http://os.51cto.com/art/201307/405333_all.htm" target="_blank" rel="external">如何在Ubuntu上安装LAMP服务器系统？</a></li>
+<li><a href="http://blog.csdn.net/fengguowuhen7871/article/details/8843241" target="_blank" rel="external">Ubuntu Apache 根目录的更改方法</a></li>
+<li><a href="https://www.digitalocean.com/community/questions/i-cannot-access-phpmyadmin-on-ubuntu-14-04" target="_blank" rel="external">I cannot access phpMyAdmin on Ubuntu 14.04</a></li>
+</ul>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2015/04/01/installLamp/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2015/04/01/installLamp/index.html" data-title="在Ubuntu上安装LAMP服务器并简单配置" data-url="http://huirong.github.io/2015/04/01/installLamp/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

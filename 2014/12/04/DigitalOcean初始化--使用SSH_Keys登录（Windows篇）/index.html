@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>DigitalOcean初始化--使用SSH_Keys登录（Windows篇） | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="VPN," />
+  
+
+  <meta name="description" content="I、SSH密钥虽然可以使用基于密码的登录管理服务器，使用SSH密钥对会更好。 SSH密钥比密码更安全，并可以帮助您登录，而无需记住长密码。
+用PuTTYgen来生成SSH密钥，PuTTY创建SSH会话，连接服务器。SSH密钥对分为公钥和密钥，公钥可以对外公布，密钥自己保管，用来连接服务器。
+PuTTY、PuTTYgen 下载地址
+II、创建SSH密钥对打开PuTTYgen，界面如下,点击 Gene">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DigitalOcean初始化--使用SSH_Keys登录（Windows篇）">
+<meta property="og:url" content="http://huirong.github.io/2014/12/04/DigitalOcean初始化--使用SSH_Keys登录（Windows篇）/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="I、SSH密钥虽然可以使用基于密码的登录管理服务器，使用SSH密钥对会更好。 SSH密钥比密码更安全，并可以帮助您登录，而无需记住长密码。
+用PuTTYgen来生成SSH密钥，PuTTY创建SSH会话，连接服务器。SSH密钥对分为公钥和密钥，公钥可以对外公布，密钥自己保管，用来连接服务器。
+PuTTY、PuTTYgen 下载地址
+II、创建SSH密钥对打开PuTTYgen，界面如下,点击 Gene">
+<meta property="og:image" content="http://img.blog.csdn.net/20141204210557253">
+<meta property="og:image" content="http://img.blog.csdn.net/20141204210627283">
+<meta property="og:image" content="http://img.blog.csdn.net/20141204210820820">
+<meta property="og:image" content="http://img.blog.csdn.net/20141204212033771">
+<meta property="og:image" content="http://img.blog.csdn.net/20141204212313703">
+<meta property="og:image" content="http://img.blog.csdn.net/20141204212624890">
+<meta property="og:image" content="http://img.blog.csdn.net/20141204212738700">
+<meta property="og:image" content="http://img.blog.csdn.net/20141204213236848">
+<meta property="og:image" content="http://img.blog.csdn.net/20141204213529656">
+<meta property="og:image" content="http://img.blog.csdn.net/20141204213619906">
+<meta property="og:image" content="http://img.blog.csdn.net/20141204213157375">
+<meta property="og:image" content="http://img.blog.csdn.net/20141204214035753">
+<meta property="og:image" content="http://img.blog.csdn.net/20141204215237738">
+<meta property="og:updated_time" content="2016-04-16T08:39:23.895Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DigitalOcean初始化--使用SSH_Keys登录（Windows篇）">
+<meta name="twitter:description" content="I、SSH密钥虽然可以使用基于密码的登录管理服务器，使用SSH密钥对会更好。 SSH密钥比密码更安全，并可以帮助您登录，而无需记住长密码。
+用PuTTYgen来生成SSH密钥，PuTTY创建SSH会话，连接服务器。SSH密钥对分为公钥和密钥，公钥可以对外公布，密钥自己保管，用来连接服务器。
+PuTTY、PuTTYgen 下载地址
+II、创建SSH密钥对打开PuTTYgen，界面如下,点击 Gene">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20141204210557253">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#I、SSH密钥"><span class="toc-text">I、SSH密钥</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#II、创建SSH密钥对"><span class="toc-text">II、创建SSH密钥对</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#III、上传公钥到DigitalOcean"><span class="toc-text">III、上传公钥到DigitalOcean</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#IV、用刚才的公钥新建一个VPS服务器"><span class="toc-text">IV、用刚才的公钥新建一个VPS服务器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#V、使用PuTTY创建SSH会话，连接服务器"><span class="toc-text">V、使用PuTTY创建SSH会话，连接服务器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ⅵ、用PuTTY保存的Session连接服务器"><span class="toc-text">Ⅵ、用PuTTY保存的Session连接服务器</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-DigitalOcean初始化--使用SSH_Keys登录（Windows篇）" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">DigitalOcean初始化--使用SSH_Keys登录（Windows篇）</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2014.12.04</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/VPN/">VPN</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2014/12/04/DigitalOcean初始化--使用SSH_Keys登录（Windows篇）/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h1 id="I、SSH密钥"><a href="#I、SSH密钥" class="headerlink" title="I、SSH密钥"></a>I、SSH密钥</h1><p>虽然可以使用基于密码的登录管理服务器，使用SSH密钥对会更好。 SSH密钥比密码更安全，并可以帮助您登录，而无需记住长密码。</p>
+<p>用PuTTYgen来生成SSH密钥，PuTTY创建SSH会话，连接服务器。SSH密钥对分为公钥和密钥，公钥可以对外公布，密钥自己保管，用来连接服务器。</p>
+<p>PuTTY、PuTTYgen <a href="http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html" target="_blank" rel="external">下载地址</a></p>
+<h1 id="II、创建SSH密钥对"><a href="#II、创建SSH密钥对" class="headerlink" title="II、创建SSH密钥对"></a>II、创建SSH密钥对</h1><p>打开PuTTYgen，界面如下,点击 Generate 按钮<br><img src="http://img.blog.csdn.net/20141204210557253" alt=""></p>
+<p>由于SSH密钥使用的是信息安全的随机块创建，需要点击对话框的空白区域随机生成数据，要一直点击，直到完成<br><img src="http://img.blog.csdn.net/20141204210627283" alt=""></p>
+<p>生成之后的界面如下<br><img src="http://img.blog.csdn.net/20141204210820820" alt=""></p>
+<p>最好对密钥加密，在Key passphrase 输入框输入密钥密码，然后保存密钥和公钥 点击Save public key 和 Save private key，保存后的文件是.ppk格式</p>
+<h1 id="III、上传公钥到DigitalOcean"><a href="#III、上传公钥到DigitalOcean" class="headerlink" title="III、上传公钥到DigitalOcean"></a>III、上传公钥到DigitalOcean</h1><p>打开DigitalOcean Control界面，点击SSH Keys -&gt; Add SSH Key<br><img src="http://img.blog.csdn.net/20141204212033771" alt=""></p>
+<p>然后随便写一个公钥的名字，把刚才的公钥填写到下面，点击CREATE SSH KEY<br><img src="http://img.blog.csdn.net/20141204212313703" alt=""></p>
+<h1 id="IV、用刚才的公钥新建一个VPS服务器"><a href="#IV、用刚才的公钥新建一个VPS服务器" class="headerlink" title="IV、用刚才的公钥新建一个VPS服务器"></a>IV、用刚才的公钥新建一个VPS服务器</h1><p><img src="http://img.blog.csdn.net/20141204212624890" alt=""></p>
+<p>根据自己的情况填写，只是最后一次选择刚才新建的SSH Key<br><img src="http://img.blog.csdn.net/20141204212738700" alt=""></p>
+<h1 id="V、使用PuTTY创建SSH会话，连接服务器"><a href="#V、使用PuTTY创建SSH会话，连接服务器" class="headerlink" title="V、使用PuTTY创建SSH会话，连接服务器"></a>V、使用PuTTY创建SSH会话，连接服务器</h1><p>打开PuTTY，选择windows，输入刚开新建的虚拟机的IP，在DO（DigitalOcean）的控制面板中可以看到，使用默认端口号22<br><img src="http://img.blog.csdn.net/20141204213236848" alt=""></p>
+<p>然后选择Data ，输入服务器的用户名，习惯root，是系统管理员<br><img src="http://img.blog.csdn.net/20141204213529656" alt="">       <img src="http://img.blog.csdn.net/20141204213619906" alt=""></p>
+<p>SSH –&gt; Auth   点击Browser（预览） 选择之前保存的 .ppk 密钥文件（第二步，Save privacy key保存的文件）<br><img src="http://img.blog.csdn.net/20141204213157375" alt=""></p>
+<p>最后创建session，点击Session。为Session取一个方便记忆的名字，然后保存（点击Save），然后可以关掉PuTTY了，以后可以用这个Session连接服务器<br><img src="http://img.blog.csdn.net/20141204214035753" alt=""></p>
+<h1 id="Ⅵ、用PuTTY保存的Session连接服务器"><a href="#Ⅵ、用PuTTY保存的Session连接服务器" class="headerlink" title="Ⅵ、用PuTTY保存的Session连接服务器"></a>Ⅵ、用PuTTY保存的Session连接服务器</h1><p>再次打开PuTTY，点击Session –&gt; Load  双击刚才保存的Session 即DO_DROPLET_SESSION,然后点击下面的open，会出现一个警告框，选择yes</p>
+<p>恭喜你，连上服务器了，输入你的密钥密码就行了（第二步设置的key passphrase）<br><img src="http://img.blog.csdn.net/20141204215237738" alt=""></p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2014/12/04/DigitalOcean初始化--使用SSH_Keys登录（Windows篇）/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2014/12/04/DigitalOcean初始化--使用SSH_Keys登录（Windows篇）/index.html" data-title="DigitalOcean初始化--使用SSH_Keys登录（Windows篇）" data-url="http://huirong.github.io/2014/12/04/DigitalOcean初始化--使用SSH_Keys登录（Windows篇）/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

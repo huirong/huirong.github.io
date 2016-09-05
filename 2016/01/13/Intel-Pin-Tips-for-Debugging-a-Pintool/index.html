@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>Intel Pin 7 ：调试 Pintool 注意事项 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Pin," />
+  
+
+  <meta name="description" content="本文是调试 Pintool，并非在 Pintool 下运行的应用程序。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Intel Pin 7 ：调试 Pintool 注意事项">
+<meta property="og:url" content="http://huirong.github.io/2016/01/13/Intel-Pin-Tips-for-Debugging-a-Pintool/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="本文是调试 Pintool，并非在 Pintool 下运行的应用程序。">
+<meta property="og:updated_time" content="2016-01-13T08:11:39.944Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Intel Pin 7 ：调试 Pintool 注意事项">
+<meta name="twitter:description" content="本文是调试 Pintool，并非在 Pintool 下运行的应用程序。">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Using-GDB-on-Linux"><span class="toc-text">Using GDB on Linux</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#具体步骤"><span class="toc-text">具体步骤</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考文献"><span class="toc-text">参考文献</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-Intel-Pin-Tips-for-Debugging-a-Pintool" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Intel Pin 7 ：调试 Pintool 注意事项</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2016.01.13</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2016/01/13/Intel-Pin-Tips-for-Debugging-a-Pintool/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>本文是调试 Pintool，并非在 Pintool 下运行的应用程序。<br><a id="more"></a></p>
+<h1 id="Using-GDB-on-Linux"><a href="#Using-GDB-on-Linux" class="headerlink" title="Using GDB on Linux"></a>Using GDB on Linux</h1><p>在 Pin 和 Pintool 下运行应用程序时，Pin 和 应用程序都加载进内存，Pintool 通常是由 Pin 加载的共享对象。本节主要介绍如何使用 GDB 发现 Pintool 中的 bug。</p>
+<p>由于 Pin 使用 debugging API 开启应用程序，所以不能直接在 GDB 中运行 Pin。需在 Pin 命令行中加 -pause_tool 选项，然后在另一个终端中使用 GDB 附加 Pin。-pause_tool 选项的功能，打印 PID 并暂停 n 秒。</p>
+<p>Pin 内置搜索算法查找 tool，因此大多数情况下 GDB 不能加载 tool 的调试信息。GDB 可使用以下几种方法找到调试信息。</p>
+<ul>
+<li>使用完整路径运行 Pin</li>
+<li>Pin 给出确切的 GDB 命令加载调试信息</li>
+</ul>
+<p>如下所示，使用 “info sharedlibrary” 检查 GDB 是否加载了 tool 的调试信息，可以发现 GDB 读取了 tool 的符号。<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">(gdb) info sharedlibrary</div><div class="line">From        To          Syms Read   Shared Object Library</div><div class="line"><span class="number">0x001b3ea0</span>  <span class="number">0x001b4d80</span>  Yes         /<span class="class"><span class="keyword">lib</span>/<span class="title">libdl</span>.<span class="title">so</span>.2</span></div><div class="line"><span class="number">0x003b3820</span>  <span class="number">0x00431d74</span>  Yes         /usr/intel/pkgs/gcc/<span class="number">4.2</span>.<span class="number">0</span>/<span class="class"><span class="keyword">lib</span>/<span class="title">libstdc</span>++.<span class="title">so</span>.6</span></div><div class="line"><span class="number">0x0084f4f0</span>  <span class="number">0x00866f8c</span>  Yes         /<span class="class"><span class="keyword">lib</span>/<span class="title">i686</span>/<span class="title">libm</span>.<span class="title">so</span>.6</span></div><div class="line"><span class="number">0x00df8760</span>  <span class="number">0x00dffcc4</span>  Yes         /usr/intel/pkgs/gcc/<span class="number">4.2</span>.<span class="number">0</span>/<span class="class"><span class="keyword">lib</span>/<span class="title">libgcc_s</span>.<span class="title">so</span>.1</span></div><div class="line"><span class="number">0x00e5fa00</span>  <span class="number">0x00f60398</span>  Yes         /<span class="class"><span class="keyword">lib</span>/<span class="title">i686</span>/<span class="title">libc</span>.<span class="title">so</span>.6</span></div><div class="line"><span class="number">0x40001c50</span>  <span class="number">0x4001367f</span>  Yes         /<span class="class"><span class="keyword">lib</span>/<span class="title">ld</span>-<span class="title">linux</span>.<span class="title">so</span>.2</span></div><div class="line"><span class="number">0x008977f0</span>  <span class="number">0x00af7784</span>  Yes         ./dcache.so</div></pre></td></tr></table></figure></p>
+<h2 id="具体步骤"><a href="#具体步骤" class="headerlink" title="具体步骤"></a>具体步骤</h2><p>例如，如果 tool 为 opcodemix，应用程序是 /bin/ls，GDB的使用步骤如下：<br>此例子运行于 Intel(R) 64 Linux 平台，IA-32 架构使用 “ia32”。</p>
+<ol>
+<li><p>进入 tool 所在的目录，启动 GDB 调试 Pin，但不运行（即，不使用 run 命令）。</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ <span class="regexp">/usr/bin/gdb ../</span>../../intel64/bin/pinbin</div><div class="line">GNU gdb Red Hat Linux (<span class="number">6.3</span>.<span class="number">0.0</span>-<span class="number">1.132</span>.EL4rh)</div><div class="line">Copyright <span class="number">2004</span> Free Software Foundation, Inc.</div><div class="line">GDB <span class="keyword">is</span> free software, covered <span class="keyword">by</span> the GNU General Public License, <span class="keyword">and</span> you are</div><div class="line">welcome <span class="keyword">to</span> change <span class="literal">it</span> <span class="keyword">and</span>/<span class="keyword">or</span> distribute copies <span class="keyword">of</span> <span class="literal">it</span> under certain conditions.</div><div class="line">Type <span class="string">"show copying"</span> <span class="keyword">to</span> see the conditions.</div><div class="line">There <span class="keyword">is</span> absolutely <span class="literal">no</span> warranty <span class="keyword">for</span> GDB.  Type <span class="string">"show warranty"</span> <span class="keyword">for</span> details.</div><div class="line">This GDB was configured as <span class="string">"x86_64-redhat-linux-gnu"</span>...Using host libthread_db library <span class="string">"/lib64/tls/libthread_db.so.1"</span></div><div class="line">(gdb)</div></pre></td></tr></table></figure>
+</li>
+<li><p>在另一个终端使用 -pause_tool 选项启动应用程序</p>
+<figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ ../../../pin -pause_tool 10 -t obj-intel64/opcodemix.so -- /bin/ls</div><div class="line">Pausing to attach to pid 28769</div><div class="line">To load the tool's debug info to gdb use:</div><div class="line">  <span class="built_in"> add-symbol-file </span>.../source/tools/SimpleExamples/obj-intel64/opcodemix.so 0x2a959e9830</div></pre></td></tr></table></figure>
+</li>
+<li><p>然后回到 GDB 附加程序</p>
+<figure class="highlight delphi"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">(gdb) attach <span class="number">28769</span></div><div class="line">Attaching <span class="keyword">to</span> <span class="keyword">program</span>: .../intel64/bin/pinbin, process <span class="number">28769</span></div><div class="line"><span class="number">0</span>x000000314b38f7a2 <span class="keyword">in</span> ?? ()</div><div class="line">(gdb)</div></pre></td></tr></table></figure>
+</li>
+<li><p>在 GDB 中运行第 2 步中提示的命令</p>
+<figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">(gdb)<span class="built_in"> add-symbol-file </span>.../source/tools/SimpleExamples/obj-intel64/opcodemix.so 0x2a959e9830<span class="built_in"></span></div><div class="line">add symbol table from file <span class="string">".../source/tools/SimpleExamples/obj-intel64/opcodemix.so"</span> at</div><div class="line"><span class="keyword">        .text</span>_addr = 0x2a959e9830</div><div class="line">        (y<span class="built_in"> or </span>n) y</div><div class="line">        Reading symbols from .../source/tools/SimpleExamples/obj-intel64/opcodemix.so...done.</div><div class="line">(gdb)</div></pre></td></tr></table></figure>
+</li>
+<li><p>使用 cont 命令设置断点，也可以先设置断点</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">(gdb) <span class="selector-tag">b</span> opcodemix<span class="selector-class">.cpp</span>:<span class="number">447</span></div><div class="line">Breakpoint <span class="number">1</span> at <span class="number">0</span>x2a959ecf60: file opcodemix<span class="selector-class">.cpp</span>, line <span class="number">447</span>.</div><div class="line">(gdb) cont</div><div class="line">Continuing.</div><div class="line"></div><div class="line">Breakpoint <span class="number">1</span>, main (argc=<span class="number">7</span>, argv=<span class="number">0</span>x3ff00f12f8) at opcodemix<span class="selector-class">.cpp</span>:<span class="number">447</span></div><div class="line"><span class="number">447</span>     int main(int argc, CHAR *argv[])</div><div class="line">(gdb)</div></pre></td></tr></table></figure>
+</li>
+<li><p>如果程序没有退出，最后需运行 detach 命令释放控制权</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">(gdb) <span class="built_in">detach</span></div><div class="line">Detaching from program: .../intel64/bin/pinbin, <span class="built_in">process</span> <span class="number">28769</span></div><div class="line">(gdb)</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>重编译程序后，再次使用 GDB 调试时，GDB 会提示二进制文件已修改，需重新读取调试信息。</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p><a href="Tips for Debugging a Pintool">Pin 用户手册：Tips for Debugging a Pintool</a></p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2016/01/13/Intel-Pin-Tips-for-Debugging-a-Pintool/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2016/01/13/Intel-Pin-Tips-for-Debugging-a-Pintool/index.html" data-title="Intel Pin 7 ：调试 Pintool 注意事项" data-url="http://huirong.github.io/2016/01/13/Intel-Pin-Tips-for-Debugging-a-Pintool/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

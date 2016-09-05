@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>msf 终端命令 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="kail,metasploit," />
+  
+
+  <meta name="description" content="show exploits列出metasploit框架中的所有渗透攻击模块。
+show payloads列出metasploit框架中的所有攻击载荷。
+show auxiliary列出metasploit框架中的所有辅助攻击载荷。
+search name查找metasploit框架中所有的渗透攻击和其他模块。
+info展示出制定渗透攻击或模块的相关信息。
+use name装载一个渗透攻击或模块。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="msf 终端命令">
+<meta property="og:url" content="http://huirong.github.io/2014/10/29/msf终端命令/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="show exploits列出metasploit框架中的所有渗透攻击模块。
+show payloads列出metasploit框架中的所有攻击载荷。
+show auxiliary列出metasploit框架中的所有辅助攻击载荷。
+search name查找metasploit框架中所有的渗透攻击和其他模块。
+info展示出制定渗透攻击或模块的相关信息。
+use name装载一个渗透攻击或模块。">
+<meta property="og:updated_time" content="2016-04-16T08:24:27.382Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="msf 终端命令">
+<meta name="twitter:description" content="show exploits列出metasploit框架中的所有渗透攻击模块。
+show payloads列出metasploit框架中的所有攻击载荷。
+show auxiliary列出metasploit框架中的所有辅助攻击载荷。
+search name查找metasploit框架中所有的渗透攻击和其他模块。
+info展示出制定渗透攻击或模块的相关信息。
+use name装载一个渗透攻击或模块。">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-msf终端命令" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">msf 终端命令</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2014.10.29</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/metasploit/">metasploit</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2014/10/29/msf终端命令/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <ul>
+<li><font color="orange">show exploits</font><br>列出metasploit框架中的所有渗透攻击模块。</li>
+<li><font color="orange">show payloads</font><br>列出metasploit框架中的所有攻击载荷。</li>
+<li><font color="orange">show auxiliary</font><br>列出metasploit框架中的所有辅助攻击载荷。</li>
+<li><font color="orange">search name</font><br>查找metasploit框架中所有的渗透攻击和其他模块。</li>
+<li><font color="orange">info</font><br>展示出制定渗透攻击或模块的相关信息。</li>
+<li><font color="orange">use name</font><br>装载一个渗透攻击或模块。</li>
+<li><font color="orange">LHOST</font><br>你本地可以让目标主机连接的IP地址，通常当目标主机不在同一个局域网内时，就需要是一个公共IP地址，特别为反弹式shell使用。</li>
+<li><font color="orange">RHOST  </font><br>远程主机或是目标主机。</li>
+<li><font color="orange">set function</font><br>设置特定的配置参数（EG：设置本地或远程主机参数）。</li>
+<li><font color="orange">setg function</font><br>以全局方式设置特定的配置参数（EG：设置本地或远程主机参数）。</li>
+<li><font color="orange">show options</font><br>列出某个渗透攻击或模块中所有的配置参数。</li>
+<li><font color="orange">show targets</font><br>列出渗透攻击所有支持的目标平台。</li>
+<li><font color="orange">set target num</font><br>指定你所知道的目标的操作系统以及补丁版本类型。 </li>
+<li><font color="orange">set payload name</font>set payload name<br>指定想要使用的攻击载荷。</li>
+<li><font color="orange">show advanced</font><br>列出所有高级配置选项。</li>
+<li><font color="orange">set autorunscript migrate -f</font><br>在渗透攻击完成后，将自动迁移到另一个进程。</li>
+<li><font color="orange">check</font><br>检测目标是否选定渗透攻击存在相应的安全漏洞。</li>
+<li><font color="orange">exploit</font><br>执行渗透攻击或模块来攻击目标。</li>
+<li><font color="orange">exploit -j</font><br>在计划任务下进行渗透攻击（攻击将在后台进行）。</li>
+<li><font color="orange">exploit -z</font><br>渗透攻击完成后不与回话进行交互。</li>
+<li><font color="orange">exploit -e encoder</font><br>制定使用的攻击载荷编码方式（EG：exploit -e shikata_ga_nai）。</li>
+<li><font color="orange">exploit -h </font><br>列出exploit命令的帮助信息。</li>
+<li><font color="orange">sessions -l</font><br>列出可用的交互会话（在处理多个shell时使用）。</li>
+<li><font color="orange">sessions -l -v</font><br>列出所有可用的交互会话以及详细信息，EG：攻击系统时使用了哪个安全漏洞。</li>
+<li><font color="orange">sessions -s script</font><br>在所有活跃的metasploit会话中运行一个特定的metasploit脚本。</li>
+<li><font color="orange">sessions -K</font><br>杀死所有活跃的交互会话。</li>
+<li><font color="orange">sessions -c cmd</font><br>在所有活跃的metasploit会话上执行一个命令。</li>
+<li><font color="orange">sessions -u sessionID</font><br>升级一个普通的win32 shell到metasploit shell。</li>
+<li><font color="orange">name</font><br>创建一个数据库驱动攻击所要使用的数据库（EG：db_create autopwn）。</li>
+<li><font color="orange">db_connect name</font><br>创建并连接一个数据库驱动攻击所要使用的数据库（EG：db_connect user:passwd@ip/sqlname）。</li>
+<li><font color="orange">db_namp</font><br>利用nmap并把扫描数据存储到数据库中（支持普通的nmap语句，EG：-sT -v -P0）。</li>
+<li><font color="orange">db_autopwn -h</font><br>展示出db_autopwn命令的帮助信息。</li>
+<li><font color="orange">db_autopwn -p -r -e</font><br>对所有发现的开放端口执行db_autopwn，攻击所有系统，并使用一个反弹式shell。</li>
+<li><font color="orange">db_destroy</font><br>删除当前数据库。</li>
+<li><font color="orange">db_destroy user：passwd@host：port/database</font><br>使用高级选项来删除数据库。</li>
+</ul>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2014/10/29/msf终端命令/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2014/10/29/msf终端命令/index.html" data-title="msf 终端命令" data-url="http://huirong.github.io/2014/10/29/msf终端命令/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

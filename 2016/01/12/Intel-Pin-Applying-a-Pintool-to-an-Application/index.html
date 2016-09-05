@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>Intel Pin 6 ：Pin 应用到应用程序 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Pin," />
+  
+
+  <meta name="description" content="调用应用程序和 tool 的命令如下：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Intel Pin 6 ：Pin 应用到应用程序">
+<meta property="og:url" content="http://huirong.github.io/2016/01/12/Intel-Pin-Applying-a-Pintool-to-an-Application/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="调用应用程序和 tool 的命令如下：">
+<meta property="og:updated_time" content="2016-01-15T02:29:31.060Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Intel Pin 6 ：Pin 应用到应用程序">
+<meta name="twitter:description" content="调用应用程序和 tool 的命令如下：">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#限制"><span class="toc-text">限制</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考文献"><span class="toc-text">参考文献</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-Intel-Pin-Applying-a-Pintool-to-an-Application" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Intel Pin 6 ：Pin 应用到应用程序</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2016.01.12</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2016/01/12/Intel-Pin-Applying-a-Pintool-to-an-Application/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>调用应用程序和 tool 的命令如下：<br><a id="more"></a><br><figure class="highlight prolog"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pin [pin-option]... -t [toolname] [tool-options]... -- [application] [application-option]..</div></pre></td></tr></table></figure></p>
+<p>以下是几条常见选项，完整列表参见 <a href="https://software.intel.com/sites/landingpage/pintool/docs/67254/Pin/html/group__KNOBS.html" target="_blank" rel="external"> Command Line Switches</a></p>
+<ul>
+<li>-t toolname，使用的Pintool</li>
+<li>-pause_tool n，打印进程 ID，并暂停 n 秒，允许 GDB 附加调试。详见<a href="http://huirong.github.io/2016/01/13/Intel-Pin-Tips-for-Debugging-a-Pintool/">Tips for Debugging a Pintool</a></li>
+</ul>
+<p>– 之后的都是 应用程序命令行<br>例如，应用 itrace 运行 “ls” 程序。<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">..<span class="regexp">/../</span>..<span class="regexp">/pin -t obj-intel64/i</span>trace.so -- <span class="regexp">/bin/</span>ls</div></pre></td></tr></table></figure></p>
+<p>使用如下命令获取可用的 Pin 命令行选项列表：<br><figure class="highlight dos"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pin -<span class="built_in">help</span></div></pre></td></tr></table></figure></p>
+<p>使用如下命令获取 itrace 示例的可用命令行选项列表：<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">..<span class="regexp">/../</span>..<span class="regexp">/pin -t obj-intel64/i</span>trace.so -help -- <span class="regexp">/bin/</span>ls</div></pre></td></tr></table></figure></p>
+<p><font color="red">注意：</font>最后的 “/bin/ls” 是必选的，但不会执行。</p>
+<h1 id="限制"><a href="#限制" class="headerlink" title="限制"></a>限制</h1><p>在受 “McAfee Host Intrusion Prevention”（McAfee主机入侵防御）杀毒软件保护的系统上运行 Pin 时，存在一个问题。我们并没有测试其他杀毒软件和 Pin 的兼容性。</p>
+<p>Linux系统会通过  sysctl /proc/sys/kernel/yama/ptrace_scope 禁用 ptrace attach，此时 Pin 不能使用其默认的 injection mode。</p>
+<p>解决方法：</p>
+<ul>
+<li><p>以 root 权限运行如下命令</p>
+ <figure class="highlight elixir"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>echo <span class="number">0</span> &gt; <span class="regexp">/proc/sys</span><span class="regexp">/kernel/yama</span><span class="regexp">/ptrace_scope</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>使用 “-injection child” 选项，关于 child injection 的更多信息参见 <a href="https://software.intel.com/sites/landingpage/pintool/docs/67254/Pin/html/index.html#INJECTION" target="_blank" rel="external"> Injection</a></p>
+</li>
+</ul>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p><a href="https://software.intel.com/sites/landingpage/pintool/docs/67254/Pin/html/index.html#EX" target="_blank" rel="external">Pin 用户手册：Applying a Pintool to an Application</a></p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2016/01/12/Intel-Pin-Applying-a-Pintool-to-an-Application/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2016/01/12/Intel-Pin-Applying-a-Pintool-to-an-Application/index.html" data-title="Intel Pin 6 ：Pin 应用到应用程序" data-url="http://huirong.github.io/2016/01/12/Intel-Pin-Applying-a-Pintool-to-an-Application/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

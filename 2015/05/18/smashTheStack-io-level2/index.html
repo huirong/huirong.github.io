@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>SmashTheStack IO level2 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="缓冲区溢出,Smash the Stack," />
+  
+
+  <meta name="description" content="由上一关取得的密码进入本关卡">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SmashTheStack IO level2">
+<meta property="og:url" content="http://huirong.github.io/2015/05/18/smashTheStack-io-level2/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="由上一关取得的密码进入本关卡">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCjw1esdajv6jf5j30ed0270t1.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCjw1esdak4gsgtj30hp03mwf5.jpg">
+<meta property="og:updated_time" content="2016-04-16T11:21:43.146Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SmashTheStack IO level2">
+<meta name="twitter:description" content="由上一关取得的密码进入本关卡">
+<meta name="twitter:image" content="http://ww2.sinaimg.cn/large/005CA6ZCjw1esdajv6jf5j30ed0270t1.jpg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#I、函数说明"><span class="toc-text">I、函数说明</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-signal"><span class="toc-text">① signal()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-SIGFPE"><span class="toc-text">② SIGFPE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#③-atoi"><span class="toc-text">③ atoi()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#④-abs"><span class="toc-text">④ abs()</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#II、找漏洞"><span class="toc-text">II、找漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-分析源码"><span class="toc-text">① 分析源码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-查看运行效果"><span class="toc-text">② 查看运行效果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#③-找漏洞"><span class="toc-text">③ 找漏洞</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-smashTheStack-io-level2" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">SmashTheStack IO level2</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2015.05.18</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Smash-the-Stack/">Smash the Stack</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2015/05/18/smashTheStack-io-level2/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>由上一关取得的密码进入本关卡<br><a id="more"></a></p>
+<h1 id="I、函数说明"><a href="#I、函数说明" class="headerlink" title="I、函数说明"></a>I、函数说明</h1><h2 id="①-signal"><a href="#①-signal" class="headerlink" title="① signal()"></a>① signal()</h2><p>【定义函数】void (<em>signal(int signum, void(</em> handler)(int)))(int);<br>【函数说明】signal()会依参数signum 指定的信号编号来设置该信号的处理函数. 当指定的信号到达时就会跳转到参数handler 指定的函数执行. 如果参数handler 不是函数指针, 则必须是下列两个常数之一：</p>
+<ul>
+<li>SIG_IGN 忽略参数signum 指定的信号.</li>
+<li>SIG_DFL 将参数signum 指定的信号重设为核心预设的信号处理方式.<br>eg: signal(SIGINT ,SIG_DFL );<br>SIGINT信号代表由InterruptKey产生，通常是CTRL+C或者是DELETE。发送给所有ForeGroundGroup的进程。 SIG_DFL代表执行系统默认操作，其实对于大多数信号的系统默认动作时终止该进程。</li>
+</ul>
+<h2 id="②-SIGFPE"><a href="#②-SIGFPE" class="headerlink" title="② SIGFPE"></a>② SIGFPE</h2><p> 数学相关的异常，如被0除，浮点溢出，等等</p>
+<h2 id="③-atoi"><a href="#③-atoi" class="headerlink" title="③ atoi()"></a>③ atoi()</h2><p>【定义函数】int atoi (const char * str);<br>【函数说明】atoi()函数会扫描参数str字符串，跳过前面的空白字符（例如空格，tab缩进等，可以通过isspace() 函数来检测），直到遇上数字或正负符号才开始做转换，而再遇到非数字或字符串结束时(‘\0’)才结束转换，并将结果返回。<br>【返回值】返回转换后的整型数；如果str不能转换成int或者str为空字符串，那么将返回 0。</p>
+<h2 id="④-abs"><a href="#④-abs" class="headerlink" title="④ abs()"></a>④ abs()</h2><p>【定义函数】int abs (int j);<br>【函数说明】abs()用来计算参数j 的绝对值，然后将结果返回。<br>【返回值】返回参数j 的绝对值结果。</p>
+<h1 id="II、找漏洞"><a href="#II、找漏洞" class="headerlink" title="II、找漏洞"></a>II、找漏洞</h1><h2 id="①-分析源码"><a href="#①-分析源码" class="headerlink" title="① 分析源码"></a>① 分析源码</h2><p>源代码：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;signal.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">catcher</span><span class="params">(<span class="keyword">int</span> a)</span></span></div><div class="line">&#123;</div><div class="line">    setresuid(geteuid(),geteuid(),geteuid());</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"WIN!\n"</span>);</div><div class="line">    system(<span class="string">"/bin/sh"</span>);</div><div class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">puts</span>(<span class="string">"source code is available in level02.c\n"</span>);</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (argc != <span class="number">3</span> || !atoi(argv[<span class="number">2</span>]))</div><div class="line">        <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">    signal(SIGFPE, catcher);</div><div class="line">    <span class="keyword">return</span> <span class="built_in">abs</span>(atoi(argv[<span class="number">1</span>])) / atoi(argv[<span class="number">2</span>]);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>源码分析：</p>
+<ul>
+<li>（1）main函数参数：<br>if (argc != 3 || !atoi(argv[2])) 如果不是三个参数或第二个参数为0 函数退出。<br>main函数文件名本身是一个参数，因此在运行时，应该输入两个参数，argc才为3</li>
+<li>（2）signal(SIGFPE, catcher);<br>如果有数字相关的异常产生，调用catcher()函数</li>
+<li>（3）返回 atoi(第一个参数)/atoi(第二个参数)的绝对值</li>
+</ul>
+<h2 id="②-查看运行效果"><a href="#②-查看运行效果" class="headerlink" title="② 查看运行效果"></a>② 查看运行效果</h2><p><img src="http://ww2.sinaimg.cn/large/005CA6ZCjw1esdajv6jf5j30ed0270t1.jpg" alt=""><br>没有任何反应</p>
+<h2 id="③-找漏洞"><a href="#③-找漏洞" class="headerlink" title="③ 找漏洞"></a>③ 找漏洞</h2><p>最终目的是调用catcher()函数，执行system(“/bin/sh”);<br>应该产生一个与数字相关的异常，除数为0的情况已经排除在外了，只能想其他办法了。<br>不知大家是否记得整数的表示范围呢，32位操作系统：-2^31~2^31-1<br>绝对值之间差1，bingo，这是漏洞点，最小负数除1，然后取绝对值，溢出了。。。。。</p>
+<p><img src="http://ww1.sinaimg.cn/large/005CA6ZCjw1esdak4gsgtj30hp03mwf5.jpg" alt=""></p>
+<p>PS：相信大家都看到了，还有个level02_alt.c函数，你也可以找这个函数的漏洞来获取下一关的密码，大家自己试试，我不写博客了。。。。。。</p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2015/05/18/smashTheStack-io-level2/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2015/05/18/smashTheStack-io-level2/index.html" data-title="SmashTheStack IO level2" data-url="http://huirong.github.io/2015/05/18/smashTheStack-io-level2/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

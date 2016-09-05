@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>GDB常用命令 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="调试器,Linux," />
+  
+
+  <meta name="description" content="调试器（比如GDB）能让你观察另一个程序在执行时的内部活动，或程序出错时发生了什么。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GDB常用命令">
+<meta property="og:url" content="http://huirong.github.io/2015/04/30/gdbDebug/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="调试器（比如GDB）能让你观察另一个程序在执行时的内部活动，或程序出错时发生了什么。">
+<meta property="og:updated_time" content="2016-04-16T11:16:01.292Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GDB常用命令">
+<meta name="twitter:description" content="调试器（比如GDB）能让你观察另一个程序在执行时的内部活动，或程序出错时发生了什么。">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#I、GDB简介"><span class="toc-text">I、GDB简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#II、GDB命令"><span class="toc-text">II、GDB命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-启动"><span class="toc-text">① 启动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-运行"><span class="toc-text">② 运行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#③-查看源码"><span class="toc-text">③ 查看源码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#④-断点"><span class="toc-text">④ 断点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#⑤-查看寄存器"><span class="toc-text">⑤ 查看寄存器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#⑥-查看变量的值"><span class="toc-text">⑥ 查看变量的值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#⑦-查看帧栈信息"><span class="toc-text">⑦ 查看帧栈信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#⑧-退出"><span class="toc-text">⑧ 退出</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-gdbDebug" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">GDB常用命令</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2015.04.30</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/调试器/">调试器</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2015/04/30/gdbDebug/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>调试器（比如GDB）能让你观察另一个程序在执行时的内部活动，或程序出错时发生了什么。<br><a id="more"></a></p>
+<h1 id="I、GDB简介"><a href="#I、GDB简介" class="headerlink" title="I、GDB简介"></a>I、GDB简介</h1><p>GDB主要能为你做四件事(包括为了完成这些事而附加的功能)，帮助你找出程序中的错误。</p>
+<ul>
+<li>运行你的程序，设置所有的能影响程序运行的东西。</li>
+<li>保证你的程序在指定的条件下停止。</li>
+<li>当你程序停止时，让你检查发生了什么。</li>
+<li>改变你的程序。那样你可以试着修正某个bug引起的问题，然后继续查找另一 个bug。<br>你可以用GDB来调试C和C++写的程序。</li>
+</ul>
+<p><strong>先说明一下</strong>如何取得包括原代码符号的可执行代码。大家有心的话可以去看一下gcc的man文件在shell下打man gcc)。 gcc -g &lt;原文件.c&gt; -o &lt;要生成的文件名&gt;<br>-g 的意思是生成带原代码调试符号的可执行文件。<br>-o 的意思是指定可执行文件名。<br>(gcc 的命令行参数有一大堆，有兴趣可以自己去看看。) </p>
+<h1 id="II、GDB命令"><a href="#II、GDB命令" class="headerlink" title="II、GDB命令"></a>II、GDB命令</h1><h2 id="①-启动"><a href="#①-启动" class="headerlink" title="① 启动"></a>① <font color="orange">启动</font></h2><ul>
+<li>gdb $program<br>program就是你的执行文件，一般在当前目录下</li>
+<li>gdb $program core<br>用gdb同时调试一个运行程序和core文件，core是程序非法执行后core dump后产生的文件。</li>
+<li>gdb $program $pid<br>如果你的程序是一个服务程序，那么你可以指定这个服务程序运行时的进程ID。gdb会自动attach上去，并调试他。program应该在PATH环境变量中搜索得到。</li>
+</ul>
+<h2 id="②-运行"><a href="#②-运行" class="headerlink" title="② 运行"></a>② <font color="orange">运行</font></h2><ul>
+<li>r ：运行程序</li>
+<li>continue/c ：继续运行</li>
+<li>next/n ：下一行，但不进入函数调用</li>
+<li>stop/s ：下一行，且进入函数调用</li>
+<li>ni 或 si ：下一跳指令，ni与si的区别同n与s的区别</li>
+<li>finish/fini ：继续运行至当前栈帧/函数刚刚退出</li>
+<li>until/u ：  继续运行至某一行，在循环中，u可以实现运行至循环刚刚退出，但这取决于循环的实现</li>
+</ul>
+<h2 id="③-查看源码"><a href="#③-查看源码" class="headerlink" title="③ 查看源码"></a>③ <font color="orange">查看源码</font></h2><ul>
+<li>list/l linenum/function ：查看第linenum行或者function所在行附近的10行</li>
+<li>list/l ：查看上一次list命令列出的代码后面的10行</li>
+<li>list/l m,n ：查看从第m行到第n行的源码</li>
+</ul>
+<h2 id="④-断点"><a href="#④-断点" class="headerlink" title="④ 断点"></a>④ <font color="orange">断点</font></h2><ul>
+<li>break/b linenum/function ：在第linenum行或函数function处停住</li>
+<li>break/b +/-offset ：在当前行号的前面/后面的offset行停住，offset为自然数</li>
+<li>break filename:linenum ：在源文件filename的linenum行处停住</li>
+<li>break filename:function ：在源文件filename的function函数入口处停住</li>
+<li>break *address ：在程序运行的内存地址处停住</li>
+<li>break ：break没有参数时，表示在吓一跳指令处停住</li>
+</ul>
+<p>查看断点</p>
+<ul>
+<li>info break</li>
+</ul>
+<h2 id="⑤-查看寄存器"><a href="#⑤-查看寄存器" class="headerlink" title="⑤ 查看寄存器"></a>⑤ <font color="orange">查看寄存器</font></h2><ul>
+<li>info registers ：查看寄存器的情况（除了浮点寄存器）</li>
+<li>info all-registers ：查看所有寄存器的情况</li>
+<li>info registers $regname  ：查看制定寄存器的情况，例如 info $rbp</li>
+</ul>
+<p>修改寄存器的值</p>
+<ul>
+<li>set $regname value ：改变指定寄存器的值，例如 set $rbx 0x5</li>
+</ul>
+<h2 id="⑥-查看变量的值"><a href="#⑥-查看变量的值" class="headerlink" title="⑥ 查看变量的值"></a>⑥ <font color="orange">查看变量的值</font></h2><ul>
+<li>p varable ：打印变量varable的值</li>
+<li>p &amp;varable ：打印变量varable的地址</li>
+</ul>
+<h2 id="⑦-查看帧栈信息"><a href="#⑦-查看帧栈信息" class="headerlink" title="⑦ 查看帧栈信息"></a>⑦ <font color="orange">查看帧栈信息</font></h2><p>查看调用栈</p>
+<ul>
+<li>backtrace/bt ：显示程序的调用栈信息</li>
+<li>backtrace/bt n ：显示程序的调用栈信息，只显示栈顶n帧</li>
+</ul>
+<p>查看帧信息</p>
+<ul>
+<li>frame/f n ：查看第n帧的信息</li>
+<li>frame/f addr ：查看pc地址为addr的帧的相关信息</li>
+<li>up n ：查看当前帧上面第n帧的信息</li>
+<li>down n ：查看当前帧下面第n帧的信息</li>
+</ul>
+<p>查看更新详细的信息</p>
+<ul>
+<li>info frame、info frame n、info frame addr  查看制定帧的详细信息</li>
+<li>info args ：查看当前帧中的参数</li>
+<li>info locals ：查看当前帧中的局部变量</li>
+<li>info catch ：查看当前帧中的异常处理器</li>
+</ul>
+<h2 id="⑧-退出"><a href="#⑧-退出" class="headerlink" title="⑧ 退出"></a>⑧ <font color="orange">退出</font></h2><ul>
+<li>quit/q ：退出GDB调试，若退出时被调试的程序尚未结束，GDB会提示，请求确认</li>
+</ul>
+<p>目前只用过这些命令，以后会持续更新。。。。。</p>
+<p>#参考文献<br><a href="http://blog.csdn.net/dadalan/article/details/3758025" target="_blank" rel="external">比较全面的gdb调试命令</a><br><a href="http://www.dutor.net/index.php/2011/02/gdb-summary/" target="_blank" rel="external">GDB使用小结</a><br><a href="http://www.wuzesheng.com/?p=1409" target="_blank" rel="external">手把手教你玩转GDB(四)——–函数调用栈(call stack)探密</a></p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2015/04/30/gdbDebug/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2015/04/30/gdbDebug/index.html" data-title="GDB常用命令" data-url="http://huirong.github.io/2015/04/30/gdbDebug/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

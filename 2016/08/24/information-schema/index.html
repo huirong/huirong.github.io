@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>INFORMATION_SCHEMA 数据库 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="渗透测试,sql注入," />
+  
+
+  <meta name="description" content="INFORMATION_SCHEMA数据库作为MySQL数据库元数据的一个中央集中仓库存在。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="INFORMATION_SCHEMA 数据库">
+<meta property="og:url" content="http://huirong.github.io/2016/08/24/information-schema/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="INFORMATION_SCHEMA数据库作为MySQL数据库元数据的一个中央集中仓库存在。">
+<meta property="og:updated_time" content="2016-08-25T07:38:32.059Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="INFORMATION_SCHEMA 数据库">
+<meta name="twitter:description" content="INFORMATION_SCHEMA数据库作为MySQL数据库元数据的一个中央集中仓库存在。">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-INFORMATION-SCHEMA-数据库"><span class="toc-text">1 INFORMATION_SCHEMA 数据库</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-information-schema-数据库表说明"><span class="toc-text">2 information_schema 数据库表说明</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-information-schema" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">INFORMATION_SCHEMA 数据库</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2016.08.24</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/sql注入/">sql注入</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2016/08/24/information-schema/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>INFORMATION_SCHEMA数据库作为MySQL数据库元数据的一个中央集中仓库存在。<br><a id="more"></a></p>
+<h1 id="1-INFORMATION-SCHEMA-数据库"><a href="#1-INFORMATION-SCHEMA-数据库" class="headerlink" title="1 INFORMATION_SCHEMA 数据库"></a>1 INFORMATION_SCHEMA 数据库</h1><p>INFORMATION_SCHEMA 是一个“虚拟的数据库”，因为它不存放在磁盘任何位置。但它和其他数据库一样含有表，且表中的内容可以通过使用select语句和其它数据库一样查询访问。<br>此外，你还可以使用select来获取关于INFORMATION_SCHEMA其本身的信息。</p>
+<h1 id="2-information-schema-数据库表说明"><a href="#2-information-schema-数据库表说明" class="headerlink" title="2 information_schema 数据库表说明"></a>2 information_schema 数据库表说明</h1><table>
+<thead>
+<tr>
+<th>表名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><font color="orange">SCHEMATA</font></td>
+<td>提供了当前mysql实例中所有数据库的信息。是show databases的结果取之此表。</td>
+</tr>
+<tr>
+<td><font color="orange">TABLES</font></td>
+<td>提供了关于数据库中的表的信息（包括视图）。详细表述了某个表属于哪个schema，表类型，表引擎，创建时间等信息。是show tables from schemaname的结果取之此表。</td>
+</tr>
+<tr>
+<td><font color="orange">COLUMNS</font></td>
+<td>提供了表中的列信息。详细表述了某张表的所有列以及每个列的信息。是show columns from schemaname.tablename的结果取之此表。</td>
+</tr>
+<tr>
+<td><font color="orange">STATISTICS</font></td>
+<td>提供了表中的列信息。详细表述了某张表的所有列以及每个列的信息。是show columns from schemaname.tablename的结果取之此表。</td>
+</tr>
+<tr>
+<td><font color="orange">USER_PRIVILEGES（用户权限）</font></td>
+<td>给出了关于全程权限的信息。该信息源自mysql.user授权表。是非标准表。</td>
+</tr>
+<tr>
+<td><font color="orange">SCHEMA_PRIVILEGES（方案权限）</font></td>
+<td>给出了关于方案（数据库）权限的信息。该信息来自mysql.db授权表。是非标准表。</td>
+</tr>
+<tr>
+<td><font color="orange">TABLE_PRIVILEGES（表权限）</font></td>
+<td>给出了关于表权限的信息。该信息源自mysql.tables_priv授权表。是非标准表。</td>
+</tr>
+<tr>
+<td><font color="orange">COLUMN_PRIVILEGES（列权限）</font></td>
+<td>给出了关于列权限的信息。该信息源自mysql.columns_priv授权表。是非标准表。</td>
+</tr>
+<tr>
+<td><font color="orange">CHARACTER_SETS（字符集）</font></td>
+<td>提供了mysql实例可用字符集的信息。是SHOW CHARACTER SET结果集取之此表。</td>
+</tr>
+<tr>
+<td><font color="orange">COLLATIONS</font></td>
+<td>提供了关于各字符集的对照信息。</td>
+</tr>
+<tr>
+<td><font color="orange">TABLE_CONSTRAINTS</font></td>
+<td>描述了存在约束的表。以及表的约束类型。</td>
+</tr>
+<tr>
+<td><font color="orange">KEY_COLUMN_USAGE</font></td>
+<td>描述了具有约束的键列。</td>
+</tr>
+<tr>
+<td><font color="orange">ROUTINES</font></td>
+<td>提供了关于存储子程序（存储程序和函数）的信息。此时，ROUTINES表不包含自定义函数（UDF）。名为“mysql.proc name”的列指明了对应于INFORMATION_SCHEMA.ROUTINES表的mysql.proc表列。</td>
+</tr>
+<tr>
+<td><font color="orange">VIEWS</font></td>
+<td>给出了关于数据库中的视图的信息。需要有show views权限，否则无法查看视图信息。</td>
+</tr>
+<tr>
+<td><font color="orange">TRIGGERS</font></td>
+<td>提供了关于触发程序的信息。必须有super权限才能查看该表。</td>
+</tr>
+</tbody>
+</table>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2016/08/24/information-schema/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2016/08/24/information-schema/index.html" data-title="INFORMATION_SCHEMA 数据库" data-url="http://huirong.github.io/2016/08/24/information-schema/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>SmashTheStack IO level4 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="缓冲区溢出,Smash the Stack," />
+  
+
+  <meta name="description" content="密码：nSwmULj2LpDnRGU2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SmashTheStack IO level4">
+<meta property="og:url" content="http://huirong.github.io/2015/05/22/smashTheStack-io-level4/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="密码：nSwmULj2LpDnRGU2">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1esldar1lq1j30i801kglq.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCjw1esldtip2x7j30k301jt8t.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1esldn58eobj30k403n3zw.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1esldo6oa1kj30k40230t9.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCjw1esldp2b06jj30k302ldgx.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1esldpzi8w0j30k301it8t.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1esldqe3qs3j30k2012dfx.jpg">
+<meta property="og:updated_time" content="2016-04-16T11:27:41.800Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SmashTheStack IO level4">
+<meta name="twitter:description" content="密码：nSwmULj2LpDnRGU2">
+<meta name="twitter:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1esldar1lq1j30i801kglq.jpg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#I、源代码"><span class="toc-text">I、源代码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-源代码："><span class="toc-text">① 源代码：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-执行结果："><span class="toc-text">② 执行结果：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#③-分析结果"><span class="toc-text">③ 分析结果</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#II、相关知识"><span class="toc-text">II、相关知识</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-PATH环境变量"><span class="toc-text">① PATH环境变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-which"><span class="toc-text">② which</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#III、找漏洞"><span class="toc-text">III、找漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-查看命令位置"><span class="toc-text">① 查看命令位置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-构造PATH并验证是否成功"><span class="toc-text">② 构造PATH并验证是否成功</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#③-查看密码"><span class="toc-text">③ 查看密码</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-smashTheStack-io-level4" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">SmashTheStack IO level4</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2015.05.22</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Smash-the-Stack/">Smash the Stack</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2015/05/22/smashTheStack-io-level4/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>密码：nSwmULj2LpDnRGU2<br><a id="more"></a></p>
+<h1 id="I、源代码"><a href="#I、源代码" class="headerlink" title="I、源代码"></a>I、源代码</h1><h2 id="①-源代码："><a href="#①-源代码：" class="headerlink" title="① 源代码："></a>① 源代码：</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//writen by bla</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">char</span> username[<span class="number">1024</span>];</div><div class="line">    FILE* f = popen(<span class="string">"whoami"</span>,<span class="string">"r"</span>);</div><div class="line">    fgets(username, <span class="keyword">sizeof</span>(username), f);</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"Welcome %s"</span>, username);</div><div class="line"></div><div class="line"><span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="②-执行结果："><a href="#②-执行结果：" class="headerlink" title="② 执行结果："></a>② 执行结果：</h2><p><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1esldar1lq1j30i801kglq.jpg" alt=""></p>
+<h2 id="③-分析结果"><a href="#③-分析结果" class="headerlink" title="③ 分析结果"></a>③ 分析结果</h2><p>welcome level5，说明系统是在level5下执行的whoami命令，而我们想要的是在level5下执行 cat /home/level5/.pass 命令，查看level5密码<br>程序不需要任何输入，我们不能构造输入；不能改变源代码，因此不能在popen中添加命令<br>我们可不可以改变whoami命令的内容呢？？<br>先看下相关介绍，或许会有思路</p>
+<h1 id="II、相关知识"><a href="#II、相关知识" class="headerlink" title="II、相关知识"></a>II、相关知识</h1><h2 id="①-PATH环境变量"><a href="#①-PATH环境变量" class="headerlink" title="① PATH环境变量"></a>① PATH环境变量</h2><p>$PATH：决定了shell将到哪些目录中寻找命令或程序，PATH的值是一系列目录，当您运行一个程序时，Linux在这些目录下进行搜寻编译链接。</p>
+<p><font color="red">思路：</font>在$PATH中添加一个目录，指向我们自己创建的whoami命令文件，whoami中的内容是 cat /home/level5/.pass，shell执行whoami命令时，先找到我们创建的目录，然后就不在向下查看，直接执行命令</p>
+<h2 id="②-which"><a href="#②-which" class="headerlink" title="② which"></a>② which</h2><p>which命令的作用是，在PATH变量指定的路径中，搜索某个系统命令的位置，并且返回第一个搜索结果。也就是说，使用which命令，就可以看到某个系统命令是否存在，以及执行的到底是哪一个位置的命令。</p>
+<h1 id="III、找漏洞"><a href="#III、找漏洞" class="headerlink" title="III、找漏洞"></a>III、找漏洞</h1><h2 id="①-查看命令位置"><a href="#①-查看命令位置" class="headerlink" title="① 查看命令位置"></a>① 查看命令位置</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">which</span> whoami</div></pre></td></tr></table></figure>
+<p><img src="http://ww4.sinaimg.cn/large/005CA6ZCjw1esldtip2x7j30k301jt8t.jpg" alt=""></p>
+<h2 id="②-构造PATH并验证是否成功"><a href="#②-构造PATH并验证是否成功" class="headerlink" title="② 构造PATH并验证是否成功"></a>② 构造PATH并验证是否成功</h2><p>自定义whoami内容：<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1esldn58eobj30k403n3zw.jpg" alt=""></p>
+<p>赋予执行权限<br><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1esldo6oa1kj30k40230t9.jpg" alt=""></p>
+<p>添加新的whoami命令路径：<br><img src="http://ww4.sinaimg.cn/large/005CA6ZCjw1esldp2b06jj30k302ldgx.jpg" alt=""></p>
+<p>再次查看whoami路径：<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCjw1esldpzi8w0j30k301it8t.jpg" alt=""></p>
+<h2 id="③-查看密码"><a href="#③-查看密码" class="headerlink" title="③ 查看密码"></a>③ 查看密码</h2><p><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1esldqe3qs3j30k2012dfx.jpg" alt=""><br>密码：nSwmULj2LpDnRGU2</p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2015/05/22/smashTheStack-io-level4/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2015/05/22/smashTheStack-io-level4/index.html" data-title="SmashTheStack IO level4" data-url="http://huirong.github.io/2015/05/22/smashTheStack-io-level4/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

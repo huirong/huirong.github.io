@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>sqli labs 安装 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="渗透测试,sql注入," />
+  
+
+  <meta name="description" content="好久没学习 Web 安全了，都去搞逆向去了，心血来潮，重温下Web 安全，就从最简单的sql注入开始">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sqli labs 安装">
+<meta property="og:url" content="http://huirong.github.io/2016/08/24/sqli-labs-series-install/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="好久没学习 Web 安全了，都去搞逆向去了，心血来潮，重温下Web 安全，就从最简单的sql注入开始">
+<meta property="og:updated_time" content="2016-08-25T07:38:30.701Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="sqli labs 安装">
+<meta name="twitter:description" content="好久没学习 Web 安全了，都去搞逆向去了，心血来潮，重温下Web 安全，就从最简单的sql注入开始">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-sqli-labs-安装"><span class="toc-text">1 sqli labs 安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-基础知识"><span class="toc-text">2 基础知识</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-infromation-schema-数据库"><span class="toc-text">2.1 infromation_schema 数据库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-注释"><span class="toc-text">2.2 注释</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-参考文献"><span class="toc-text">3 参考文献</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-sqli-labs-series-install" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">sqli labs 安装</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2016.08.24</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/sql注入/">sql注入</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2016/08/24/sqli-labs-series-install/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>好久没学习 Web 安全了，都去搞逆向去了，心血来潮，重温下Web 安全，就从最简单的sql注入开始<br><a id="more"></a></p>
+<h1 id="1-sqli-labs-安装"><a href="#1-sqli-labs-安装" class="headerlink" title="1 sqli labs 安装"></a>1 sqli labs 安装</h1><ul>
+<li>搭建 wamp 集成环境，教程网上都有。</li>
+<li>从 <a href="https://github.com/Audi-1/sqli-labs" target="_blank" rel="external">https://github.com/Audi-1/sqli-labs</a> 下载源码</li>
+<li>将加压后的源码放在 www 目录下</li>
+<li>打开sql-connections文件夹下的“db-creds.inc”文件 ，修改用户名密码为自己的</li>
+<li>打开浏览器，输入网址 <a href="http://localhost/sqli-labs-master" target="_blank" rel="external">http://localhost/sqli-labs-master</a></li>
+<li>点击setup/resetDB 链接在你的mysql中创造数据库</li>
+<li>开始学习</li>
+</ul>
+<h1 id="2-基础知识"><a href="#2-基础知识" class="headerlink" title="2 基础知识"></a>2 基础知识</h1><h2 id="2-1-infromation-schema-数据库"><a href="#2-1-infromation-schema-数据库" class="headerlink" title="2.1 infromation_schema 数据库"></a>2.1 <a href="http://huirong.github.io/2016/08/24/information-schema/">infromation_schema 数据库</a></h2><h2 id="2-2-注释"><a href="#2-2-注释" class="headerlink" title="2.2 注释"></a>2.2 注释</h2><ol>
+<li>#(请用%23来使用，一般会被转码)</li>
+<li>– (–后面加个空格，用%20或者+表示空格)</li>
+<li>/<em>  </em>/</li>
+</ol>
+<h1 id="3-参考文献"><a href="#3-参考文献" class="headerlink" title="3 参考文献"></a>3 参考文献</h1><p><a href="http://www.freebuf.com/articles/web/34619.html" target="_blank" rel="external">安全科普：SQLi Labs 指南 Part 1</a></p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2016/08/24/sqli-labs-series-install/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2016/08/24/sqli-labs-series-install/index.html" data-title="sqli labs 安装" data-url="http://huirong.github.io/2016/08/24/sqli-labs-series-install/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

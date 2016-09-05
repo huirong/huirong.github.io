@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>SmashTheStack IO level1 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="缓冲区溢出,Smash the Stack," />
+  
+
+  <meta name="description" content="现在正式开始练习，进入第一关">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SmashTheStack IO level1">
+<meta property="og:url" content="http://huirong.github.io/2015/05/18/smashTheStack-io-level1/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="现在正式开始练习，进入第一关">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1es88zxmuwxj30k305pwfv.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1es890ccegkj30k00cvq7i.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCjw1es891dmcsaj30k10220tk.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCjw1es891i9mhjj30k00a479u.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCjw1es891o9ucfj30k0012t8w.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1es891rv5uij30k001hglw.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCjw1es891xfak8j30k10ak0uc.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCjw1es89254g8dj30k102174y.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCjw1es892c8l9wj30jz01imx9.jpg">
+<meta property="og:updated_time" content="2016-04-16T11:15:05.461Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SmashTheStack IO level1">
+<meta name="twitter:description" content="现在正式开始练习，进入第一关">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1es88zxmuwxj30k305pwfv.jpg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#I、进入系统"><span class="toc-text">I、进入系统</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#II、熟悉环境"><span class="toc-text">II、熟悉环境</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-首先阅读README文件"><span class="toc-text">① 首先阅读README文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-查看levels"><span class="toc-text">② 查看levels</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#III、找漏洞"><span class="toc-text">III、找漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-执行level01"><span class="toc-text">① 执行level01</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-gdb调试"><span class="toc-text">② gdb调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#③-分析汇编指令"><span class="toc-text">③ 分析汇编指令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#④-测试"><span class="toc-text">④ 测试</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#IV、查看下一关密码"><span class="toc-text">IV、查看下一关密码</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-smashTheStack-io-level1" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">SmashTheStack IO level1</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2015.05.18</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Smash-the-Stack/">Smash the Stack</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2015/05/18/smashTheStack-io-level1/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>现在正式开始练习，进入第一关<br><a id="more"></a></p>
+<h1 id="I、进入系统"><a href="#I、进入系统" class="headerlink" title="I、进入系统"></a>I、进入系统</h1><p>1、在终端输入：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ssh -l level1 io<span class="selector-class">.smashthestack</span><span class="selector-class">.org</span> -p2224</div></pre></td></tr></table></figure></p>
+<p><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1es88zxmuwxj30k305pwfv.jpg" alt=""></p>
+<p>2、输入密码<br>第一关的密码是level1 （只有第一关的密码才知道，以后每一关的密码需要自己取得）<br>看到以下信息，说明已经进来了，每一关的权限有限，这个可以自己测试一下就知道了。<br><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1es890ccegkj30k00cvq7i.jpg" alt=""></p>
+<h1 id="II、熟悉环境"><a href="#II、熟悉环境" class="headerlink" title="II、熟悉环境"></a>II、熟悉环境</h1><h2 id="①-首先阅读README文件"><a href="#①-首先阅读README文件" class="headerlink" title="① 首先阅读README文件"></a>① 首先阅读README文件</h2><p>我是不会给你翻译的，自己慢慢阅读<br><img src="http://ww4.sinaimg.cn/large/005CA6ZCjw1es891dmcsaj30k10220tk.jpg" alt=""></p>
+<h2 id="②-查看levels"><a href="#②-查看levels" class="headerlink" title="② 查看levels"></a>② 查看levels</h2><p>每一关都有一个可执行文件或对应的C程序，可通过gdb调试可执行文件，所有这些文件存放在 /levels 目录中<br><img src="http://ww4.sinaimg.cn/large/005CA6ZCjw1es891i9mhjj30k00a479u.jpg" alt=""></p>
+<h1 id="III、找漏洞"><a href="#III、找漏洞" class="headerlink" title="III、找漏洞"></a>III、找漏洞</h1><h2 id="①-执行level01"><a href="#①-执行level01" class="headerlink" title="① 执行level01"></a>① 执行level01</h2><p><img src="http://ww4.sinaimg.cn/large/005CA6ZCjw1es891o9ucfj30k0012t8w.jpg" alt=""><br>随便输入三个数字，查看效果<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCjw1es891rv5uij30k001hglw.jpg" alt=""><br>没有任何反应</p>
+<h2 id="②-gdb调试"><a href="#②-gdb调试" class="headerlink" title="② gdb调试"></a>② gdb调试</h2><p>如果不会gdb的，可以查看我的博客：<a href="">GDB常用命令</a>，当然网上也有很多教程<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">gdb</span> level01</div></pre></td></tr></table></figure></p>
+<p>我试过了，不能使用list命令查看源代码，那就老老实实看汇编代码吧<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">disassembel main</span></div></pre></td></tr></table></figure></p>
+<p><img src="http://ww4.sinaimg.cn/large/005CA6ZCjw1es891xfak8j30k10ak0uc.jpg" alt=""></p>
+<h2 id="③-分析汇编指令"><a href="#③-分析汇编指令" class="headerlink" title="③ 分析汇编指令"></a>③ 分析汇编指令</h2><p>第一关，应该不会太难的，果真如此，就连我这个汇编菜鸟都能看懂<br>输入一个数，存入eax寄存器；与0x10f进行比较，如果相等，跳转到YouWin，否则退出<br>那么结果显而易见，应该输入0x10f，不过要转化为十进制：271</p>
+<h2 id="④-测试"><a href="#④-测试" class="headerlink" title="④ 测试"></a>④ 测试</h2><p>重新运行level01<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./level01</div></pre></td></tr></table></figure></p>
+<p>输入 271<br><img src="http://ww4.sinaimg.cn/large/005CA6ZCjw1es89254g8dj30k102174y.jpg" alt=""><br>OK，成功破解第一关，是不是很easy</p>
+<h1 id="IV、查看下一关密码"><a href="#IV、查看下一关密码" class="headerlink" title="IV、查看下一关密码"></a>IV、查看下一关密码</h1><p>按照上面的提示，密码放在/home/level2/.pass 中<br>那还等什么，赶紧查看密码吧！！！！<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat /<span class="built_in">home</span>/level2/.pass</div></pre></td></tr></table></figure></p>
+<p>密码get：3ywr07ZFw5IsdKzU<br><img src="http://ww1.sinaimg.cn/large/005CA6ZCjw1es892c8l9wj30jz01imx9.jpg" alt=""></p>
+<p>由此密码可以顺利进入下一关。。。。。。。</p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2015/05/18/smashTheStack-io-level1/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2015/05/18/smashTheStack-io-level1/index.html" data-title="SmashTheStack IO level1" data-url="http://huirong.github.io/2015/05/18/smashTheStack-io-level1/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

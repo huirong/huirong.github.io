@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>ROPgadget安装 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="缓冲区溢出,ROP," />
+  
+
+  <meta name="description" content="ROPgadget是一个自动化的搜索工具，找到指定二进制文件中的gadgets，来帮助我们实现ROP攻击。支持x86、x64、ARM、ARM64、PowerPC、SPARC和MIPS架构。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ROPgadget安装">
+<meta property="og:url" content="http://huirong.github.io/2015/06/12/ROPgadget/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="ROPgadget是一个自动化的搜索工具，找到指定二进制文件中的gadgets，来帮助我们实现ROP攻击。支持x86、x64、ARM、ARM64、PowerPC、SPARC和MIPS架构。">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1et1cc51hfnj30oo0240tj.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1et1ccc944xj30p3014q3k.jpg">
+<meta property="og:updated_time" content="2016-05-03T14:06:24.440Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ROPgadget安装">
+<meta name="twitter:description" content="ROPgadget是一个自动化的搜索工具，找到指定二进制文件中的gadgets，来帮助我们实现ROP攻击。支持x86、x64、ARM、ARM64、PowerPC、SPARC和MIPS架构。">
+<meta name="twitter:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1et1cc51hfnj30oo0240tj.jpg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#I、安装"><span class="toc-text">I、安装</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-安装Capstone"><span class="toc-text">① 安装Capstone</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-下载ROPgadget"><span class="toc-text">② 下载ROPgadget</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#II、参考文献"><span class="toc-text">II、参考文献</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-ROPgadget" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">ROPgadget安装</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2015.06.12</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/ROP/">ROP</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2015/06/12/ROPgadget/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>ROPgadget是一个自动化的搜索工具，找到指定二进制文件中的gadgets，来帮助我们实现ROP攻击。支持x86、x64、ARM、ARM64、PowerPC、SPARC和MIPS架构。<br><a id="more"></a><br>下载网址：<a href="https://github.com/JonathanSalwan/ROPgadget" target="_blank" rel="external">https://github.com/JonathanSalwan/ROPgadget</a></p>
+<h1 id="I、安装"><a href="#I、安装" class="headerlink" title="I、安装"></a>I、安装</h1><h2 id="①-安装Capstone"><a href="#①-安装Capstone" class="headerlink" title="① 安装Capstone"></a>① 安装Capstone</h2><p>Capstone是一个轻量级的多平台架构支持的反汇编架构，支持包括ARM\ARM64、MIPC和x64/x86平台。<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-<span class="built_in">get</span> install <span class="keyword">python</span>-capstone</div></pre></td></tr></table></figure></p>
+<h2 id="②-下载ROPgadget"><a href="#②-下载ROPgadget" class="headerlink" title="② 下载ROPgadget"></a>② 下载ROPgadget</h2><p>下载ROPgadget并解压，就可以使用ROPgadget了。<br><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1et1cc51hfnj30oo0240tj.jpg" alt=""><br>也可以上诉命令使用别名<br><figure class="highlight monkey"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">alias</span> <span class="title">ropgadget</span>=<span class="string">"/home/star/ROP/ROPgadget-master/ROPgadget.py"</span></div></pre></td></tr></table></figure></p>
+<p><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1et1ccc944xj30p3014q3k.jpg" alt=""></p>
+<h1 id="II、参考文献"><a href="#II、参考文献" class="headerlink" title="II、参考文献"></a>II、参考文献</h1><p><a href="http://shell-storm.org/project/ROPgadget/" target="_blank" rel="external">ROPgadget - Gadgets finder and auto-roper</a><br><a href="https://github.com/JonathanSalwan/ROPgadget" target="_blank" rel="external">https://github.com/JonathanSalwan/ROPgadget</a></p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2015/06/12/ROPgadget/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2015/06/12/ROPgadget/index.html" data-title="ROPgadget安装" data-url="http://huirong.github.io/2015/06/12/ROPgadget/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

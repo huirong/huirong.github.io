@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>ARP欺骗原理 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="kali,渗透测试," />
+  
+
+  <meta name="description" content="详细讲解ARP欺骗的原理，实验在下篇博客">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ARP欺骗原理">
+<meta property="og:url" content="http://huirong.github.io/2015/03/25/arp/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="详细讲解ARP欺骗的原理，实验在下篇博客">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1eqhy7qjsuzj30fb09r0t9.jpg">
+<meta property="og:updated_time" content="2016-04-16T09:01:29.557Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ARP欺骗原理">
+<meta name="twitter:description" content="详细讲解ARP欺骗的原理，实验在下篇博客">
+<meta name="twitter:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1eqhy7qjsuzj30fb09r0t9.jpg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#I、ARP"><span class="toc-text">I、ARP</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#II、ARP欺骗"><span class="toc-text">II、ARP欺骗</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#III、ARP欺骗工作原理"><span class="toc-text">III、ARP欺骗工作原理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#IV、参考文献"><span class="toc-text">IV、参考文献</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-arp" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">ARP欺骗原理</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2015.03.25</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/渗透测试/">渗透测试</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2015/03/25/arp/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>详细讲解ARP欺骗的原理，实验在下篇博客<br><a id="more"></a></p>
+<h1 id="I、ARP"><a href="#I、ARP" class="headerlink" title="I、ARP"></a>I、ARP</h1><p>地址解析协议，即ARP（Address Resolution Protocol），是根据IP地址获取物理地址的一个TCP/IP协议。主机发送信息时将包含目标IP地址的ARP请求广播到网络上的所有主机，并接收返回消息，以此确定目标的物理地址；收到返回消息后将该IP地址和物理地址存入本机ARP缓存中并保留一定时间，下次请求时直接查询ARP缓存以节约资源。</p>
+<h1 id="II、ARP欺骗"><a href="#II、ARP欺骗" class="headerlink" title="II、ARP欺骗"></a>II、ARP欺骗</h1><p>地址解析协议是建立在网络中各个主机互相信任的基础上的，网络上的主机可以自主发送ARP应答消息，其他主机收到应答报文时不会检测该报文的真实性就会将其记入本机ARP缓存；由此攻击者就可以向某一主机发送伪ARP应答报文，使其发送的信息无法到达预期的主机或到达错误的主机，这就构成了一个ARP欺骗。<br>局域网的网络流通不是根据IP地址进行，而是根据MAC地址进行传输。</p>
+<h1 id="III、ARP欺骗工作原理"><a href="#III、ARP欺骗工作原理" class="headerlink" title="III、ARP欺骗工作原理"></a>III、ARP欺骗工作原理</h1><p>假设一个网络环境中，网内有2台主机，分别为主机A、B，网关。主机详细信息如下描述：<br>网关的地址为：IP：192.168.1.1 MAC: 01-01-01-01-01-01<br>A的地址为：IP：192.168.1.2 MAC: 02-02-02-02-02-02<br>B的地址为：IP：192.168.1.3 MAC: 03-03-03-03-03-03<br>正常情况下A和网关之间进行通讯。</p>
+<ol>
+<li>B向A发送一个自己伪造的ARP应答，而这个应答中的数据为发送方IP地址是192.168.1.1（网关的IP地址），MAC地址是03-03-03-03-03-03（网关的MAC地址本来应该是01-01-01-01-01-01，这里被伪造了）</li>
+<li>当A接收到B伪造的ARP应答，就会更新本地的ARP缓存（A被欺骗了），这时B就伪装成网关了。</li>
+<li>B同样向网关发送一个ARP应答，应答包中发送方IP地址四192.168.10.2（A的IP地址），MAC地址是03-03-03-03-03-03（A的MAC地址本来应该是 02-02-02-02-02-02，这里被伪造了）。</li>
+<li>当网关收到B伪造的ARP应答，也会更新本地ARP缓存（网关也被欺骗了），这时B就伪装成了A。</li>
+<li>样主机A和网关都被主机B欺骗，A和网关之间通讯的数据都经过了B。主机B完全可以知道他们之间说的什么：）。<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCjw1eqhy7qjsuzj30fb09r0t9.jpg" alt=""><br>就是，A向网关发送数据包，先会发给B，在由B转发给网关<br>网关向A发送数据包，也先会发给B，在由B转发给A<h1 id="IV、参考文献"><a href="#IV、参考文献" class="headerlink" title="IV、参考文献"></a>IV、参考文献</h1><a href="http://baike.baidu.com/subview/32698/16532303.htm" target="_blank" rel="external">ARP（地址解析协议）</a><br><a href="http://baike.baidu.com/view/155386.htm" target="_blank" rel="external">ARP欺骗</a></li>
+</ol>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2015/03/25/arp/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2015/03/25/arp/index.html" data-title="ARP欺骗原理" data-url="http://huirong.github.io/2015/03/25/arp/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

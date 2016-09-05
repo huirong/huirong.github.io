@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>Intel Pin 8 ：编写 Pintool 时的性能开销 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Pin," />
+  
+
+  <meta name="description" content="Pintool 的编写方式对性能影响很大，本文主要介绍提高性能的几种技术。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Intel Pin 8 ：编写 Pintool 时的性能开销">
+<meta property="og:url" content="http://huirong.github.io/2016/01/13/Intel-Pin-Performance-Considerations/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="Pintool 的编写方式对性能影响很大，本文主要介绍提高性能的几种技术。">
+<meta property="og:updated_time" content="2016-01-13T08:11:36.041Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Intel Pin 8 ：编写 Pintool 时的性能开销">
+<meta name="twitter:description" content="Pintool 的编写方式对性能影响很大，本文主要介绍提高性能的几种技术。">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Shifting-Computation-for-Analysis-to-Instrumentation-Code"><span class="toc-text">Shifting Computation for Analysis to Instrumentation Code</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Eliminating-Control-Flow"><span class="toc-text">Eliminating Control Flow</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-Intel-Pin-Performance-Considerations" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Intel Pin 8 ：编写 Pintool 时的性能开销</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2016.01.13</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2016/01/13/Intel-Pin-Performance-Considerations/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>Pintool 的编写方式对性能影响很大，本文主要介绍提高性能的几种技术。<br><a id="more"></a><br>从示例开始，下面的代码段源自 source/tools/SimpleExamples/edgcnt.cpp<br>tool 的 instrumentation 组件如下：<br><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">VOID <span class="keyword">Instruction(INS </span><span class="keyword">ins, </span>void *v)</div><div class="line">&#123;</div><div class="line">      ...</div><div class="line"></div><div class="line">      if ( [<span class="keyword">ins </span>is a <span class="keyword">branch </span><span class="keyword">or </span>a call <span class="keyword">instruction] </span>)</div><div class="line">      &#123;</div><div class="line"></div><div class="line"></div><div class="line">        <span class="keyword">INS_InsertCall(ins, </span>IPOINT_BEFORE, (AFUNPTR) docount2,</div><div class="line">                       IARG_INST_PTR,</div><div class="line">                       IARG_BRANCH_TARGET_ADDR,</div><div class="line">                       IARG_BRANCH_TAKEN,</div><div class="line">                       IARG_END)<span class="comment">;</span></div><div class="line">      &#125;</div><div class="line"></div><div class="line">      ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>analysis 组件：<br><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">VOID docount2( <span class="keyword">ADDRINT </span>src, <span class="keyword">ADDRINT </span>dst, INT32 taken )</div><div class="line">&#123;</div><div class="line">    if(!taken) return<span class="comment">;</span></div><div class="line">    COUNTER *pedg = Lookup( src,dst )<span class="comment">;</span></div><div class="line">    pedg-&gt;_<span class="built_in">count</span>++<span class="comment">;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>此 tool 用于计算控制流转移频率，需统计 calls 和 分支 指令，<font color="red">为了简单起见，本文统称为分支指令</font><br>tool 的工作流程：</p>
+<ul>
+<li>instrumentation 组件为每个分支指令插入 docount2 函数。</li>
+<li>docount2 的 src、dst 、taken参数，为分支指令的源地址和目的地址，taken 表明指令是否执行。</li>
+<li>若没有执行，直接返回；如执行，说明发生控制流转移，通过 src 和 dst 参数查找此控制流边的计数器（如没找到，新建计数器），然后计数器加 1 。</li>
+</ul>
+<h1 id="Shifting-Computation-for-Analysis-to-Instrumentation-Code"><a href="#Shifting-Computation-for-Analysis-to-Instrumentation-Code" class="headerlink" title="Shifting Computation for Analysis to Instrumentation Code"></a>Shifting Computation for Analysis to Instrumentation Code</h1><p>通常应用程序中平均每 5 条指令一条分支指令，接着调用 Lookup 函数，大大降低了应用程序执行速度。</p>
+<p>改善方法：<br>我们注意到，每条指令的 instrumentation 代码只调用一次，而每次执行指令时都会执行对应的 analysis 代码。因此，如果将 analysis 中的部分计算转移到 instrumentation 中，将全面提高性能。</p>
+<p>本例中</p>
+<ul>
+<li>直接分支指令，程序中有大量直接分支指令，因此在 instruction() 中调用 Lookup() </li>
+<li>间接分支指令（即call），相对较少，使用原有 analysis 代码<br>基于此，我们增加了一个轻量级 analysis 函数，docount，而原有的 docount2() 保持不变。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function">VOID <span class="title">docount</span><span class="params">( COUNTER *pedg, INT32 taken )</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">if</span>( !taken ) <span class="keyword">return</span>;</div><div class="line">    pedg-&gt;<span class="number">_</span>count++;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>instrumentation 相对复杂：<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">VOID Instruction(<span class="name">INS</span> ins, void *v)</div><div class="line">&#123;</div><div class="line">      ...</div><div class="line"></div><div class="line">    if (INS_IsDirectBranchOrCall(ins))</div><div class="line">    &#123;</div><div class="line">        COUNTER *pedg = Lookup( <span class="name">INS_Address</span>(<span class="name">ins</span>),  INS_DirectBranchOrCallTargetAddress(<span class="name">ins</span>) )<span class="comment">;</span></div><div class="line"></div><div class="line">        INS_InsertCall(<span class="name">ins</span>, IPOINT_BEFORE, (<span class="name">AFUNPTR</span>) docount,</div><div class="line">                       IARG_ADDRINT, pedg,</div><div class="line">                       IARG_BRANCH_TAKEN,</div><div class="line">                       IARG_END)<span class="comment">;</span></div><div class="line">    &#125;</div><div class="line">    else</div><div class="line">    &#123;</div><div class="line">        INS_InsertCall(<span class="name">ins</span>, IPOINT_BEFORE, (<span class="name">AFUNPTR</span>) docount2,</div><div class="line">                       IARG_INST_PTR,</div><div class="line">                       IARG_BRANCH_TARGET_ADDR,</div><div class="line">                       IARG_BRANCH_TAKEN,</div><div class="line">                       IARG_END)<span class="comment">;</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">      ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="Eliminating-Control-Flow"><a href="#Eliminating-Control-Flow" class="headerlink" title="Eliminating Control Flow"></a>Eliminating Control Flow</h1><p>docount() 函数为内联函数将有助于提高性能，没有任何控制流转移（单基本块）的例程几乎可以保证为内联函数。<br>如果参数 taken 为 0 或 1 可以使用如下方法消除控制流转移：<br><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">VOID docount( COUNTER *pedg, INT32 taken )</div><div class="line">&#123;</div><div class="line">    pedg-&gt;_<span class="built_in">count</span> += taken<span class="comment">;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2016/01/13/Intel-Pin-Performance-Considerations/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2016/01/13/Intel-Pin-Performance-Considerations/index.html" data-title="Intel Pin 8 ：编写 Pintool 时的性能开销" data-url="http://huirong.github.io/2016/01/13/Intel-Pin-Performance-Considerations/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

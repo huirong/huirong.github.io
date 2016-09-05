@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>抓取scrapy中文文档(我的第一个爬虫) | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="爬虫,python," />
+  
+
+  <meta name="description" content="I、新建scrapy项目Tips：本文档默认大家已经安装scripy，如果还没，请参考Installation guide1scrapy startproject scrapyDoc
+II、新建spider① 进入项目1cd scrapyDoc
+② 新建spider1scrapy genspider ScrapyDoc scrapy-chs.readthedocs.org
+即: name = ‘S">
+<meta property="og:type" content="article">
+<meta property="og:title" content="抓取scrapy中文文档(我的第一个爬虫)">
+<meta property="og:url" content="http://huirong.github.io/2014/05/22/抓取scrapy中文文档(我的第一个爬虫)/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="I、新建scrapy项目Tips：本文档默认大家已经安装scripy，如果还没，请参考Installation guide1scrapy startproject scrapyDoc
+II、新建spider① 进入项目1cd scrapyDoc
+② 新建spider1scrapy genspider ScrapyDoc scrapy-chs.readthedocs.org
+即: name = ‘S">
+<meta property="og:updated_time" content="2016-04-16T07:42:59.910Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="抓取scrapy中文文档(我的第一个爬虫)">
+<meta name="twitter:description" content="I、新建scrapy项目Tips：本文档默认大家已经安装scripy，如果还没，请参考Installation guide1scrapy startproject scrapyDoc
+II、新建spider① 进入项目1cd scrapyDoc
+② 新建spider1scrapy genspider ScrapyDoc scrapy-chs.readthedocs.org
+即: name = ‘S">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#I、新建scrapy项目"><span class="toc-text">I、新建scrapy项目</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#II、新建spider"><span class="toc-text">II、新建spider</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-进入项目"><span class="toc-text">① 进入项目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-新建spider"><span class="toc-text">② 新建spider</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#III、编写代码"><span class="toc-text">III、编写代码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-item-py"><span class="toc-text">① item.py</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-ScrapyDocSpider-py"><span class="toc-text">② ScrapyDocSpider.py</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#IV、运行程序"><span class="toc-text">IV、运行程序</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-抓取scrapy中文文档(我的第一个爬虫)" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">抓取scrapy中文文档(我的第一个爬虫)</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2014.05.22</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/爬虫/">爬虫</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2014/05/22/抓取scrapy中文文档(我的第一个爬虫)/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h1 id="I、新建scrapy项目"><a href="#I、新建scrapy项目" class="headerlink" title="I、新建scrapy项目"></a>I、新建scrapy项目</h1><p><font color="red">Tips：</font>本文档默认大家已经安装scripy，如果还没，请参考<a href="http://doc.scrapy.org/en/latest/intro/install.html" target="_blank" rel="external">Installation guide</a><br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">scrapy startproject scrapyDoc</span></div></pre></td></tr></table></figure></p>
+<h1 id="II、新建spider"><a href="#II、新建spider" class="headerlink" title="II、新建spider"></a>II、新建spider</h1><h2 id="①-进入项目"><a href="#①-进入项目" class="headerlink" title="① 进入项目"></a>① 进入项目</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> scrapyDoc</div></pre></td></tr></table></figure>
+<h2 id="②-新建spider"><a href="#②-新建spider" class="headerlink" title="② 新建spider"></a>② 新建spider</h2><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scrapy genspider ScrapyDoc scrapy-chs<span class="selector-class">.readthedocs</span><span class="selector-class">.org</span></div></pre></td></tr></table></figure>
+<p>即: name = ‘ScrapyDoc’<br>allowed_domains = [‘scrapy-chs.readthedocs.org’]   </p>
+<h1 id="III、编写代码"><a href="#III、编写代码" class="headerlink" title="III、编写代码"></a>III、编写代码</h1><h2 id="①-item-py"><a href="#①-item-py" class="headerlink" title="① item.py"></a>① item.py</h2><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta"># Define here the models for your scraped items</span></div><div class="line"><span class="meta">#</span></div><div class="line"><span class="meta"># See documentation in:</span></div><div class="line"><span class="meta"># http://doc.scrapy.org/topics/items.html</span></div><div class="line"></div><div class="line"><span class="title">from</span> scrapy.item <span class="keyword">import</span> Item, Field</div><div class="line"><span class="class"></span></div><div class="line"><span class="keyword">class</span> <span class="type">ScrapydocItem</span>(<span class="type">Item</span>):</div><div class="line">    title = <span class="type">Field</span>()</div><div class="line">    link = <span class="type">Field</span>()</div><div class="line">    url = <span class="type">Field</span>()</div></pre></td></tr></table></figure>
+<h2 id="②-ScrapyDocSpider-py"><a href="#②-ScrapyDocSpider-py" class="headerlink" title="② ScrapyDocSpider.py"></a>② ScrapyDocSpider.py</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.spider <span class="keyword">import</span> BaseSpider</div><div class="line"><span class="keyword">from</span> scrapy.selector <span class="keyword">import</span> HtmlXPathSelector</div><div class="line"><span class="keyword">from</span> scrapy.http <span class="keyword">import</span> Request</div><div class="line"></div><div class="line"><span class="keyword">from</span> ScrapyDoc.items <span class="keyword">import</span> ScrapydocItem</div><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line"><span class="comment">#设置默认编码</span></div><div class="line"><span class="keyword">import</span> sys</div><div class="line">reload(sys)</div><div class="line">sys.setdefaultencoding(<span class="string">'utf-8'</span>)</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ScrapyDocSpider</span><span class="params">(BaseSpider)</span>:</span></div><div class="line">    name = <span class="string">'ScrapyDoc'</span></div><div class="line">    allowed_domains = [<span class="string">'scrapy-chs.readthedocs.org'</span>]</div><div class="line"></div><div class="line">    start_urls = [<span class="string">'http://scrapy-chs.readthedocs.org/zh_CN/latest'</span>]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self,response)</span>:</span></div><div class="line"></div><div class="line">        <span class="keyword">if</span> response.url.split(<span class="string">"/"</span>)[<span class="number">-1</span>] == <span class="string">''</span>:</div><div class="line">            filename = response.url.split(<span class="string">"/"</span>)[<span class="number">-2</span>]</div><div class="line">        <span class="keyword">else</span> :</div><div class="line">            dirname = response.url.split(<span class="string">"/"</span>)[<span class="number">-2</span>]</div><div class="line">            <span class="comment">#判断是否有此目录,如果没有就新建</span></div><div class="line">            <span class="keyword">if</span> os.path.isdir(dirname) == <span class="keyword">False</span>:</div><div class="line">                os.mkdir(dirname)</div><div class="line">            filename = <span class="string">'/'</span>.join(response.url.split(<span class="string">"/"</span>)[<span class="number">-2</span>:])</div><div class="line"></div><div class="line">        <span class="comment">#保存文件</span></div><div class="line">        open(filename,<span class="string">'wb'</span>).write(response.body)</div><div class="line"></div><div class="line">        sel = HtmlXPathSelector(response)</div><div class="line">        sites = sel.select(<span class="string">'//li[@class="toctree-l1"]'</span>)</div><div class="line">        <span class="keyword">for</span> site <span class="keyword">in</span> sites:</div><div class="line">            item = ScrapydocItem()</div><div class="line">            item[<span class="string">'title'</span>] = site.select(<span class="string">'a/text()'</span>).extract()</div><div class="line"></div><div class="line">            <span class="comment">#生成连接 begin   ,因为从页面提取的连接都是相对地址</span></div><div class="line">            link = site.select(<span class="string">'a/@href'</span>).extract()[<span class="number">0</span>]</div><div class="line">            url = response.url</div><div class="line"></div><div class="line">            <span class="comment">#地址形式是否为 ../spiders.html 这种形式,需要回到上级地址</span></div><div class="line">            <span class="keyword">if</span> link.split(<span class="string">'/'</span>)[<span class="number">0</span>] == <span class="string">'..'</span>:</div><div class="line">                url2 = <span class="string">'/'</span>.join(url.split(<span class="string">'/'</span>)[<span class="number">0</span>:<span class="number">-2</span>]) + <span class="string">'/'</span> + <span class="string">'/'</span>.join(link.split(<span class="string">'/'</span>)[<span class="number">1</span>:])</div><div class="line">            <span class="keyword">else</span>:</div><div class="line">                url2 = <span class="string">'/'</span>.join(url.split(<span class="string">'/'</span>)[<span class="number">0</span>:<span class="number">-1</span>]) + <span class="string">'/'</span> + link</div><div class="line"></div><div class="line">            item[<span class="string">'link'</span>] = [url2]</div><div class="line">            <span class="comment">#生成连接 end </span></div><div class="line">            <span class="keyword">yield</span> item</div><div class="line"></div><div class="line">            <span class="comment">#返回多个request</span></div><div class="line">            <span class="keyword">yield</span> Request(url=url2,callback=self.parse)</div><div class="line"></div><div class="line">        <span class="keyword">return</span></div></pre></td></tr></table></figure>
+<h1 id="IV、运行程序"><a href="#IV、运行程序" class="headerlink" title="IV、运行程序"></a>IV、运行程序</h1><ol>
+<li>回到scrapy项目主目录</li>
+<li><p>新建一个文件夹(我习惯将所有下载的文件保存在一个单独文件夹下)</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">mkdir</span> doc</div></pre></td></tr></table></figure>
+</li>
+<li><p>进入doc文件夹  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> doc</div></pre></td></tr></table></figure>
+</li>
+<li><p>运行程序</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">scrapy crawl ScrapyDoc</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>现在终于将scrapy中文文档保存在本地了,不过提取到的item还没存储,可以输入如下命令行保存item</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">scrapy </span>crawl <span class="keyword">ScrapyDoc </span>-o s.<span class="keyword">json </span>-t <span class="keyword">json</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2014/05/22/抓取scrapy中文文档(我的第一个爬虫)/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2014/05/22/抓取scrapy中文文档(我的第一个爬虫)/index.html" data-title="抓取scrapy中文文档(我的第一个爬虫)" data-url="http://huirong.github.io/2014/05/22/抓取scrapy中文文档(我的第一个爬虫)/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

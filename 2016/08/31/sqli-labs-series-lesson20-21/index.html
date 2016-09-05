@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>sqli labs lesson 20~21 学习 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="渗透测试,sql注入," />
+  
+
+  <meta name="description" content="为了找工作，前几天重温了下背包九讲，现在继续学习sql注入。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sqli labs lesson 20~21 学习">
+<meta property="og:url" content="http://huirong.github.io/2016/08/31/sqli-labs-series-lesson20-21/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="为了找工作，前几天重温了下背包九讲，现在继续学习sql注入。">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7fkm2fcwxj30zn0a9q7f.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1f7fkqai00tj30fm0ardgv.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7fks7dy43j311r09d0xy.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7fku8u59qj31000ggdma.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7fl5zdbnkj310n0a2gqm.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7ii7z0ugzj30eq099dgi.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7iie2bw5uj30eq09zgmc.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7iiepfhe8j30fm0cgwg4.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7iifome6uj311p08sgqk.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7iij6a57wj30eq094t9s.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7iijffkzmj30fm0cg0ul.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7iijuq7ntj31160bkwk1.jpg">
+<meta property="og:updated_time" content="2016-09-05T03:33:32.608Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="sqli labs lesson 20~21 学习">
+<meta name="twitter:description" content="为了找工作，前几天重温了下背包九讲，现在继续学习sql注入。">
+<meta name="twitter:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7fkm2fcwxj30zn0a9q7f.jpg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-lesson-20-cookie注入-基于错误"><span class="toc-text">1 lesson 20 cookie注入-基于错误</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-1-测试cookie"><span class="toc-text">1.1 测试cookie</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-获取数据库信息"><span class="toc-text">1.2 获取数据库信息</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-lesson-21-cookie注入-基于错误"><span class="toc-text">2 lesson 21 cookie注入-基于错误</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-测试"><span class="toc-text">2.1 测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-闭合类型"><span class="toc-text">2.2 闭合类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-注入"><span class="toc-text">2.2 注入</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-后记"><span class="toc-text">3 后记</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-sqli-labs-series-lesson20-21" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">sqli labs lesson 20~21 学习</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2016.08.31</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/sql注入/">sql注入</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2016/08/31/sqli-labs-series-lesson20-21/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>为了找工作，前几天重温了下背包九讲，现在继续学习sql注入。<br><a id="more"></a></p>
+<h1 id="1-lesson-20-cookie注入-基于错误"><a href="#1-lesson-20-cookie注入-基于错误" class="headerlink" title="1 lesson 20 cookie注入-基于错误"></a>1 lesson 20 cookie注入-基于错误</h1><p>此时，无论用户名、密码以什么格式输入，在后面加单引号’，双引号”，注释符#，页面都不会报错。</p>
+<p>在页面上输入普通用户 用户名和密码之后，显示如下<br><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7fkm2fcwxj30zn0a9q7f.jpg" alt=""></p>
+<p>USER AGENT,cookie,username,password,id等信息显示在页面上</p>
+<h1 id="1-1-测试cookie"><a href="#1-1-测试cookie" class="headerlink" title="1.1 测试cookie"></a>1.1 测试cookie</h1><p>使用 EditThisCookie 插件查看cookie值<br><img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1f7fkqai00tj30fm0ardgv.jpg" alt=""></p>
+<p>cookie 值为 Dumb，编辑cookie，观察页面显示：<br>在 Dumb 后面添加单引号 ‘, 即 cookie 值为 <code>Dumb&#39;</code><br>然后刷新页面<br><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7fks7dy43j311r09d0xy.jpg" alt=""><br>出现错误：<code>Issue with your mysql: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near &#39;&#39;Dumb&#39;&#39; LIMIT 0,1&#39; at line 1</code></p>
+<p>cookie 值：<code>Dumb&quot;</code><br><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7fku8u59qj31000ggdma.jpg" alt=""><br>提示不太友好，就不解释了<del>~</del><br>总之没有语法错误。</p>
+<p>初步断定 <font color="red"> cookie 是以单引号’ 闭合的</font></p>
+<table>
+<thead>
+<tr>
+<th>cookie 值</th>
+<th>页面情况</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Dumb&#39;#</code></td>
+<td>页面显示正常</td>
+</tr>
+<tr>
+<td><code>Dumb&#39; order by 5#</code></td>
+<td>语法错误</td>
+</tr>
+<tr>
+<td><code>Dumb&#39; order by 1#</code></td>
+<td>正常</td>
+</tr>
+<tr>
+<td><code>Dumb&#39; order by 3#</code></td>
+<td>正常</td>
+</tr>
+<tr>
+<td><code>Dumb&#39; order by 4#</code></td>
+<td>语法错误</td>
+</tr>
+</tbody>
+</table>
+<font color="red">说明sql语句有三个字段</font>
+
+<h2 id="1-2-获取数据库信息"><a href="#1-2-获取数据库信息" class="headerlink" title="1.2 获取数据库信息"></a>1.2 获取数据库信息</h2><p>cookie 值：<code>&#39; union select version(),database(),user()#</code><br><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7fl5zdbnkj310n0a2gqm.jpg" alt=""><br>页面显示</p>
+<ul>
+<li>数据库版本：5.6.17</li>
+<li>数据库名：security</li>
+<li>用户名：root@localhost</li>
+</ul>
+<p>其他数据库信息的获取方式，参加 <a href="http://huirong.github.io/2016/08/24/sqli-labs-series-lesson1-4/">sqli labs lesson 1~4 学习</a> lesson 1</p>
+<h1 id="2-lesson-21-cookie注入-基于错误"><a href="#2-lesson-21-cookie注入-基于错误" class="headerlink" title="2 lesson 21 cookie注入-基于错误"></a>2 lesson 21 cookie注入-基于错误</h1><h2 id="2-1-测试"><a href="#2-1-测试" class="headerlink" title="2.1 测试"></a>2.1 测试</h2><ul>
+<li>在页面输入 用户名：Dumb 密码：Dumb 后</li>
+<li>cookie 值：RHVtYg==</li>
+<li>备注：可能是浏览器上看到的 cookie 值为：RHVtYg%3D%3D，因为 == 浏览器进行url编码后为 %3D</li>
+</ul>
+<p>无论怎么使用 lesson 20 的方式修改cookie都没有用<br>使用 base 64 解密 cookie<br><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7ii7z0ugzj30eq099dgi.jpg" alt=""><br>解密后的结果为 Dumb，说明cookie是经过base 64加密的。</p>
+<h2 id="2-2-闭合类型"><a href="#2-2-闭合类型" class="headerlink" title="2.2 闭合类型"></a>2.2 闭合类型</h2><p>将 <code>Dumb\</code> 进行base64加密<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7iie2bw5uj30eq09zgmc.jpg" alt=""></p>
+<p>然后EditThisCookie，将cookie修改为加密后的值<br><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7iiepfhe8j30fm0cgwg4.jpg" alt=""></p>
+<p>刷新页面<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7iifome6uj311p08sgqk.jpg" alt=""></p>
+<p>页面出现如下错误：<br><code>Issue with your mysql: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near &#39;&#39;Dumb\&#39;) LIMIT 0,1&#39; at line 1</code></p>
+<p>说明 sql 语句是以 <code>(&#39;&#39;)</code> 闭合的。</p>
+<h2 id="2-2-注入"><a href="#2-2-注入" class="headerlink" title="2.2 注入"></a>2.2 注入</h2><p>将 <code>&#39;) union select database(),version(),version() #</code>  进行base64加密<br><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7iij6a57wj30eq094t9s.jpg" alt=""></p>
+<p><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7iijffkzmj30fm0cg0ul.jpg" alt=""></p>
+<p><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7iijuq7ntj31160bkwk1.jpg" alt=""></p>
+<p>页面上显示出数据库，MySQL版本等信息。<br>其他数据库信息的获取方式，参加 <a href="http://huirong.github.io/2016/08/24/sqli-labs-series-lesson1-4/">sqli labs lesson 1~4 学习</a> lesson 1</p>
+<h1 id="3-后记"><a href="#3-后记" class="headerlink" title="3 后记"></a>3 后记</h1><p>sqli labs 的学习就先告一段落，等找完工作，继续学习，顺便把中间没有博客的 lesson 18 和 lesson 19 补上。</p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2016/08/31/sqli-labs-series-lesson20-21/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2016/08/31/sqli-labs-series-lesson20-21/index.html" data-title="sqli labs lesson 20~21 学习" data-url="http://huirong.github.io/2016/08/31/sqli-labs-series-lesson20-21/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

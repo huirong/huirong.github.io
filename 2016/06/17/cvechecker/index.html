@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>cvechecker 安装和使用教程 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="渗透测试," />
+  
+
+  <meta name="description" content="cvechecker 通过扫描系统中已安装的软件列表，并将结果和CVE数据库匹配，报告系统中可能存在的漏洞。
+1 安装
+下载 cvechecker 安装包首先运行
+1autoreconf --force --install
+
+运行标准配置命令（根据不同的环境，添加 –enable-*  选项）
+1./configure --enable-sqlite3
+
+
+如果不加 –enable-sqlite3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cvechecker 安装和使用教程">
+<meta property="og:url" content="http://huirong.github.io/2016/06/17/cvechecker/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="cvechecker 通过扫描系统中已安装的软件列表，并将结果和CVE数据库匹配，报告系统中可能存在的漏洞。
+1 安装
+下载 cvechecker 安装包首先运行
+1autoreconf --force --install
+
+运行标准配置命令（根据不同的环境，添加 –enable-*  选项）
+1./configure --enable-sqlite3
+
+
+如果不加 –enable-sqlite3">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCjw1f5582ge5icj30k107qadf.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1f558grmtpsj30k305ognw.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCjw1f55g7yrl64j30i80a8432.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1f55gdhdxjnj30jx0ce44b.jpg">
+<meta property="og:updated_time" content="2016-06-23T13:23:53.494Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="cvechecker 安装和使用教程">
+<meta name="twitter:description" content="cvechecker 通过扫描系统中已安装的软件列表，并将结果和CVE数据库匹配，报告系统中可能存在的漏洞。
+1 安装
+下载 cvechecker 安装包首先运行
+1autoreconf --force --install
+
+运行标准配置命令（根据不同的环境，添加 –enable-*  选项）
+1./configure --enable-sqlite3
+
+
+如果不加 –enable-sqlite3">
+<meta name="twitter:image" content="http://ww2.sinaimg.cn/large/005CA6ZCjw1f5582ge5icj30k107qadf.jpg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-安装"><span class="toc-text">1 安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-待解决问题"><span class="toc-text">2 待解决问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-安装-libconfig"><span class="toc-text">2.1 安装 libconfig</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-安装-sqlite3"><span class="toc-text">2.2 安装 sqlite3</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-编译安装"><span class="toc-text">3 编译安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-使用"><span class="toc-text">4 使用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-参数解释"><span class="toc-text">5 参数解释</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-参考文献"><span class="toc-text">6 参考文献</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-cvechecker" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">cvechecker 安装和使用教程</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2016.06.17</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2016/06/17/cvechecker/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>cvechecker 通过扫描系统中已安装的软件列表，并将结果和CVE数据库匹配，报告系统中可能存在的漏洞。</p>
+<h1 id="1-安装"><a href="#1-安装" class="headerlink" title="1 安装"></a>1 安装</h1><ul>
+<li><p>下载 <a href="https://github.com/sjvermeu/cvechecker" target="_blank" rel="external">cvechecker</a> 安装包<br>首先运行</p>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment">autoreconf</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">force</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">install</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>运行标准配置命令（根据不同的环境，添加 –enable-*  选项）</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./configure <span class="comment">--enable-sqlite3</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><font color="orange">如果不加 –enable-sqlite3 选项，安装好之后，初始化数据库的时候会出问题</font></p>
+<h1 id="2-待解决问题"><a href="#2-待解决问题" class="headerlink" title="2 待解决问题"></a>2 待解决问题</h1><h2 id="2-1-安装-libconfig"><a href="#2-1-安装-libconfig" class="headerlink" title="2.1 安装 libconfig"></a>2.1 安装 libconfig</h2><p>安装过程会出现如下问题：<br><img src="http://ww2.sinaimg.cn/large/005CA6ZCjw1f5582ge5icj30k107qadf.jpg" alt=""></p>
+<p>需要安装 libconfig，下载 <a href="http://www.hyperrealm.com/libconfig/libconfig-1.5.tar.gz" target="_blank" rel="external">libconfig</a> 安装包</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">cd</span> libconfig-<span class="number">1.5</span>/</div><div class="line">./configure</div><div class="line"><span class="keyword">make</span></div><div class="line">sudo <span class="keyword">make</span> install</div></pre></td></tr></table></figure>
+<h2 id="2-2-安装-sqlite3"><a href="#2-2-安装-sqlite3" class="headerlink" title="2.2 安装 sqlite3"></a>2.2 安装 sqlite3</h2><p>安装完 libconfig 之后，又会出现如下问题，缺少 sqlite3 包<br><img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1f558grmtpsj30k305ognw.jpg" alt=""></p>
+<p>安装 sqlite3<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sudo apt-get <span class="keyword">install</span> sqlite3</div><div class="line">sudo apt-<span class="keyword">get</span> <span class="keyword">install</span> libsqlite3-dev</div><div class="line">apt-<span class="keyword">get</span> <span class="keyword">install</span> libsqlite3-tcl</div></pre></td></tr></table></figure></p>
+<h1 id="3-编译安装"><a href="#3-编译安装" class="headerlink" title="3 编译安装"></a>3 编译安装</h1><p>./configure 运行成功后，编译安装</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">make</span></div><div class="line">sudo <span class="built_in">make</span> install</div></pre></td></tr></table></figure>
+<h1 id="4-使用"><a href="#4-使用" class="headerlink" title="4 使用"></a>4 使用</h1><ul>
+<li><p>初始化 SQLite3 数据库</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">cvechecker -i</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>加载 CVE 和版本匹配规则</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo apt-<span class="keyword">get</span> install xsltproc</div><div class="line">pullcves pull</div></pre></td></tr></table></figure>
+</li>
+<li><p>生成需要扫描的文件</p>
+<figure class="highlight sqf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo <span class="built_in">find</span> / -<span class="built_in">type</span> f -perm -o+x &gt; scanlist.txt</div><div class="line"><span class="built_in">echo</span> <span class="string">"/proc/version"</span> &gt;&gt; scanlist.txt</div></pre></td></tr></table></figure>
+</li>
+<li><p>收集已经安装的软件列表</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo cvechecker -<span class="selector-tag">b</span> scanlist.txt</div></pre></td></tr></table></figure>
+</li>
+<li><p>输出匹配的 CVE 列表</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">sudo cvechecker -r</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>部分结果截图如下：<br><img src="http://ww1.sinaimg.cn/large/005CA6ZCjw1f55g7yrl64j30i80a8432.jpg" alt=""></p>
+<h1 id="5-参数解释"><a href="#5-参数解释" class="headerlink" title="5 参数解释"></a>5 参数解释</h1><figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cvechecker <span class="comment">--help</span></div></pre></td></tr></table></figure>
+<p><img src="http://ww3.sinaimg.cn/large/005CA6ZCjw1f55gdhdxjnj30jx0ce44b.jpg" alt=""></p>
+<h1 id="6-参考文献"><a href="#6-参考文献" class="headerlink" title="6 参考文献"></a>6 参考文献</h1><p><a href="https://github.com/sjvermeu/cvechecker" target="_blank" rel="external">cvechecker</a><br><a href="https://github.com/sjvermeu/cvechecker/wiki/Installation" target="_blank" rel="external">cvechecker Installation</a></p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2016/06/17/cvechecker/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2016/06/17/cvechecker/index.html" data-title="cvechecker 安装和使用教程" data-url="http://huirong.github.io/2016/06/17/cvechecker/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

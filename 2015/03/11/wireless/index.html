@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>使用kali破解无线网 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="kali,渗透测试," />
+  
+
+  <meta name="description" content="之前也用kali破解无线网，但kali装在虚拟机上，虚拟机不支持无线网卡，即使使用小米随身wifi做适配器还是各种问题，前两天刚在硬盘上安装kali，就迫不及待的想试试了">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用kali破解无线网">
+<meta property="og:url" content="http://huirong.github.io/2015/03/11/wireless/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="之前也用kali破解无线网，但kali装在虚拟机上，虚拟机不支持无线网卡，即使使用小米随身wifi做适配器还是各种问题，前两天刚在硬盘上安装kali，就迫不及待的想试试了">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1eq1wj6klytj30ff0cw76v.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1eq1wis1p6yj30k40dljuy.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1eq1zm1ixgsj30ki0dtq5c.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1eq1wkkjzb3j30p10i8jxw.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1eq1zssu6rtj311y0lcdj0.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1eq1wmh2w48j30kf0don2o.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1eq1wm1m8j0j30jp0d7tb6.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCjw1eqh3oj2cdcj30kc0domzg.jpg">
+<meta property="og:updated_time" content="2016-04-16T08:51:15.491Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用kali破解无线网">
+<meta name="twitter:description" content="之前也用kali破解无线网，但kali装在虚拟机上，虚拟机不支持无线网卡，即使使用小米随身wifi做适配器还是各种问题，前两天刚在硬盘上安装kali，就迫不及待的想试试了">
+<meta name="twitter:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1eq1wj6klytj30ff0cw76v.jpg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016sfsf1fba3xxxx8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#I、关于Aircrack-ng"><span class="toc-text">I、关于Aircrack-ng</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#II、使用Aircrack-ng破解WPA2加密的无线网"><span class="toc-text">II、使用Aircrack-ng破解WPA2加密的无线网</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#①-查看无线网卡"><span class="toc-text">① 查看无线网卡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#②-使无线网卡处于监听模式"><span class="toc-text">② 使无线网卡处于监听模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#③-探测无线网络，抓取无线数据包"><span class="toc-text">③ 探测无线网络，抓取无线数据包</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-查看bssid-channel"><span class="toc-text">(1)查看bssid channel</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-抓包并保存"><span class="toc-text">(2)抓包并保存</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#④-进行DeAuth攻击"><span class="toc-text">④ 进行DeAuth攻击</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#⑤-开始暴力破解"><span class="toc-text">⑤ 开始暴力破解</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-wireless" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">使用kali破解无线网</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2015.03.11</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/kali/">kali</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://huirong.github.io/2015/03/11/wireless/#disqus_thread"></a>
+        </span>
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>之前也用kali破解无线网，但kali装在虚拟机上，虚拟机不支持无线网卡，即使使用小米随身wifi做适配器还是各种问题，前两天刚在硬盘上安装kali，就迫不及待的想试试了<br><a id="more"></a><br>我使用的是 aircrack-ng 来破解，无线网加密方式是WPA2，现在一般的无线网都是这种加密方式</p>
+<h1 id="I、关于Aircrack-ng"><a href="#I、关于Aircrack-ng" class="headerlink" title="I、关于Aircrack-ng"></a>I、关于Aircrack-ng</h1><p>Aircrack-ng是一个与802.11标准的无线网络分析有关的安全软件，主要功能有：网络侦测，数据包嗅探。WEP和WPA/WPA2-PSK破解。Aircrack-ng可以工作在任何支持监听模式的无线网卡上并嗅探802.11a,802.11b,802.11g的数据。<br>Aircrack-ng是一个包含了多款工具的无线攻击审计套装，这里面很多工具在后面的内容中都会用到，具体见下表：<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1eq1wj6klytj30ff0cw76v.jpg" alt=""></p>
+<h1 id="II、使用Aircrack-ng破解WPA2加密的无线网"><a href="#II、使用Aircrack-ng破解WPA2加密的无线网" class="headerlink" title="II、使用Aircrack-ng破解WPA2加密的无线网"></a>II、使用Aircrack-ng破解WPA2加密的无线网</h1><h2 id="①-查看无线网卡"><a href="#①-查看无线网卡" class="headerlink" title="① 查看无线网卡"></a>① 查看无线网卡</h2><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">ifconfig</span></div></pre></td></tr></table></figure>
+<p><img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1eq1wis1p6yj30k40dljuy.jpg" alt=""><br>wlan0即为我的无线网卡</p>
+<h2 id="②-使无线网卡处于监听模式"><a href="#②-使无线网卡处于监听模式" class="headerlink" title="② 使无线网卡处于监听模式"></a>② 使无线网卡处于监听模式</h2><p>用于嗅探的无线网卡要处于monitor监听模式（若不会，自行百度）<br><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">airmon-ng <span class="literal">start</span> wlan0</div></pre></td></tr></table></figure></p>
+<p><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1eq1zm1ixgsj30ki0dtq5c.jpg" alt=""><br>当看到驱动下面显示有monitor mode enabled on mon0，即已启动监听模式，监听模式下适配器名称变更为mon0</p>
+<h2 id="③-探测无线网络，抓取无线数据包"><a href="#③-探测无线网络，抓取无线数据包" class="headerlink" title="③ 探测无线网络，抓取无线数据包"></a>③ 探测无线网络，抓取无线数据包</h2><p>激活无线网卡后就可以进行抓包了，是用airodump-ng工具实现，我这里分为两步来实现</p>
+<h3 id="1-查看bssid-channel"><a href="#1-查看bssid-channel" class="headerlink" title="(1)查看bssid channel"></a>(1)查看bssid channel</h3><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">airodump-ng mon0</div></pre></td></tr></table></figure>
+<p><img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1eq1wkkjzb3j30p10i8jxw.jpg" alt=""><br>第一个就是我要破解的无线网，记住他的bssid channel号</p>
+<h3 id="2-抓包并保存"><a href="#2-抓包并保存" class="headerlink" title="(2)抓包并保存"></a>(2)抓包并保存</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">airodump-ng</span> <span class="selector-tag">--ivs</span> <span class="selector-tag">--ignore-negative-one</span> <span class="selector-tag">--bssid</span>  <span class="selector-tag">A8</span><span class="selector-pseudo">:57</span><span class="selector-pseudo">:4E</span><span class="selector-pseudo">:77</span><span class="selector-pseudo">:D0</span><span class="selector-pseudo">:8C</span> <span class="selector-tag">mon0</span></div></pre></td></tr></table></figure>
+<p>参数解释：</p>
+<ul>
+<li>–ivs 这里的设置是通过设置过滤，不再将所有无线数据保存，而只是保存可用于破解的IVS数据报文，这样可以有效地缩减保存的数据包大小</li>
+<li>–ignore-negative-one 没有使用这个参数的时候，一直fixed channel -1，导致后面的步骤一直出错，可能因为我的Aircrack-ng不是最新的版本，这个根据大家的实际情况来，不一定非得加上</li>
+<li>–bssid 待破解的无线网的MAC地址</li>
+<li>-c 无线网的工作频道</li>
+<li>-w 后跟要保存的文件名，这里w就是“write写”的意思，所以输入自己希望保持的文件名，我的文件名为loanga。<font color="red">大家一定要注意的是：</font>这里我们虽然设置保存的文件名是loanga，但是生成的文件却不是loanga.ivs，而是loanga-01.ivs。<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1eq1zssu6rtj311y0lcdj0.jpg" alt=""><h2 id="④-进行DeAuth攻击"><a href="#④-进行DeAuth攻击" class="headerlink" title="④ 进行DeAuth攻击"></a>④ 进行DeAuth攻击</h2>为了获得破解所需的WPA2握手验证的整个完整数据包，将会发送一种称之为“DeAuth”的数据包来将已经连接至无线路由器的合法无线客户端强制断开，此时，客户端就会自动重新连接无线路由器，大家也就有机会捕获到包含WPA2握手验证的完整数据包了<br>重新打开一个终端<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">aireplay-ng</span> <span class="selector-tag">-0</span> 30 <span class="selector-tag">-a</span> <span class="selector-tag">A8</span><span class="selector-pseudo">:57</span><span class="selector-pseudo">:4E</span><span class="selector-pseudo">:77</span><span class="selector-pseudo">:D0</span><span class="selector-pseudo">:8C</span> <span class="selector-tag">mon0</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>参数解释：</p>
+<ul>
+<li>-0 采用DeAuth攻击模式，后面跟攻击次数</li>
+<li>-a 待破解的MAC地址<br><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1eq1wmh2w48j30kf0don2o.jpg" alt=""><br>当抓包的界面出现 WPA handshake 时，即成功获取到无线WPA-PSK验证数据报文，就可以进行暴力破解了<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1eq1wm1m8j0j30jp0d7tb6.jpg" alt=""><h2 id="⑤-开始暴力破解"><a href="#⑤-开始暴力破解" class="headerlink" title="⑤ 开始暴力破解"></a>⑤ 开始暴力破解</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">aircrack-ng -w <span class="regexp">/usr/</span>share<span class="regexp">/wordlists/</span>dictionary<span class="regexp">/wordlist1.txt loanga-01.ivs</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>参数解释：<br>-w 后跟预先下载的字典，我的字典是在网上下载的，大家也可以自己下载生成字典的软件，自己制作字典<br>如果破解不成功，大家可以换一个字典<br><img src="http://ww2.sinaimg.cn/large/005CA6ZCjw1eqh3oj2cdcj30kc0domzg.jpg" alt=""><br>恭喜你，破解成功！！！！</p>
+<p>#参考文献</p>
+<ul>
+<li>完全教程 Aircrack-ng破解WEP、WPA-PSK加密利器<a href="http://netsecurity.51cto.com/art/201105/264844_all.htm" target="_blank" rel="external">http://netsecurity.51cto.com/art/201105/264844_all.htm</a></li>
+<li><a href="https://www.youtube.com/watch?v=zAh0yQdLXDc" target="_blank" rel="external">https://www.youtube.com/watch?v=zAh0yQdLXDc</a></li>
+</ul>
+<font color="red">本教程纯属学习。。。。。。</font>
+
+
+
+
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'huirong';
+    
+    var disqus_url = 'http://huirong.github.io/2015/03/11/wireless/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//huirong.disqus.com/count.js" async></script>
+
+
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2015/03/11/wireless/index.html" data-title="使用kali破解无线网" data-url="http://huirong.github.io/2015/03/11/wireless/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
