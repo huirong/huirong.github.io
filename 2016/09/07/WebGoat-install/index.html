@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>WebGoat 安装 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="渗透测试,WebGoat," />
+  
+
+  <meta name="description" content="WebGoat 是 OWASP 组织研制出的用于进行 web 漏洞实验的应用平台，用来说明 web 应用中存在的安全漏洞。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WebGoat 安装">
+<meta property="og:url" content="http://huirong.github.io/2016/09/07/WebGoat-install/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="WebGoat 是 OWASP 组织研制出的用于进行 web 漏洞实验的应用平台，用来说明 web 应用中存在的安全漏洞。">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7l54687c4j30j5025wez.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7l4tebd2qj30gt02mq3e.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7l5azp2crj30s0045abh.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7l5b917d5j30s00633zw.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7l5citwzzj30gy02lwes.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7l5i4d4kij30rz0ir405.jpg">
+<meta property="og:updated_time" content="2016-09-07T09:39:38.933Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WebGoat 安装">
+<meta name="twitter:description" content="WebGoat 是 OWASP 组织研制出的用于进行 web 漏洞实验的应用平台，用来说明 web 应用中存在的安全漏洞。">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7l54687c4j30j5025wez.jpg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?13fd5daa6d82a4022fb7211641792382";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-WebGoat-简介"><span class="toc-text">1 WebGoat 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-OWASP-简介"><span class="toc-text">2 OWASP 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-安装-升级-JDK"><span class="toc-text">3 安装/升级 JDK</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-下载"><span class="toc-text">3.1 下载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-修改环境变量"><span class="toc-text">3.2 修改环境变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-设置成系统默认的jdk"><span class="toc-text">3.3 设置成系统默认的jdk</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-查看是否安装-升级成功"><span class="toc-text">3.4 查看是否安装/升级成功</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-安装-WebGoat"><span class="toc-text">4 安装 WebGoat</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-参考文献"><span class="toc-text">5 参考文献</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-WebGoat-install" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">WebGoat 安装</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2016.09.07</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/WebGoat/">WebGoat</a>
+  </span>
+
+
+
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>WebGoat 是 OWASP 组织研制出的用于进行 web 漏洞实验的应用平台，用来说明 web 应用中存在的安全漏洞。<br><a id="more"></a></p>
+<h1 id="1-WebGoat-简介"><a href="#1-WebGoat-简介" class="headerlink" title="1 WebGoat 简介"></a>1 WebGoat 简介</h1><p>WebGoat 运行在带有java 虚拟机的平台之上，当前提供的训练课程有30 多个，其中包括：跨站点脚本攻击（XSS）、访问控制、线程安全、操作隐藏字段、操纵参数、弱会话cookie、SQL 盲注、数字型SQL 注入、字符串型SQL 注入、web 服务、Open Authentication 失效、危险的HTML 注释等等。</p>
+<h1 id="2-OWASP-简介"><a href="#2-OWASP-简介" class="headerlink" title="2 OWASP 简介"></a>2 OWASP 简介</h1><p>OWASP 是一个开放式Web 应用程序安全项目（OWASP，Open Web Application Security Project）组织，它提供有关计算机和互联网应用程序的公正、实际、有成本效益的信息。其目的是协助个人、企业和机构来发现和使用可信赖的软件。</p>
+<p>开放式Web 应用程序安全项目（OWASP）是一个非营利组织，不附属于任何企业或财团。因此，由OWASP 提供和开发的所有设施和文件都不受商业因素的影响。</p>
+<h1 id="3-安装-升级-JDK"><a href="#3-安装-升级-JDK" class="headerlink" title="3 安装/升级 JDK"></a>3 安装/升级 JDK</h1><p>WebGoat 运行在带有java 虚拟机的平台上，因此需要安装 JDK。<br>而且如果版本过低，会出错，最好还是升级 JDK 到最新版。升级 JDK 步骤和安装相同，不用卸载原来的 JDK。</p>
+<font color="red"> 如果是在 Windows 下安装，可自行绕过此步骤，毕竟双击 exe 谁都会<del>~</del> </font>
+
+<p>我原装 JDK 如下：<br><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7l54687c4j30j5025wez.jpg" alt=""></p>
+<p>JDK 版本太低，在后续运行 WebGoat 出错，所以需要升级。</p>
+<h2 id="3-1-下载"><a href="#3-1-下载" class="headerlink" title="3.1 下载"></a>3.1 下载</h2><p>下载最新版 JDK，网址 <a href="http://www.oracle.com/technetwork/java/index.html" target="_blank" rel="external">http://www.oracle.com/technetwork/java/index.html</a><br>根据自己的机型选择对应的版本。</p>
+<p>将安装包移动到 <code>/usr/local/java</code> 目录下，并解压。<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7l4tebd2qj30gt02mq3e.jpg" alt=""></p>
+<h2 id="3-2-修改环境变量"><a href="#3-2-修改环境变量" class="headerlink" title="3.2 修改环境变量"></a>3.2 修改环境变量</h2><p>修改 <code>/etc/profile</code> 配置文件，在文件末尾添加如下代码，不要修改其他部分。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">JAVA_HOME=<span class="string">"/usr/local/java/jdk1.8.0_101"</span></div><div class="line">CLASSPATH=<span class="string">"./:/usr/local/java/jdk1.8.0_101/lib"</span></div><div class="line">PATH=<span class="variable">$PATH</span>:<span class="variable">$JAVA_HOME</span>/bin:<span class="variable">$CLASSPATH</span></div><div class="line"><span class="built_in">export</span> PATH</div></pre></td></tr></table></figure></p>
+<p>可能大家下载的 jdk 版本和我的不同，根据自己的修改jdk版本号。</p>
+<p>保存并退出，<code>source /etc/profile</code></p>
+<h2 id="3-3-设置成系统默认的jdk"><a href="#3-3-设置成系统默认的jdk" class="headerlink" title="3.3 设置成系统默认的jdk"></a>3.3 设置成系统默认的jdk</h2><figure class="highlight dts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">update-alternatives --install <span class="meta-keyword">/usr/</span>bin/javac javac <span class="meta-keyword">/usr/</span>local<span class="meta-keyword">/java/</span>jdk1<span class="number">.8</span><span class="number">.0</span>_101<span class="meta-keyword">/bin/</span>javac <span class="number">1071</span></div><div class="line">update-alternatives --install <span class="meta-keyword">/usr/</span>bin/java java <span class="meta-keyword">/usr/</span>local<span class="meta-keyword">/java/</span>jdk1<span class="number">.8</span><span class="number">.0</span>_101<span class="meta-keyword">/bin/</span>java <span class="number">1071</span></div><div class="line">update-alternatives --config java</div></pre></td></tr></table></figure>
+<p>最后一个 –config java 命令，shell会提示你选择哪个jdk作为默认的jdk，第一个带 * ，就是刚才设置的，直接enter就可以了。</p>
+<p><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7l5azp2crj30s0045abh.jpg" alt=""></p>
+<p><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7l5b917d5j30s00633zw.jpg" alt=""></p>
+<h2 id="3-4-查看是否安装-升级成功"><a href="#3-4-查看是否安装-升级成功" class="headerlink" title="3.4 查看是否安装/升级成功"></a>3.4 查看是否安装/升级成功</h2><p><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7l5citwzzj30gy02lwes.jpg" alt=""><br>说明安装/升级成功！！！！！</p>
+<h1 id="4-安装-WebGoat"><a href="#4-安装-WebGoat" class="headerlink" title="4 安装 WebGoat"></a>4 安装 WebGoat</h1><p>下载简易安装 jar 可执行文件<br><a href="https://s3.amazonaws.com/webgoat-war/webgoat-container-7.0-SNAPSHOT-war-exec.jar" target="_blank" rel="external">https://s3.amazonaws.com/webgoat-war/webgoat-container-7.0-SNAPSHOT-war-exec.jar</a></p>
+<p>在终端运行如下命令：<br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">java</span> <span class="selector-tag">-jar</span> <span class="selector-tag">webgoat-container-7</span><span class="selector-class">.0</span><span class="selector-class">.1-war-exec</span><span class="selector-class">.jar</span></div></pre></td></tr></table></figure></p>
+<p>在浏览器访问 <a href="http://localhost:8080/WebGoat" target="_blank" rel="external">http://localhost:8080/WebGoat</a><br><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7l5i4d4kij30rz0ir405.jpg" alt=""></p>
+<p>可根据页面下方的用户名和密码登录 O(∩_∩)O~~</p>
+<h1 id="5-参考文献"><a href="#5-参考文献" class="headerlink" title="5 参考文献"></a>5 参考文献</h1><p><a href="https://github.com/WebGoat/WebGoat/blob/master/README.MD" target="_blank" rel="external">WebGoat: A deliberately insecure Web Application</a><br><a href="http://www.cnblogs.com/chineseboy/archive/2013/05/07/3064873.html" target="_blank" rel="external">debian 6 安装 JDK 、eclipse、 SDK 笔记</a></p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2016/09/07/WebGoat-install/index.html" data-title="WebGoat 安装" data-url="http://huirong.github.io/2016/09/07/WebGoat-install/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
