@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>WebGoat 学习 -- Access Control Flaws（访问控制缺陷） | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="渗透测试,WebGoat," />
+  
+
+  <meta name="description" content="访问控制知识点可参考 第六章 访问控制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WebGoat 学习 -- Access Control Flaws（访问控制缺陷）">
+<meta property="og:url" content="http://huirong.github.io/2016/09/08/WebGoat-AccessControlFlaws/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="访问控制知识点可参考 第六章 访问控制">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1f7m0zycfgoj30ir046aae.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7m2rfvuzuj30ir047aaj.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7m2rxfw6lj30ir04ujs8.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7m5qdo181j30iu0g3tbd.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7m6fggkpgj30l90e5n03.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7m6n08zdtj30l90e5juh.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7m78tp2u1j30qy0ar78d.jpg">
+<meta property="og:updated_time" content="2016-09-08T07:16:18.254Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WebGoat 学习 -- Access Control Flaws（访问控制缺陷）">
+<meta name="twitter:description" content="访问控制知识点可参考 第六章 访问控制">
+<meta name="twitter:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1f7m0zycfgoj30ir046aae.jpg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?13fd5daa6d82a4022fb7211641792382";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-Using-an-Access-Control-Matrix（使用访问控制模型）"><span class="toc-text">1 Using an Access Control Matrix（使用访问控制模型）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-General-Goal-s-目标"><span class="toc-text">1.1 General Goal(s) 目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-探索"><span class="toc-text">1.2 探索</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Bypass-a-Path-Based-Access-Control-Scheme-绕过基于路径的访问控制方案"><span class="toc-text">2 Bypass a Path Based Access Control Scheme(绕过基于路径的访问控制方案)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-General-Goal-s-目标"><span class="toc-text">2.1 General Goal(s) 目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-绕过实验"><span class="toc-text">2.2 绕过实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-1-测试"><span class="toc-text">2.2.1 测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-2-使用-WebScarab-拦截并修改"><span class="toc-text">2.2.2 使用 WebScarab 拦截并修改</span></a></li></ol></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-WebGoat-AccessControlFlaws" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">WebGoat 学习 -- Access Control Flaws（访问控制缺陷）</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2016.09.08</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/WebGoat/">WebGoat</a>
+  </span>
+
+
+
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>访问控制知识点可参考 <a href="http://www.cec-ceda.org.cn/information/book/info_6.htm" target="_blank" rel="external">第六章 访问控制</a><br><a id="more"></a></p>
+<h1 id="1-Using-an-Access-Control-Matrix（使用访问控制模型）"><a href="#1-Using-an-Access-Control-Matrix（使用访问控制模型）" class="headerlink" title="1 Using an Access Control Matrix（使用访问控制模型）"></a>1 Using an Access Control Matrix（使用访问控制模型）</h1><p>在基于角色的访问控制方案中，一个角色表示一组访问权限和特权，一个用户可以分配一个或多个角色。基于角色的访问控制方案通常由两部分组成：角色权限管理和角色分配。<br>一个被破坏的方案控制方案可能允许用户执行不在他/她分配的角色范围内的访问，或以某种方式允许特权升级到未经授权的角色。</p>
+<h2 id="1-1-General-Goal-s-目标"><a href="#1-1-General-Goal-s-目标" class="headerlink" title="1.1 General Goal(s) 目标"></a>1.1 General Goal(s) 目标</h2><p>每个用户都是角色的成员，每个角色允许访问特定资源。<br>本课程的目标是探索管理此网站使用的访问控制规则，只有 “Admin” 组才有 “Account Manager(账户管理)” 资源。</p>
+<h2 id="1-2-探索"><a href="#1-2-探索" class="headerlink" title="1.2 探索"></a>1.2 探索</h2><p>在上一节 General 中，设置了代理，本小节不需要设置代理，记得取消代理。</p>
+<ul>
+<li><p>先选择一个用户，在选择一个资源，点击【Check Access】按钮<br>  <img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1f7m0zycfgoj30ir046aae.jpg" alt=""></p>
+<p>  <code>* User Moe [Public] was allowed to access resource Public Share</code><br>  共有用户 Moe 对资源 Public Share 有访问权限</p>
+</li>
+<li><p>继续测试用户的访问控制权限，选择用户和资源，点击【Check Access】<br>  <img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7m2rfvuzuj30ir047aaj.jpg" alt=""></p>
+<p>  共有用户 Moe 没有访问资源 Performance Review 的权限。</p>
+</li>
+<li><p>继续测试<br>  <img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7m2rxfw6lj30ir04ujs8.jpg" alt=""></p>
+<p>  恭喜你，成功完成本课程。<br>  用户 Larry 对资源Account Manager 具有访问权限时。</p>
+<p>  同时左侧菜单栏看到醒目的绿色图标——过关标志。</p>
+</li>
+</ul>
+<h1 id="2-Bypass-a-Path-Based-Access-Control-Scheme-绕过基于路径的访问控制方案"><a href="#2-Bypass-a-Path-Based-Access-Control-Scheme-绕过基于路径的访问控制方案" class="headerlink" title="2 Bypass a Path Based Access Control Scheme(绕过基于路径的访问控制方案)"></a>2 Bypass a Path Based Access Control Scheme(绕过基于路径的访问控制方案)</h1><p>在一个基于路径的访问控制方案中，攻击者可以通过提供相对路径信息遍历路径。因此，攻击者可以使用相对路径访问那些通常任何人都不能直接访问或直接请求就会被拒绝的文件。</p>
+<h2 id="2-1-General-Goal-s-目标"><a href="#2-1-General-Goal-s-目标" class="headerlink" title="2.1 General Goal(s) 目标"></a>2.1 General Goal(s) 目标</h2><p>用户 ‘guest’ 具有访问 lessonPlans/en 目录下所有文件的权限。我们需要尝试突破访问控制侧路，访问不在下列清单中的文件。<br>选中一个文件，点击【View File】按钮，WebCoat会提示是否具有访问该文件的权限，可是试着访问“WEB-INF/spring-security.xml”文件。注意：该文件的位置取决于您正在使用的WebGoat 版本和环境。</p>
+<h2 id="2-2-绕过实验"><a href="#2-2-绕过实验" class="headerlink" title="2.2 绕过实验"></a>2.2 绕过实验</h2><h3 id="2-2-1-测试"><a href="#2-2-1-测试" class="headerlink" title="2.2.1 测试"></a>2.2.1 测试</h3><p>随便打击框框中的一个文件，然后【View File】，页面上方红色的有提示，下面显示页面的具体内容</p>
+<p><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7m5qdo181j30iu0g3tbd.jpg" alt=""></p>
+<h3 id="2-2-2-使用-WebScarab-拦截并修改"><a href="#2-2-2-使用-WebScarab-拦截并修改" class="headerlink" title="2.2.2 使用 WebScarab 拦截并修改"></a>2.2.2 使用 WebScarab 拦截并修改</h3><p>在使用 WebScarab 前，记得设置浏览器的代理。</p>
+<p><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7m6fggkpgj30l90e5n03.jpg" alt=""></p>
+<p>URL 为 <code>http://localhost:8080/WebGoat/attack?Screen=320&amp;menu=200&amp;File=DOMXSS.html&amp;SUBMIT=View+File</code>  </p>
+<p>File 的值即为想要访问的文件名，修改这个文件为 WEB-INF/spring-security.xml 的路径，<code>http://localhost:8080/WebGoat/attack?Screen=320&amp;menu=200&amp;File=DOMXSS.html&amp;SUBMIT=View+File</code></p>
+<p><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7m6n08zdtj30l90e5juh.jpg" alt=""></p>
+<p>然后点击 【Accept changes】之后查看浏览器内容</p>
+<p><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7m78tp2u1j30qy0ar78d.jpg" alt=""></p>
+<ul>
+<li>页面上显示 spring-security.xml 的绝对路径，还有恭喜通过本课程的提示！！！！</li>
+<li>下方是 spring-security.xml 的内容。</li>
+<li>左侧菜单栏醒目的绿色图标——过关标志。</li>
+</ul>
+<font color="red"> 不同机器和环境，spring-security.xml的目录不同 </font>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2016/09/08/WebGoat-AccessControlFlaws/index.html" data-title="WebGoat 学习 -- Access Control Flaws（访问控制缺陷）" data-url="http://huirong.github.io/2016/09/08/WebGoat-AccessControlFlaws/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
