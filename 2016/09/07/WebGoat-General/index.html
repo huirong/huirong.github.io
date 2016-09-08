@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>WebGoat 学习 -- General | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="渗透测试,WebGoat," />
+  
+
+  <meta name="description" content="1 工具与插件1.1 WebScarab1.1.1 简介WebScarab 是一个用来分析由浏览器提交到服务器请求，以及服务器对浏览器做出的响应的应用服务框架，也可以当做一个代理工具，或者说就是一个代理。使用者可以利用 WebScarab 看、分析、修改、创建所截取的浏览器与服务器之间的请求与响应，也可以用来分析HTTP 与HTTPS 协议。
+网页的对话输入框中可能存在某些限制，比如长度，格式等等">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WebGoat 学习 -- General">
+<meta property="og:url" content="http://huirong.github.io/2016/09/07/WebGoat-General/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="1 工具与插件1.1 WebScarab1.1.1 简介WebScarab 是一个用来分析由浏览器提交到服务器请求，以及服务器对浏览器做出的响应的应用服务框架，也可以当做一个代理工具，或者说就是一个代理。使用者可以利用 WebScarab 看、分析、修改、创建所截取的浏览器与服务器之间的请求与响应，也可以用来分析HTTP 与HTTPS 协议。
+网页的对话输入框中可能存在某些限制，比如长度，格式等等">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7lcb90i5fj30gr040q3a.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7lx3ageg0j30f50hcmzc.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7lxbj6sfqj30hz0eoq4g.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7lx9mqoe4j30i20eqq5r.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1f7lxqx5enhj30lz0bf77d.jpg">
+<meta property="og:updated_time" content="2016-09-08T01:51:42.829Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WebGoat 学习 -- General">
+<meta name="twitter:description" content="1 工具与插件1.1 WebScarab1.1.1 简介WebScarab 是一个用来分析由浏览器提交到服务器请求，以及服务器对浏览器做出的响应的应用服务框架，也可以当做一个代理工具，或者说就是一个代理。使用者可以利用 WebScarab 看、分析、修改、创建所截取的浏览器与服务器之间的请求与响应，也可以用来分析HTTP 与HTTPS 协议。
+网页的对话输入框中可能存在某些限制，比如长度，格式等等">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7lcb90i5fj30gr040q3a.jpg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?13fd5daa6d82a4022fb7211641792382";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-工具与插件"><span class="toc-text">1 工具与插件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-WebScarab"><span class="toc-text">1.1 WebScarab</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-1-简介"><span class="toc-text">1.1.1 简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-2-安装"><span class="toc-text">1.1.2 安装</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-Firebug"><span class="toc-text">1.2 Firebug</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-General（Http-Basic（Http-基础知识））"><span class="toc-text">2 General（Http Basic（Http 基础知识））</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-总体目标"><span class="toc-text">2.1 总体目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-Http-工作原理"><span class="toc-text">2.2 Http 工作原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-WebScarab-拦截并分析"><span class="toc-text">2.3 WebScarab 拦截并分析</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-WebGoat-General" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">WebGoat 学习 -- General</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2016.09.07</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/WebGoat/">WebGoat</a>
+  </span>
+
+
+
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h1 id="1-工具与插件"><a href="#1-工具与插件" class="headerlink" title="1 工具与插件"></a>1 工具与插件</h1><h2 id="1-1-WebScarab"><a href="#1-1-WebScarab" class="headerlink" title="1.1 WebScarab"></a>1.1 WebScarab</h2><h3 id="1-1-1-简介"><a href="#1-1-1-简介" class="headerlink" title="1.1.1 简介"></a>1.1.1 简介</h3><p>WebScarab 是一个用来分析由浏览器提交到服务器请求，以及服务器对浏览器做出的响应的应用服务框架，也可以当做一个代理工具，或者说就是一个代理。使用者可以利用 WebScarab 看、分析、修改、创建所截取的浏览器与服务器之间的请求与响应，也可以用来分析HTTP 与HTTPS 协议。</p>
+<p>网页的对话输入框中可能存在某些限制，比如长度，格式等等。现在使用者可以在 WebScarab 截获请求对话框中对其进行修改；还可以利用WebScarab 对网站进行注入型攻击，以测试网站的安全性。</p>
+<p>WebScarab 也是WebGoat 的一个辅助工具，在WebGoat 进行某些漏洞攻击时，可以利用 WebScarab 分析，修改所提交的请求，以及返回的响应。</p>
+<p>但是 WebScarab 工具好像在七八年前就停止更新了，大家可以选择更好的工具。。。。</p>
+<h3 id="1-1-2-安装"><a href="#1-1-2-安装" class="headerlink" title="1.1.2 安装"></a>1.1.2 安装</h3><ul>
+<li>下载  <a href="https://sourceforge.net/projects/owasp/files/WebScarab/" target="_blank" rel="external">https://sourceforge.net/projects/owasp/files/WebScarab/</a><br>根据系统选择对应的版本，我安装在Linux系统下，下载的是 webscarab-selfcontained-20070504-1631.jar</li>
+<li>安装 首先要有 JRE 环境，上一节已经安装了 JDK，所以可以使用命令直接运行 <code>java -jar webscarab-selfcontained-20070504-1631.jar</code></li>
+</ul>
+<h2 id="1-2-Firebug"><a href="#1-2-Firebug" class="headerlink" title="1.2 Firebug"></a>1.2 Firebug</h2><p>相信对 Web 安全有一定了解的人，对 Firebug 一定不陌生。</p>
+<p>Firebug 是Firefox 下的一个插件,能够调试所有网站语言,如HTML,CSS 等，但FireBug 最吸引人的就是 JavaScript 调试功能，使用起来非常方便，而且在各种浏览器下都能使用（IE,Firefox,Opera, Safari）。除此之外，还有其他强大的功能，比如HTML,CSS,DOM 的察看与调试，网站整体分析等等。总之，就是一套完整而强大的 WEB 开发工具。再有就是其为开源的软件。</p>
+<h1 id="2-General（Http-Basic（Http-基础知识））"><a href="#2-General（Http-Basic（Http-基础知识））" class="headerlink" title="2 General（Http Basic（Http 基础知识））"></a>2 General（Http Basic（Http 基础知识））</h1><h2 id="2-1-总体目标"><a href="#2-1-总体目标" class="headerlink" title="2.1 总体目标"></a>2.1 总体目标</h2><p>在页面下方的输入框中输入你的名字，点击【Go!】按钮提交。服务器接收请求，并逆置你的输入，并将结果返回给客户端，显示在页面的输入框中。该过程主要是展示 HTTP 请求的基本操作原理。</p>
+<p>点击页面上方的按钮可以查看：Java 源代码、提<br>示信息、HTTP 请求参数、HTTP 请求 Cookies 。您也可以在首次使用时尝<br>试使用工具WebScarab。</p>
+<p><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7lcb90i5fj30gr040q3a.jpg" alt=""></p>
+<h2 id="2-2-Http-工作原理"><a href="#2-2-Http-工作原理" class="headerlink" title="2.2 Http 工作原理"></a>2.2 Http 工作原理</h2><p>所有的HTTP 传输遵循同样的通用格式，每个客户端的请求和服务端的响应都有三个部分:  <font color="red"> 请<br>求或响应行、一个报头部分、实体部分 </font> 。客户端以如下方式启动一个交互：</p>
+<ul>
+<li>客户端连接服务器并发送一个文件请求<br>  <code>GET /index.html?param=value HTTP/1.0</code></li>
+<li>客户端发送可选头信息，告知接收服务器其配置和文件格式。<br>  <code>User-Agent: Mozilla/4.06 Accept: image/gif, image/jpeg, */*</code></li>
+<li>发送请求和报头之后，客户端可以发送更多的数据。该数据主要用于使用POST 方法的<br>CGI 程序。</li>
+</ul>
+<h2 id="2-3-WebScarab-拦截并分析"><a href="#2-3-WebScarab-拦截并分析" class="headerlink" title="2.3 WebScarab 拦截并分析"></a>2.3 WebScarab 拦截并分析</h2><ul>
+<li><p>在浏览器中手动配置代理，然后启动 WebScarab：</p>
+  <font color="red"> 代理端口为 8008，我刚开始写错了，一直拦截不到信息(╯﹏╰) </font>
+
+<p>  <img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7lx3ageg0j30f50hcmzc.jpg" alt=""></p>
+</li>
+<li><p>然后在 WebScarab 的 Intercept 中选取 Intercept requests ，设置拦截请求：</p>
+<p>  <img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7lxbj6sfqj30hz0eoq4g.jpg" alt=""></p>
+</li>
+<li><p>在输入框中输入你的名字，点击【Go!】按钮。然后观察 WebScarab 的新窗口中。</p>
+<p>  <img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7lx9mqoe4j30i20eqq5r.jpg" alt=""></p>
+</li>
+<li><p>回到浏览器，页面提示成功完成本课程，左侧菜单栏看到醒目的绿色图标——过关标志。</p>
+<p>  <img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1f7lxqx5enhj30lz0bf77d.jpg" alt=""></p>
+</li>
+</ul>
+<p>OK，果然第一个课程很简单，感觉主要是为了熟悉 WebGoat 环境 o(〃’▽’〃)o</p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2016/09/07/WebGoat-General/index.html" data-title="WebGoat 学习 -- General" data-url="http://huirong.github.io/2016/09/07/WebGoat-General/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
