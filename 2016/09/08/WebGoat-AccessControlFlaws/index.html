@@ -28,7 +28,16 @@
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7m6fggkpgj30l90e5n03.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7m6n08zdtj30l90e5juh.jpg">
 <meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7m78tp2u1j30qy0ar78d.jpg">
-<meta property="og:updated_time" content="2016-09-08T12:36:55.743Z">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1f7mi0pmp1pj30h40c675u.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7mi185ydjj30n40770tj.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7mhne9n7lj30h80br75b.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7mhtgltbwj30l10du41m.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7mhy5p43dj30l10dun0a.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7mi3ucyovj30h80b0mxy.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1f7mi4liz17j30l10duad6.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7mid0kzjcj30l10du0vu.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7mi9xyk63j30mt0e3diu.jpg">
+<meta property="og:updated_time" content="2016-09-08T13:59:23.996Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WebGoat 学习 -- Access Control Flaws（访问控制缺陷）">
 <meta name="twitter:description" content="访问控制知识点可参考 第六章 访问控制">
@@ -149,7 +158,7 @@
 
   <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-Using-an-Access-Control-Matrix（使用访问控制模型）"><span class="toc-text">1 Using an Access Control Matrix（使用访问控制模型）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-General-Goal-s-目标"><span class="toc-text">1.1 General Goal(s) 目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-探索"><span class="toc-text">1.2 探索</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Bypass-a-Path-Based-Access-Control-Scheme-绕过基于路径的访问控制方案"><span class="toc-text">2 Bypass a Path Based Access Control Scheme(绕过基于路径的访问控制方案)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-General-Goal-s-目标"><span class="toc-text">2.1 General Goal(s) 目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-绕过实验"><span class="toc-text">2.2 绕过实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-1-测试"><span class="toc-text">2.2.1 测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-2-使用-WebScarab-拦截并修改"><span class="toc-text">2.2.2 使用 WebScarab 拦截并修改</span></a></li></ol></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-Using-an-Access-Control-Matrix（使用访问控制模型）"><span class="toc-text">1 Using an Access Control Matrix（使用访问控制模型）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-General-Goal-s-目标"><span class="toc-text">1.1 General Goal(s) 目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-探索"><span class="toc-text">1.2 探索</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Bypass-a-Path-Based-Access-Control-Scheme-绕过基于路径的访问控制方案"><span class="toc-text">2 Bypass a Path Based Access Control Scheme(绕过基于路径的访问控制方案)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-General-Goal-s-目标"><span class="toc-text">2.1 General Goal(s) 目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-绕过实验"><span class="toc-text">2.2 绕过实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-1-测试"><span class="toc-text">2.2.1 测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-2-使用-WebScarab-拦截并修改"><span class="toc-text">2.2.2 使用 WebScarab 拦截并修改</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-LAB-Role-Based-Access-Control"><span class="toc-text">3 LAB:Role Based Access Control</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-Stage-1-Bypass-Presentational-Layer-Access-Control"><span class="toc-text">3.1 Stage 1: Bypass Presentational Layer Access Control</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-1-General-Goal（目标）"><span class="toc-text">3.1.1 General Goal（目标）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-2-初探"><span class="toc-text">3.1.2 初探</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-3-验证"><span class="toc-text">3.1.3 验证</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-2-stage2：Add-Business-Layer-Access-Control"><span class="toc-text">3.2 stage2：Add Business Layer Access Control</span></a></li></ol>
   </div>
 
 
@@ -199,8 +208,7 @@
 <p>  共有用户 Moe 没有访问资源 Performance Review 的权限。</p>
 </li>
 <li><p>继续测试<br>  <img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7m2rxfw6lj30ir04ujs8.jpg" alt=""></p>
-<p>  恭喜你，成功完成本课程。<br>  用户 Larry 对资源Account Manager 具有访问权限时。</p>
-<p>  同时左侧菜单栏看到醒目的绿色图标——过关标志。</p>
+<p>  恭喜你，成功完成本课程。<br>  用户 Larry 对资源Account Manager 具有访问权限时。<br>  同时左侧菜单栏看到醒目的绿色图标——过关标志。</p>
 </li>
 </ul>
 <h1 id="2-Bypass-a-Path-Based-Access-Control-Scheme-绕过基于路径的访问控制方案"><a href="#2-Bypass-a-Path-Based-Access-Control-Scheme-绕过基于路径的访问控制方案" class="headerlink" title="2 Bypass a Path Based Access Control Scheme(绕过基于路径的访问控制方案)"></a>2 Bypass a Path Based Access Control Scheme(绕过基于路径的访问控制方案)</h1><p>在一个基于路径的访问控制方案中，攻击者可以通过提供相对路径信息遍历路径。因此，攻击者可以使用相对路径访问那些通常任何人都不能直接访问或直接请求就会被拒绝的文件。</p>
@@ -220,6 +228,33 @@
 <li>左侧菜单栏醒目的绿色图标——过关标志。</li>
 </ul>
 <font color="red"> 不同机器和环境，spring-security.xml的目录不同 </font>
+
+<h1 id="3-LAB-Role-Based-Access-Control"><a href="#3-LAB-Role-Based-Access-Control" class="headerlink" title="3 LAB:Role Based Access Control"></a>3 LAB:Role Based Access Control</h1><p>很多网站都尝试使用基于角色的方式严格限制资源访问，但开发人员在实现这类解决方案时容易出现疏忽。</p>
+<h2 id="3-1-Stage-1-Bypass-Presentational-Layer-Access-Control"><a href="#3-1-Stage-1-Bypass-Presentational-Layer-Access-Control" class="headerlink" title="3.1 Stage 1: Bypass Presentational Layer Access Control"></a>3.1 Stage 1: Bypass Presentational Layer Access Control</h2><h3 id="3-1-1-General-Goal（目标）"><a href="#3-1-1-General-Goal（目标）" class="headerlink" title="3.1.1 General Goal（目标）"></a>3.1.1 General Goal（目标）</h3><p>即：绕过表示层访问控制。</p>
+<p>Tom 是一名普通员工，利用脆弱的访问控制策略在员工列表页面中执行 Delete（删除）功能。验证 Tom 的 profile（个人档案）可以被删除。<br>每个用户的密码是该用户名的小写字母（Tom Cat 的密码为 tom）。</p>
+<p>该公司内部员工层次图：</p>
+<p><img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1f7mi0pmp1pj30h40c675u.jpg" alt=""></p>
+<p>访问控制矩阵如下：</p>
+<p><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7mi185ydjj30n40770tj.jpg" alt=""></p>
+<h3 id="3-1-2-初探"><a href="#3-1-2-初探" class="headerlink" title="3.1.2 初探"></a>3.1.2 初探</h3><p>通过员工层次图和访问控制矩阵可以发现，员工的所有上司（直系或非直系）都具有删除其 profile 的权限。以 Tom 的直系上司 Jerry Mouse 的身份登录：</p>
+<p><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7mhne9n7lj30h80br75b.jpg" alt=""></p>
+<p>设置浏览器代理，然后开启 WebScarab，选中 Joanne McDougal ，点击 【DeleteProfile】，观察 WebScarab 拦截到的信息：</p>
+<p><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7mhtgltbwj30l10du41m.jpg" alt=""></p>
+<p>然后点击【Abort request】终止请求，回到浏览器点击【ViewProfile】，观察 WebScarab 拦截到的信息：</p>
+<p><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7mhy5p43dj30l10dun0a.jpg" alt=""></p>
+<p>多次实验，发现同一个用户，点击不同的操作，只有 action 参数不同。</p>
+<h3 id="3-1-3-验证"><a href="#3-1-3-验证" class="headerlink" title="3.1.3 验证"></a>3.1.3 验证</h3><p>为了验证 Tom 的 profile（个人档案）可以被删除，以 Tom 身份登录，点击【ViewProfile】，尝试使用 WebScarab 拦截请求，修改 action 参数。</p>
+<p><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7mi3ucyovj30h80b0mxy.jpg" alt=""></p>
+<p><img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1f7mi4liz17j30l10duad6.jpg" alt=""></p>
+<p>修改 action 参数，然后点击【Accept changes】</p>
+<p><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7mid0kzjcj30l10du0vu.jpg" alt=""></p>
+<p>返回到浏览器，发现通关了 (^o^)/YES!</p>
+<p><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7mi9xyk63j30mt0e3diu.jpg" alt=""></p>
+<h1 id="3-2-stage2：Add-Business-Layer-Access-Control"><a href="#3-2-stage2：Add-Business-Layer-Access-Control" class="headerlink" title="3.2 stage2：Add Business Layer Access Control"></a>3.2 stage2：Add Business Layer Access Control</h1><p>添加业务层访问控制。</p>
+<font color="red"> 本课程只适用于 WebGoat 开发版。</font>
+
+<p>本课程是修改 stage 1 的 bug，拒绝未经授权的用户使用 Delete 功能，为此一定要修改 WebGoat 源码。<br>修复成功后，可以返回 stage 1 验证是否拒绝未经授权的使用 delete 功能。</p>
+<p>由于 WebGoat 源码是用 Java 写的，我是 Java 小白，so 本教程暂且搁置。</p>
 
     
   </div>
