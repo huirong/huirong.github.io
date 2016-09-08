@@ -28,7 +28,7 @@
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7m6fggkpgj30l90e5n03.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7m6n08zdtj30l90e5juh.jpg">
 <meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7m78tp2u1j30qy0ar78d.jpg">
-<meta property="og:updated_time" content="2016-09-08T07:16:18.254Z">
+<meta property="og:updated_time" content="2016-09-08T12:36:55.743Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WebGoat 学习 -- Access Control Flaws（访问控制缺陷）">
 <meta name="twitter:description" content="访问控制知识点可参考 第六章 访问控制">
@@ -210,7 +210,7 @@
 <h3 id="2-2-2-使用-WebScarab-拦截并修改"><a href="#2-2-2-使用-WebScarab-拦截并修改" class="headerlink" title="2.2.2 使用 WebScarab 拦截并修改"></a>2.2.2 使用 WebScarab 拦截并修改</h3><p>在使用 WebScarab 前，记得设置浏览器的代理。</p>
 <p><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7m6fggkpgj30l90e5n03.jpg" alt=""></p>
 <p>URL 为 <code>http://localhost:8080/WebGoat/attack?Screen=320&amp;menu=200&amp;File=DOMXSS.html&amp;SUBMIT=View+File</code>  </p>
-<p>File 的值即为想要访问的文件名，修改这个文件为 WEB-INF/spring-security.xml 的路径，<code>http://localhost:8080/WebGoat/attack?Screen=320&amp;menu=200&amp;File=DOMXSS.html&amp;SUBMIT=View+File</code></p>
+<p>File 的值即为想要访问的文件名，修改这个文件为 WEB-INF/spring-security.xml 的路径，<code>http://localhost:8080/WebGoat/attack?Screen=320&amp;menu=200&amp;File=../../../../../WEB-INF/spring-security.xml&amp;SUBMIT=View+File</code></p>
 <p><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7m6n08zdtj30l90e5juh.jpg" alt=""></p>
 <p>然后点击 【Accept changes】之后查看浏览器内容</p>
 <p><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7m78tp2u1j30qy0ar78d.jpg" alt=""></p>
