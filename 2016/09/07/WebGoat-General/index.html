@@ -23,17 +23,17 @@
 <meta property="og:site_name" content="Star">
 <meta property="og:description" content="1 工具与插件1.1 WebScarab1.1.1 简介WebScarab 是一个用来分析由浏览器提交到服务器请求，以及服务器对浏览器做出的响应的应用服务框架，也可以当做一个代理工具，或者说就是一个代理。使用者可以利用 WebScarab 看、分析、修改、创建所截取的浏览器与服务器之间的请求与响应，也可以用来分析HTTP 与HTTPS 协议。
 网页的对话输入框中可能存在某些限制，比如长度，格式等等">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7lcb90i5fj30gr040q3a.jpg">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7lx3ageg0j30f50hcmzc.jpg">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7lxbj6sfqj30hz0eoq4g.jpg">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7lx9mqoe4j30i20eqq5r.jpg">
-<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1f7lxqx5enhj30lz0bf77d.jpg">
-<meta property="og:updated_time" content="2016-09-08T02:30:49.192Z">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/005CA6ZCgw1f7lcb90i5fj30gr040q3a.jpg">
+<meta property="og:image" content="https://ww3.sinaimg.cn/large/005CA6ZCgw1f7lx3ageg0j30f50hcmzc.jpg">
+<meta property="og:image" content="https://ww3.sinaimg.cn/large/005CA6ZCgw1f7lxbj6sfqj30hz0eoq4g.jpg">
+<meta property="og:image" content="https://ww3.sinaimg.cn/large/005CA6ZCgw1f7lx9mqoe4j30i20eqq5r.jpg">
+<meta property="og:image" content="https://ww2.sinaimg.cn/large/005CA6ZCgw1f7lxqx5enhj30lz0bf77d.jpg">
+<meta property="og:updated_time" content="2017-02-19T10:36:22.032Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WebGoat 学习 -- General">
 <meta name="twitter:description" content="1 工具与插件1.1 WebScarab1.1.1 简介WebScarab 是一个用来分析由浏览器提交到服务器请求，以及服务器对浏览器做出的响应的应用服务框架，也可以当做一个代理工具，或者说就是一个代理。使用者可以利用 WebScarab 看、分析、修改、创建所截取的浏览器与服务器之间的请求与响应，也可以用来分析HTTP 与HTTPS 协议。
 网页的对话输入框中可能存在某些限制，比如长度，格式等等">
-<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7lcb90i5fj30gr040q3a.jpg">
+<meta name="twitter:image" content="https://ww1.sinaimg.cn/large/005CA6ZCgw1f7lcb90i5fj30gr040q3a.jpg">
 
   
 
@@ -200,7 +200,7 @@
 <p>Firebug 是Firefox 下的一个插件,能够调试所有网站语言,如HTML,CSS 等，但FireBug 最吸引人的就是 JavaScript 调试功能，使用起来非常方便，而且在各种浏览器下都能使用（IE,Firefox,Opera, Safari）。除此之外，还有其他强大的功能，比如HTML,CSS,DOM 的察看与调试，网站整体分析等等。总之，就是一套完整而强大的 WEB 开发工具。再有就是其为开源的软件。</p>
 <h1 id="2-General（Http-Basic（Http-基础知识））"><a href="#2-General（Http-Basic（Http-基础知识））" class="headerlink" title="2 General（Http Basic（Http 基础知识））"></a>2 General（Http Basic（Http 基础知识））</h1><h2 id="2-1-总体目标"><a href="#2-1-总体目标" class="headerlink" title="2.1 总体目标"></a>2.1 总体目标</h2><p>在页面下方的输入框中输入你的名字，点击【Go!】按钮提交。服务器接收请求，并逆置你的输入，并将结果返回给客户端，显示在页面的输入框中。该过程主要是展示 HTTP 请求的基本操作原理。</p>
 <p>点击页面上方的按钮可以查看：Java 源代码、提<br>示信息、HTTP 请求参数、HTTP 请求 Cookies 。您也可以在首次使用时尝<br>试使用工具WebScarab。</p>
-<p><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7lcb90i5fj30gr040q3a.jpg" alt=""></p>
+<p><img src="https://ww1.sinaimg.cn/large/005CA6ZCgw1f7lcb90i5fj30gr040q3a.jpg" alt=""></p>
 <h2 id="2-2-Http-工作原理"><a href="#2-2-Http-工作原理" class="headerlink" title="2.2 Http 工作原理"></a>2.2 Http 工作原理</h2><p>所有的HTTP 传输遵循同样的通用格式，每个客户端的请求和服务端的响应都有三个部分:  <font color="red"> 请<br>求或响应行、一个报头部分、实体部分 </font> 。客户端以如下方式启动一个交互：</p>
 <ul>
 <li>客户端连接服务器并发送一个文件请求<br>  <code>GET /index.html?param=value HTTP/1.0</code></li>
@@ -211,16 +211,16 @@
 <li><p>在浏览器中手动配置代理，然后启动 WebScarab：</p>
   <font color="red"> 代理端口为 8008，我刚开始写错了，一直拦截不到信息(╯﹏╰) </font>
 
-<p>  <img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7lx3ageg0j30f50hcmzc.jpg" alt=""></p>
+<p>  <img src="https://ww3.sinaimg.cn/large/005CA6ZCgw1f7lx3ageg0j30f50hcmzc.jpg" alt=""></p>
 </li>
 <li><p>然后在 WebScarab 的 Intercept 中选取 Intercept requests ，设置拦截请求：</p>
-<p>  <img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7lxbj6sfqj30hz0eoq4g.jpg" alt=""></p>
+<p>  <img src="https://ww3.sinaimg.cn/large/005CA6ZCgw1f7lxbj6sfqj30hz0eoq4g.jpg" alt=""></p>
 </li>
 <li><p>在输入框中输入你的名字，点击【Go!】按钮。然后观察 WebScarab 的新窗口中。</p>
-<p>  <img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7lx9mqoe4j30i20eqq5r.jpg" alt=""></p>
+<p>  <img src="https://ww3.sinaimg.cn/large/005CA6ZCgw1f7lx9mqoe4j30i20eqq5r.jpg" alt=""></p>
 </li>
 <li><p>回到浏览器，页面提示成功完成本课程，左侧菜单栏看到醒目的绿色图标——过关标志。</p>
-<p>  <img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1f7lxqx5enhj30lz0bf77d.jpg" alt=""></p>
+<p>  <img src="https://ww2.sinaimg.cn/large/005CA6ZCgw1f7lxqx5enhj30lz0bf77d.jpg" alt=""></p>
 </li>
 </ul>
 <p>OK，果然第一个课程很简单，感觉主要是为了熟悉 WebGoat 环境 o(〃’▽’〃)o</p>

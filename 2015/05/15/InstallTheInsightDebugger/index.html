@@ -21,14 +21,14 @@
 <meta property="og:url" content="http://huirong.github.io/2015/05/15/InstallTheInsightDebugger/index.html">
 <meta property="og:site_name" content="Star">
 <meta property="og:description" content="之前一直在用gdb调试器，查看内存、寄存器的值都觉得不方便，Insight Debugger相当与图形化的gdb">
-<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCjw1es4yacbwwrj30i301u74j.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCjw1es4yarfwcej30db00jt8j.jpg">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1es4yazd31yj30jg0f4djx.jpg">
-<meta property="og:updated_time" content="2016-04-16T11:01:37.035Z">
+<meta property="og:image" content="https://ww4.sinaimg.cn/large/005CA6ZCjw1es4yacbwwrj30i301u74j.jpg">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/005CA6ZCjw1es4yarfwcej30db00jt8j.jpg">
+<meta property="og:image" content="https://ww3.sinaimg.cn/large/005CA6ZCjw1es4yazd31yj30jg0f4djx.jpg">
+<meta property="og:updated_time" content="2017-02-19T10:37:32.091Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux 下安装 Insight Debugger">
 <meta name="twitter:description" content="之前一直在用gdb调试器，查看内存、寄存器的值都觉得不方便，Insight Debugger相当与图形化的gdb">
-<meta name="twitter:image" content="http://ww4.sinaimg.cn/large/005CA6ZCjw1es4yacbwwrj30i301u74j.jpg">
+<meta name="twitter:image" content="https://ww4.sinaimg.cn/large/005CA6ZCjw1es4yacbwwrj30i301u74j.jpg">
 
   
 
@@ -184,12 +184,12 @@
   <div class="article-content">
     
       <p>之前一直在用gdb调试器，查看内存、寄存器的值都觉得不方便，Insight Debugger相当与图形化的gdb<br><a id="more"></a></p>
-<h1 id="I、添加源"><a href="#I、添加源" class="headerlink" title="I、添加源"></a>I、添加源</h1><p><img src="http://ww4.sinaimg.cn/large/005CA6ZCjw1es4yacbwwrj30i301u74j.jpg" alt=""><br>在 /etc/apt/sources.list 中添加源：<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">deb <span class="symbol">http:</span>/<span class="regexp">/ppa.launchpad.net/sevenmachines</span><span class="regexp">/dev/ubuntu</span> natty main </div><div class="line">deb-src <span class="symbol">http:</span>/<span class="regexp">/ppa.launchpad.net/sevenmachines</span><span class="regexp">/dev/ubuntu</span> natty main</div></pre></td></tr></table></figure></p>
+<h1 id="I、添加源"><a href="#I、添加源" class="headerlink" title="I、添加源"></a>I、添加源</h1><p><img src="https://ww4.sinaimg.cn/large/005CA6ZCjw1es4yacbwwrj30i301u74j.jpg" alt=""><br>在 /etc/apt/sources.list 中添加源：<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">deb <span class="symbol">http:</span>/<span class="regexp">/ppa.launchpad.net/sevenmachines</span><span class="regexp">/dev/ubuntu</span> natty main </div><div class="line">deb-src <span class="symbol">http:</span>/<span class="regexp">/ppa.launchpad.net/sevenmachines</span><span class="regexp">/dev/ubuntu</span> natty main</div></pre></td></tr></table></figure></p>
 <p>更新源<br><figure class="highlight q"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-<span class="built_in">get</span> <span class="keyword">update</span></div></pre></td></tr></table></figure></p>
 <h1 id="II、安装Insight-Debugger"><a href="#II、安装Insight-Debugger" class="headerlink" title="II、安装Insight Debugger"></a>II、安装Insight Debugger</h1><p>在终端输入：<br><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-<span class="keyword">get</span> install insight</div></pre></td></tr></table></figure></p>
 <h1 id="III、验证安装"><a href="#III、验证安装" class="headerlink" title="III、验证安装"></a>III、验证安装</h1><p>现在感受下Insight Debugger<br>启动：</p>
-<p><img src="http://ww1.sinaimg.cn/large/005CA6ZCjw1es4yarfwcej30db00jt8j.jpg" alt=""></p>
-<p>图像化界面：<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCjw1es4yazd31yj30jg0f4djx.jpg" alt=""><br>OK！！ Insight Debugger已经安装成功了，大家慢慢享受其中的奥妙</p>
+<p><img src="https://ww1.sinaimg.cn/large/005CA6ZCjw1es4yarfwcej30db00jt8j.jpg" alt=""></p>
+<p>图像化界面：<br><img src="https://ww3.sinaimg.cn/large/005CA6ZCjw1es4yazd31yj30jg0f4djx.jpg" alt=""><br>OK！！ Insight Debugger已经安装成功了，大家慢慢享受其中的奥妙</p>
 <h1 id="IV、参考文献"><a href="#IV、参考文献" class="headerlink" title="IV、参考文献"></a>IV、参考文献</h1><p><a href="http://baptiste-wicht.com/posts/2012/01/install-insight-debugger-linux-mint-ubuntu.html#" target="_blank" rel="external">Install the Insight Debugger on Linux Mint (works for Ubuntu too)</a></p>
 
     

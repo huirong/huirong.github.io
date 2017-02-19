@@ -21,13 +21,13 @@
 <meta property="og:url" content="http://huirong.github.io/2015/05/18/smashTheStack-io-level2/index.html">
 <meta property="og:site_name" content="Star">
 <meta property="og:description" content="由上一关取得的密码进入本关卡">
-<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCjw1esdajv6jf5j30ed0270t1.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCjw1esdak4gsgtj30hp03mwf5.jpg">
-<meta property="og:updated_time" content="2016-04-16T11:21:43.146Z">
+<meta property="og:image" content="https://ww2.sinaimg.cn/large/005CA6ZCjw1esdajv6jf5j30ed0270t1.jpg">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/005CA6ZCjw1esdak4gsgtj30hp03mwf5.jpg">
+<meta property="og:updated_time" content="2017-02-19T10:37:01.164Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SmashTheStack IO level2">
 <meta name="twitter:description" content="由上一关取得的密码进入本关卡">
-<meta name="twitter:image" content="http://ww2.sinaimg.cn/large/005CA6ZCjw1esdajv6jf5j30ed0270t1.jpg">
+<meta name="twitter:image" content="https://ww2.sinaimg.cn/large/005CA6ZCjw1esdajv6jf5j30ed0270t1.jpg">
 
   
 
@@ -198,9 +198,9 @@
 <li>（2）signal(SIGFPE, catcher);<br>如果有数字相关的异常产生，调用catcher()函数</li>
 <li>（3）返回 atoi(第一个参数)/atoi(第二个参数)的绝对值</li>
 </ul>
-<h2 id="②-查看运行效果"><a href="#②-查看运行效果" class="headerlink" title="② 查看运行效果"></a>② 查看运行效果</h2><p><img src="http://ww2.sinaimg.cn/large/005CA6ZCjw1esdajv6jf5j30ed0270t1.jpg" alt=""><br>没有任何反应</p>
+<h2 id="②-查看运行效果"><a href="#②-查看运行效果" class="headerlink" title="② 查看运行效果"></a>② 查看运行效果</h2><p><img src="https://ww2.sinaimg.cn/large/005CA6ZCjw1esdajv6jf5j30ed0270t1.jpg" alt=""><br>没有任何反应</p>
 <h2 id="③-找漏洞"><a href="#③-找漏洞" class="headerlink" title="③ 找漏洞"></a>③ 找漏洞</h2><p>最终目的是调用catcher()函数，执行system(“/bin/sh”);<br>应该产生一个与数字相关的异常，除数为0的情况已经排除在外了，只能想其他办法了。<br>不知大家是否记得整数的表示范围呢，32位操作系统：-2^31~2^31-1<br>绝对值之间差1，bingo，这是漏洞点，最小负数除1，然后取绝对值，溢出了。。。。。</p>
-<p><img src="http://ww1.sinaimg.cn/large/005CA6ZCjw1esdak4gsgtj30hp03mwf5.jpg" alt=""></p>
+<p><img src="https://ww1.sinaimg.cn/large/005CA6ZCjw1esdak4gsgtj30hp03mwf5.jpg" alt=""></p>
 <p>PS：相信大家都看到了，还有个level02_alt.c函数，你也可以找这个函数的漏洞来获取下一关的密码，大家自己试试，我不写博客了。。。。。。</p>
 
     

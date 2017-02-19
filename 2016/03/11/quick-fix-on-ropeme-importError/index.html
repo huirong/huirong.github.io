@@ -21,12 +21,12 @@
 <meta property="og:url" content="http://huirong.github.io/2016/03/11/quick-fix-on-ropeme-importError/index.html">
 <meta property="og:site_name" content="Star">
 <meta property="og:description" content="首次使用 ropeme 过程中，遇到 ImportError 问题，解决方案如下。">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1f36pui72zij30kd03o762.jpg">
-<meta property="og:updated_time" content="2016-04-23T10:35:44.895Z">
+<meta property="og:image" content="https://ww3.sinaimg.cn/large/005CA6ZCjw1f36pui72zij30kd03o762.jpg">
+<meta property="og:updated_time" content="2017-02-19T10:37:11.712Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="快速修复 ropeme ImportError：No module named distorm">
 <meta name="twitter:description" content="首次使用 ropeme 过程中，遇到 ImportError 问题，解决方案如下。">
-<meta name="twitter:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1f36pui72zij30kd03o762.jpg">
+<meta name="twitter:image" content="https://ww3.sinaimg.cn/large/005CA6ZCjw1f36pui72zij30kd03o762.jpg">
 
   
 
@@ -182,7 +182,7 @@
   <div class="article-content">
     
       <p>首次使用 <a href="https://github.com/packz/ropeme" target="_blank" rel="external">ropeme</a> 过程中，遇到 ImportError 问题，解决方案如下。<br><a id="more"></a></p>
-<h1 id="Ⅰ、问题"><a href="#Ⅰ、问题" class="headerlink" title="Ⅰ、问题"></a>Ⅰ、问题</h1><p><img src="http://ww3.sinaimg.cn/large/005CA6ZCjw1f36pui72zij30kd03o762.jpg" alt=""><br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">star@ubuntu<span class="symbol">:~/glibc/CVE-</span><span class="number">2015</span>-<span class="number">7547</span>-master$ ../ropeme-master/ropeme/ropshell.py </div><div class="line">Traceback (most recent call last):</div><div class="line">  File <span class="string">"../ropeme-master/ropeme/ropshell.py"</span>, line <span class="number">24</span>, <span class="keyword">in</span> &lt;<span class="class"><span class="keyword">module</span>&gt;</span></div><div class="line">    import gadgets</div><div class="line">  File <span class="string">"/home/star/glibc/ropeme-master/ropeme/gadgets.py"</span>, line <span class="number">21</span>, <span class="keyword">in</span> &lt;<span class="class"><span class="keyword">module</span>&gt;</span></div><div class="line">    import distorm</div><div class="line"><span class="symbol">ImportError:</span> No <span class="class"><span class="keyword">module</span> <span class="title">named</span> <span class="title">distorm</span></span></div></pre></td></tr></table></figure></p>
+<h1 id="Ⅰ、问题"><a href="#Ⅰ、问题" class="headerlink" title="Ⅰ、问题"></a>Ⅰ、问题</h1><p><img src="https://ww3.sinaimg.cn/large/005CA6ZCjw1f36pui72zij30kd03o762.jpg" alt=""><br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">star@ubuntu<span class="symbol">:~/glibc/CVE-</span><span class="number">2015</span>-<span class="number">7547</span>-master$ ../ropeme-master/ropeme/ropshell.py </div><div class="line">Traceback (most recent call last):</div><div class="line">  File <span class="string">"../ropeme-master/ropeme/ropshell.py"</span>, line <span class="number">24</span>, <span class="keyword">in</span> &lt;<span class="class"><span class="keyword">module</span>&gt;</span></div><div class="line">    import gadgets</div><div class="line">  File <span class="string">"/home/star/glibc/ropeme-master/ropeme/gadgets.py"</span>, line <span class="number">21</span>, <span class="keyword">in</span> &lt;<span class="class"><span class="keyword">module</span>&gt;</span></div><div class="line">    import distorm</div><div class="line"><span class="symbol">ImportError:</span> No <span class="class"><span class="keyword">module</span> <span class="title">named</span> <span class="title">distorm</span></span></div></pre></td></tr></table></figure></p>
 <h1 id="Ⅱ、解决方法"><a href="#Ⅱ、解决方法" class="headerlink" title="Ⅱ、解决方法"></a>Ⅱ、解决方法</h1><ul>
 <li>打开 gadgets.py</li>
 <li>将所有的 distorm 替换成 distorm3</li>

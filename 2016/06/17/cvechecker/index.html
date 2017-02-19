@@ -39,11 +39,11 @@
 
 
 如果不加 –enable-sqlite3">
-<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCjw1f5582ge5icj30k107qadf.jpg">
-<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1f558grmtpsj30k305ognw.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCjw1f55g7yrl64j30i80a8432.jpg">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1f55gdhdxjnj30jx0ce44b.jpg">
-<meta property="og:updated_time" content="2016-06-23T13:23:53.494Z">
+<meta property="og:image" content="https://ww2.sinaimg.cn/large/005CA6ZCjw1f5582ge5icj30k107qadf.jpg">
+<meta property="og:image" content="https://ww2.sinaimg.cn/large/005CA6ZCgw1f558grmtpsj30k305ognw.jpg">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/005CA6ZCjw1f55g7yrl64j30i80a8432.jpg">
+<meta property="og:image" content="https://ww3.sinaimg.cn/large/005CA6ZCjw1f55gdhdxjnj30jx0ce44b.jpg">
+<meta property="og:updated_time" content="2017-02-19T10:37:53.108Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="cvechecker 安装和使用教程">
 <meta name="twitter:description" content="cvechecker 通过扫描系统中已安装的软件列表，并将结果和CVE数据库匹配，报告系统中可能存在的漏洞。
@@ -56,7 +56,7 @@
 
 
 如果不加 –enable-sqlite3">
-<meta name="twitter:image" content="http://ww2.sinaimg.cn/large/005CA6ZCjw1f5582ge5icj30k107qadf.jpg">
+<meta name="twitter:image" content="https://ww2.sinaimg.cn/large/005CA6ZCjw1f5582ge5icj30k107qadf.jpg">
 
   
 
@@ -216,10 +216,10 @@
 </li>
 </ul>
 <p><font color="orange">如果不加 –enable-sqlite3 选项，安装好之后，初始化数据库的时候会出问题</font></p>
-<h1 id="2-待解决问题"><a href="#2-待解决问题" class="headerlink" title="2 待解决问题"></a>2 待解决问题</h1><h2 id="2-1-安装-libconfig"><a href="#2-1-安装-libconfig" class="headerlink" title="2.1 安装 libconfig"></a>2.1 安装 libconfig</h2><p>安装过程会出现如下问题：<br><img src="http://ww2.sinaimg.cn/large/005CA6ZCjw1f5582ge5icj30k107qadf.jpg" alt=""></p>
+<h1 id="2-待解决问题"><a href="#2-待解决问题" class="headerlink" title="2 待解决问题"></a>2 待解决问题</h1><h2 id="2-1-安装-libconfig"><a href="#2-1-安装-libconfig" class="headerlink" title="2.1 安装 libconfig"></a>2.1 安装 libconfig</h2><p>安装过程会出现如下问题：<br><img src="https://ww2.sinaimg.cn/large/005CA6ZCjw1f5582ge5icj30k107qadf.jpg" alt=""></p>
 <p>需要安装 libconfig，下载 <a href="http://www.hyperrealm.com/libconfig/libconfig-1.5.tar.gz" target="_blank" rel="external">libconfig</a> 安装包</p>
 <figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">cd</span> libconfig-<span class="number">1.5</span>/</div><div class="line">./configure</div><div class="line"><span class="keyword">make</span></div><div class="line">sudo <span class="keyword">make</span> install</div></pre></td></tr></table></figure>
-<h2 id="2-2-安装-sqlite3"><a href="#2-2-安装-sqlite3" class="headerlink" title="2.2 安装 sqlite3"></a>2.2 安装 sqlite3</h2><p>安装完 libconfig 之后，又会出现如下问题，缺少 sqlite3 包<br><img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1f558grmtpsj30k305ognw.jpg" alt=""></p>
+<h2 id="2-2-安装-sqlite3"><a href="#2-2-安装-sqlite3" class="headerlink" title="2.2 安装 sqlite3"></a>2.2 安装 sqlite3</h2><p>安装完 libconfig 之后，又会出现如下问题，缺少 sqlite3 包<br><img src="https://ww2.sinaimg.cn/large/005CA6ZCgw1f558grmtpsj30k305ognw.jpg" alt=""></p>
 <p>安装 sqlite3<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sudo apt-get <span class="keyword">install</span> sqlite3</div><div class="line">sudo apt-<span class="keyword">get</span> <span class="keyword">install</span> libsqlite3-dev</div><div class="line">apt-<span class="keyword">get</span> <span class="keyword">install</span> libsqlite3-tcl</div></pre></td></tr></table></figure></p>
 <h1 id="3-编译安装"><a href="#3-编译安装" class="headerlink" title="3 编译安装"></a>3 编译安装</h1><p>./configure 运行成功后，编译安装</p>
 <figure class="highlight gauss"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">make</span></div><div class="line">sudo <span class="built_in">make</span> install</div></pre></td></tr></table></figure>
@@ -240,9 +240,9 @@
 <figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">sudo cvechecker -r</span></div></pre></td></tr></table></figure>
 </li>
 </ul>
-<p>部分结果截图如下：<br><img src="http://ww1.sinaimg.cn/large/005CA6ZCjw1f55g7yrl64j30i80a8432.jpg" alt=""></p>
+<p>部分结果截图如下：<br><img src="https://ww1.sinaimg.cn/large/005CA6ZCjw1f55g7yrl64j30i80a8432.jpg" alt=""></p>
 <h1 id="5-参数解释"><a href="#5-参数解释" class="headerlink" title="5 参数解释"></a>5 参数解释</h1><figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cvechecker <span class="comment">--help</span></div></pre></td></tr></table></figure>
-<p><img src="http://ww3.sinaimg.cn/large/005CA6ZCjw1f55gdhdxjnj30jx0ce44b.jpg" alt=""></p>
+<p><img src="https://ww3.sinaimg.cn/large/005CA6ZCjw1f55gdhdxjnj30jx0ce44b.jpg" alt=""></p>
 <h1 id="6-参考文献"><a href="#6-参考文献" class="headerlink" title="6 参考文献"></a>6 参考文献</h1><p><a href="https://github.com/sjvermeu/cvechecker" target="_blank" rel="external">cvechecker</a><br><a href="https://github.com/sjvermeu/cvechecker/wiki/Installation" target="_blank" rel="external">cvechecker Installation</a></p>
 
     

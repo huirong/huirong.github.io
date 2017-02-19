@@ -21,18 +21,18 @@
 <meta property="og:url" content="http://huirong.github.io/2015/03/25/arpspoof/index.html">
 <meta property="og:site_name" content="Star">
 <meta property="og:description" content="上篇博客讲解了ARP欺骗的原理http://huirong.github.io/2015/03/25/arp/，不懂的可以自行google，网上有很多教程。这次讲解利用ARP欺骗劫持登录会话">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1eqi3adliqnj30ki0duwi5.jpg">
-<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCjw1eqi2xbwlwwj30kf0dq75p.jpg">
-<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCjw1eqi3mc4oycj30kh0dodjl.jpg">
-<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCjw1eqi3mc4oycj30kh0dodjl.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCjw1eqi2yqbc8mj30f40iadhm.jpg">
-<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCjw1eqi2z18sdfj311x0dqtch.jpg">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1eqi3096wd6j30m807sdi2.jpg">
-<meta property="og:updated_time" content="2016-04-16T09:07:33.419Z">
+<meta property="og:image" content="https://ww3.sinaimg.cn/large/005CA6ZCjw1eqi3adliqnj30ki0duwi5.jpg">
+<meta property="og:image" content="https://ww4.sinaimg.cn/large/005CA6ZCjw1eqi2xbwlwwj30kf0dq75p.jpg">
+<meta property="og:image" content="https://ww4.sinaimg.cn/large/005CA6ZCjw1eqi3mc4oycj30kh0dodjl.jpg">
+<meta property="og:image" content="https://ww4.sinaimg.cn/large/005CA6ZCjw1eqi3mc4oycj30kh0dodjl.jpg">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/005CA6ZCjw1eqi2yqbc8mj30f40iadhm.jpg">
+<meta property="og:image" content="https://ww2.sinaimg.cn/large/005CA6ZCjw1eqi2z18sdfj311x0dqtch.jpg">
+<meta property="og:image" content="https://ww3.sinaimg.cn/large/005CA6ZCjw1eqi3096wd6j30m807sdi2.jpg">
+<meta property="og:updated_time" content="2017-02-19T10:37:43.515Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kali利用Arpspoof、tcpdump、ferret和hamster劫持登录会话">
 <meta name="twitter:description" content="上篇博客讲解了ARP欺骗的原理http://huirong.github.io/2015/03/25/arp/，不懂的可以自行google，网上有很多教程。这次讲解利用ARP欺骗劫持登录会话">
-<meta name="twitter:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1eqi3adliqnj30ki0duwi5.jpg">
+<meta name="twitter:image" content="https://ww3.sinaimg.cn/large/005CA6ZCjw1eqi3adliqnj30ki0duwi5.jpg">
 
   
 
@@ -214,14 +214,14 @@
 <h1 id="II、开始攻击"><a href="#II、开始攻击" class="headerlink" title="II、开始攻击"></a>II、开始攻击</h1><h2 id="①-打开路由转发"><a href="#①-打开路由转发" class="headerlink" title="① 打开路由转发"></a>① 打开路由转发</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">echo <span class="string">"1"</span> &gt; <span class="regexp">/proc/</span>sys<span class="regexp">/net/i</span>pv4<span class="regexp">/ip_forward</span></div></pre></td></tr></table></figure>
 <p>linux下开启路由转发功能，可以让linux机器作为一个路由器来工作，将受害主机的数据包发送给网关。如果不开启此功能，受害主机的将会断网，这就是ARP断网攻击。<br>系统重启后，恢复原来的配置，只是临时生效</p>
 <h2 id="②-ARP欺骗"><a href="#②-ARP欺骗" class="headerlink" title="② ARP欺骗"></a>② ARP欺骗</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">arpspoof</span> <span class="selector-tag">-i</span> <span class="selector-tag">wlan0</span> <span class="selector-tag">-t</span> 192<span class="selector-class">.168</span><span class="selector-class">.1</span><span class="selector-class">.131</span> 192<span class="selector-class">.168</span><span class="selector-class">.1</span><span class="selector-class">.1</span></div></pre></td></tr></table></figure>
-<p>欺骗受害主机192.168.1.131，网关192.168.1.1的MAC地址是攻击机的MAC地址，那么在局域网内，受害主机发送给网关的数据包，都会发送给攻击机<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCjw1eqi3adliqnj30ki0duwi5.jpg" alt=""></p>
+<p>欺骗受害主机192.168.1.131，网关192.168.1.1的MAC地址是攻击机的MAC地址，那么在局域网内，受害主机发送给网关的数据包，都会发送给攻击机<br><img src="https://ww3.sinaimg.cn/large/005CA6ZCjw1eqi3adliqnj30ki0duwi5.jpg" alt=""></p>
 <h2 id="③-抓取本地数据包"><a href="#③-抓取本地数据包" class="headerlink" title="③ 抓取本地数据包"></a>③ 抓取本地数据包</h2><p>重新打开一个终端，输入：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tcpdump -<span class="selector-tag">i</span> wlan0 -w hello.cap</div></pre></td></tr></table></figure></p>
-<p><img src="http://ww4.sinaimg.cn/large/005CA6ZCjw1eqi2xbwlwwj30kf0dq75p.jpg" alt=""><br>将抓取到的数据保存到hello.cap文件中</p>
+<p><img src="https://ww4.sinaimg.cn/large/005CA6ZCjw1eqi2xbwlwwj30kf0dq75p.jpg" alt=""><br>将抓取到的数据保存到hello.cap文件中</p>
 <h2 id="④-耐心等待。。。"><a href="#④-耐心等待。。。" class="headerlink" title="④ 耐心等待。。。"></a>④ 耐心等待。。。</h2><p>此时，需要等待受害主机登录摸个网站，或刷新已经登录过的页面<br>相当于受害在想网关发送携带了cookie的数据包，我们就是要劫持这个cookie<br>当刷新完毕后，就可以结束 arpspoof 和 tcpdump</p>
 <h2 id="⑤-使用ferret分析抓取的数据包"><a href="#⑤-使用ferret分析抓取的数据包" class="headerlink" title="⑤ 使用ferret分析抓取的数据包"></a>⑤ 使用ferret分析抓取的数据包</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">ferret</span> <span class="selector-tag">-r</span> <span class="selector-tag">hello</span><span class="selector-class">.cap</span></div></pre></td></tr></table></figure>
-<p><img src="http://ww4.sinaimg.cn/large/005CA6ZCjw1eqi3mc4oycj30kh0dodjl.jpg" alt=""><br>查看根目录，会发现自动生成了hamster.txt文件</p>
+<p><img src="https://ww4.sinaimg.cn/large/005CA6ZCjw1eqi3mc4oycj30kh0dodjl.jpg" alt=""><br>查看根目录，会发现自动生成了hamster.txt文件</p>
 <h2 id="⑥-hamster架设代理，登录会话"><a href="#⑥-hamster架设代理，登录会话" class="headerlink" title="⑥ hamster架设代理，登录会话"></a>⑥ hamster架设代理，登录会话</h2><p>在终端输入<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">hamster</span></div></pre></td></tr></table></figure></p>
-<p><img src="http://ww4.sinaimg.cn/large/005CA6ZCjw1eqi3mc4oycj30kh0dodjl.jpg" alt=""><br>设置浏览器代理<br><img src="http://ww1.sinaimg.cn/large/005CA6ZCjw1eqi2yqbc8mj30f40iadhm.jpg" alt=""><br>打开hamster<br><img src="http://ww2.sinaimg.cn/large/005CA6ZCjw1eqi2z18sdfj311x0dqtch.jpg" alt=""><br>点击192.168.1.131<br>左边就是获取的cookie信息，找到合适的，就可以看到受害者的登录信息<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCjw1eqi3096wd6j30m807sdi2.jpg" alt=""></p>
+<p><img src="https://ww4.sinaimg.cn/large/005CA6ZCjw1eqi3mc4oycj30kh0dodjl.jpg" alt=""><br>设置浏览器代理<br><img src="https://ww1.sinaimg.cn/large/005CA6ZCjw1eqi2yqbc8mj30f40iadhm.jpg" alt=""><br>打开hamster<br><img src="https://ww2.sinaimg.cn/large/005CA6ZCjw1eqi2z18sdfj311x0dqtch.jpg" alt=""><br>点击192.168.1.131<br>左边就是获取的cookie信息，找到合适的，就可以看到受害者的登录信息<br><img src="https://ww3.sinaimg.cn/large/005CA6ZCjw1eqi3096wd6j30m807sdi2.jpg" alt=""></p>
 <p>OK，攻击完毕啦，本教程仅做学习用途<del>~</del>~~~~</p>
 <h1 id="III、参考文献"><a href="#III、参考文献" class="headerlink" title="III、参考文献"></a>III、参考文献</h1><p><a href="http://www.it165.net/safe/html/201501/1025.html" target="_blank" rel="external">局域网安全 利用ARP欺骗劫持Cookie</a><br><a href="http://yuangeqingtian.blog.51cto.com/6994701/1302773" target="_blank" rel="external">linux开启路由转发功能</a></p>
 

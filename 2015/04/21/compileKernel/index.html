@@ -21,13 +21,13 @@
 <meta property="og:url" content="http://huirong.github.io/2015/04/21/compileKernel/index.html">
 <meta property="og:site_name" content="Star">
 <meta property="og:description" content="题记：如果你想了解关于编译内核的基础知识：内核的定义、内核编译、内核编译的目的、内核版本的选择，请参考我的另一篇博客 编译内核基础知识">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1ereo9ppwjcj30ke0dmwg9.jpg">
-<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCjw1ereo9y7ugkj30i70es760.jpg">
-<meta property="og:updated_time" content="2016-04-16T10:54:27.311Z">
+<meta property="og:image" content="https://ww3.sinaimg.cn/large/005CA6ZCjw1ereo9ppwjcj30ke0dmwg9.jpg">
+<meta property="og:image" content="https://ww2.sinaimg.cn/large/005CA6ZCjw1ereo9y7ugkj30i70es760.jpg">
+<meta property="og:updated_time" content="2017-02-19T10:37:42.132Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux编译内核步骤">
 <meta name="twitter:description" content="题记：如果你想了解关于编译内核的基础知识：内核的定义、内核编译、内核编译的目的、内核版本的选择，请参考我的另一篇博客 编译内核基础知识">
-<meta name="twitter:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1ereo9ppwjcj30ke0dmwg9.jpg">
+<meta name="twitter:image" content="https://ww3.sinaimg.cn/large/005CA6ZCjw1ereo9ppwjcj30ke0dmwg9.jpg">
 
   
 
@@ -197,7 +197,7 @@
 </ul>
 <h1 id="III、编译内核"><a href="#III、编译内核" class="headerlink" title="III、编译内核"></a>III、编译内核</h1><h2 id="①-清理内核中的残渣"><a href="#①-清理内核中的残渣" class="headerlink" title="① 清理内核中的残渣"></a>① 清理内核中的残渣</h2><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd /usr/src/linux<span class="number">-3.14</span><span class="number">.39</span></div><div class="line">make mrproper</div></pre></td></tr></table></figure>
 <h2 id="②-配置内核"><a href="#②-配置内核" class="headerlink" title="② 配置内核"></a>② 配置内核</h2><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">make menuconfig</span></div></pre></td></tr></table></figure>
-<p>出现图形化界面<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCjw1ereo9ppwjcj30ke0dmwg9.jpg" alt=""><br>说一下配置：<br>对每一个配置选项，用户有三种选择，它们分别代表的含义如下：<br>&lt;<em>&gt;或[</em>]——将该功能编译进内核<br>[]——不将该功能编译进内核<br>[M]——将该功能编译成可以在需要时动态插入到内核中的代码</p>
+<p>出现图形化界面<br><img src="https://ww3.sinaimg.cn/large/005CA6ZCjw1ereo9ppwjcj30ke0dmwg9.jpg" alt=""><br>说一下配置：<br>对每一个配置选项，用户有三种选择，它们分别代表的含义如下：<br>&lt;<em>&gt;或[</em>]——将该功能编译进内核<br>[]——不将该功能编译进内核<br>[M]——将该功能编译成可以在需要时动态插入到内核中的代码</p>
 <p>使用空格键进行切换<br>配置完之后，保存退出</p>
 <h2 id="③-配置完之后，开始编译内核"><a href="#③-配置完之后，开始编译内核" class="headerlink" title="③ 配置完之后，开始编译内核"></a>③ 配置完之后，开始编译内核</h2><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">make</span></div></pre></td></tr></table></figure>
 <p>这一步需要很长时间，请耐心等待。。。。。。。。</p>
@@ -209,7 +209,7 @@
 <li><p>查看启动项</p>
 <ul>
 <li>更新系统引导配置，不同系统命令不一样，大家自行google</li>
-<li>查看配置文件<br>配置文件在/boot/grub2/grub.cfg<br>gedit /boot/grub2/grub.cfg<br>看到配置文件中有如下内容，说明内核已经添加到启动项了<br><img src="http://ww2.sinaimg.cn/large/005CA6ZCjw1ereo9y7ugkj30i70es760.jpg" alt=""></li>
+<li>查看配置文件<br>配置文件在/boot/grub2/grub.cfg<br>gedit /boot/grub2/grub.cfg<br>看到配置文件中有如下内容，说明内核已经添加到启动项了<br><img src="https://ww2.sinaimg.cn/large/005CA6ZCjw1ereo9y7ugkj30i70es760.jpg" alt=""></li>
 </ul>
 <p>OK，编译内核已经全部完成，可以重启电脑了。。。。。<br>如果没有必要不要编译内核，需要很久啊O(∩_∩)O</p>
 </li>

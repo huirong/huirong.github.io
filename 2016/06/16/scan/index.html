@@ -27,19 +27,19 @@
 
 通过信息收集工作，确定渗透测试目标的范围
 通过情报信息收集，发现渗透测试目标的安全漏洞与脆弱点，为后续的渗透测试攻击提供基础">
-<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCjw1f4xenjqm3wj30i60cxacj.jpg">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f4xeq4d7hjj30i60bytau.jpg">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1f4xeilzf87j308605vdg5.jpg">
-<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCjw1f4xfboqjbvj30hz0ch76d.jpg">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1f4xfep93jtj30hm0h6ad6.jpg">
-<meta property="og:updated_time" content="2016-06-16T14:30:46.023Z">
+<meta property="og:image" content="https://ww2.sinaimg.cn/large/005CA6ZCjw1f4xenjqm3wj30i60cxacj.jpg">
+<meta property="og:image" content="https://ww3.sinaimg.cn/large/005CA6ZCgw1f4xeq4d7hjj30i60bytau.jpg">
+<meta property="og:image" content="https://ww3.sinaimg.cn/large/005CA6ZCjw1f4xeilzf87j308605vdg5.jpg">
+<meta property="og:image" content="https://ww2.sinaimg.cn/large/005CA6ZCjw1f4xfboqjbvj30hz0ch76d.jpg">
+<meta property="og:image" content="https://ww3.sinaimg.cn/large/005CA6ZCjw1f4xfep93jtj30hm0h6ad6.jpg">
+<meta property="og:updated_time" content="2017-02-19T10:37:07.580Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Web安全之情报收集">
 <meta name="twitter:description" content="渗透测试中情报收集环节需要完成两项重要任务：
 
 通过信息收集工作，确定渗透测试目标的范围
 通过情报信息收集，发现渗透测试目标的安全漏洞与脆弱点，为后续的渗透测试攻击提供基础">
-<meta name="twitter:image" content="http://ww2.sinaimg.cn/large/005CA6ZCjw1f4xenjqm3wj30i60cxacj.jpg">
+<meta name="twitter:image" content="https://ww2.sinaimg.cn/large/005CA6ZCjw1f4xenjqm3wj30i60cxacj.jpg">
 
   
 
@@ -197,19 +197,19 @@
 <a id="more"></a>
 <h1 id="1-通过-DNS-和-IP-地址挖掘目标网络信息"><a href="#1-通过-DNS-和-IP-地址挖掘目标网络信息" class="headerlink" title="1. 通过 DNS 和 IP 地址挖掘目标网络信息"></a>1. 通过 DNS 和 IP 地址挖掘目标网络信息</h1><p>如果渗透测试任务中所有关于测试目标的信息只有一个域名或IP地址时，</p>
 <h2 id="1-1-whois-域名注册信息查询"><a href="#1-1-whois-域名注册信息查询" class="headerlink" title="1.1 whois 域名注册信息查询"></a>1.1 whois 域名注册信息查询</h2><p>whois 是一个用来查询域名注册信息数据库的工具，一般的域名注册信息会包含域名所有者、服务商、管理员邮件地址、域名注册日期和过期日期等。</p>
-<p>如下是通过在 MSF 终端中使用 whois 命令对域名注册信息进行查询的结果：<br><img src="http://ww2.sinaimg.cn/large/005CA6ZCjw1f4xenjqm3wj30i60cxacj.jpg" alt=""></p>
-<p><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f4xeq4d7hjj30i60bytau.jpg" alt=""></p>
+<p>如下是通过在 MSF 终端中使用 whois 命令对域名注册信息进行查询的结果：<br><img src="https://ww2.sinaimg.cn/large/005CA6ZCjw1f4xenjqm3wj30i60cxacj.jpg" alt=""></p>
+<p><img src="https://ww3.sinaimg.cn/large/005CA6ZCgw1f4xeq4d7hjj30i60bytau.jpg" alt=""></p>
 <p>可以得到关于 taobao.com 域名的一些基本信息，域名申请公司，管理员 Eamil、电话传真（可以尝试社会工程学攻击），以及域名服务器等信息。</p>
 <h2 id="1-2-nslookup-和-dig-域名查询"><a href="#1-2-nslookup-和-dig-域名查询" class="headerlink" title="1.2 nslookup 和 dig 域名查询"></a>1.2 nslookup 和 dig 域名查询</h2><p>nslookup 和 dig 两个工具功能上类似，都可以查询指定域名所对应的 IP 地址，所不同的是 dig 工具可以从该域名的官方 DNS服务器上查询到精确的权威解答，而nslookup 只会得到 DNS 解析服务器保存在 Cache 中的非权威解答。</p>
-<p><img src="http://ww3.sinaimg.cn/large/005CA6ZCjw1f4xeilzf87j308605vdg5.jpg" alt=""></p>
+<p><img src="https://ww3.sinaimg.cn/large/005CA6ZCjw1f4xeilzf87j308605vdg5.jpg" alt=""></p>
 <p>dig 命令更为灵活，比如可以指定使用哪台 DNS 解析服务器进行查询，同时采用 dig 命令将会触发 DNS 解析服务器向官方权威 DNS服务器进行一次递归查询，以获得权威解答。<br>用法：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dig @<span class="tag">&lt;<span class="name">DNS</span> 服务器&gt;</span> <span class="tag">&lt;<span class="name">待查询的域名</span>&gt;</span></div></pre></td></tr></table></figure></p>
 <p>可以在待查询域名后面加上 A、NS、MX 等选项以查找特定类型的 DNS 记录，默认为 A。</p>
-<p><img src="http://ww2.sinaimg.cn/large/005CA6ZCjw1f4xfboqjbvj30hz0ch76d.jpg" alt=""></p>
+<p><img src="https://ww2.sinaimg.cn/large/005CA6ZCjw1f4xfboqjbvj30hz0ch76d.jpg" alt=""></p>
 <h2 id="1-3-IP2Domain-反查域名"><a href="#1-3-IP2Domain-反查域名" class="headerlink" title="1.3 IP2Domain 反查域名"></a>1.3 IP2Domain 反查域名</h2><p>如果渗透的目标网络是一台虚拟主机，那么通过 IP 反查到的域名信息往往很有价值。</p>
 <font color="red">因为一套物理服务器上面可能运行多个虚拟主机，这些虚拟主机具有不同的域名，但通常公用一个 IP 地址，如果你只有有哪些网站公用这台服务器，就有可能通过此服务器上的其他网站获取服务器控制权，进而迂回获取渗透目标的权限，称为“旁注”。</font>
 
 <p>可以使用 (<a href="http://www.ip-adress.com/reverse_ip" target="_blank" rel="external">http://www.ip-adress.com/reverse_ip</a>) 提供的服务查询有哪些域名指向同一IP 地址。</p>
-<p><img src="http://ww3.sinaimg.cn/large/005CA6ZCjw1f4xfep93jtj30hm0h6ad6.jpg" alt=""></p>
+<p><img src="https://ww3.sinaimg.cn/large/005CA6ZCjw1f4xfep93jtj30hm0h6ad6.jpg" alt=""></p>
 <h1 id="2-主机探测与端口扫面"><a href="#2-主机探测与端口扫面" class="headerlink" title="2. 主机探测与端口扫面"></a>2. 主机探测与端口扫面</h1><p>Nmap是目前最流行的网络扫面工具，他不仅能够准确地探测单台主机的详细情况，而且能够高效地对大范围 IP 地址段进行扫面，使用 Nmap 能够得知<font color="red">目标网络上有哪些主机是存活的，哪些服务是开放的，甚至知道网络中使用了何种类型的防火墙设备</font>等。</p>
 <h2 id="2-1-用法"><a href="#2-1-用法" class="headerlink" title="2.1 用法"></a>2.1 用法</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nmap <span class="tag">&lt;<span class="name">扫面选项</span>&gt;</span> <span class="tag">&lt;<span class="name">扫描目标</span>&gt;</span></div></pre></td></tr></table></figure>
 

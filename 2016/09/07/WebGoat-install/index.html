@@ -21,17 +21,17 @@
 <meta property="og:url" content="http://huirong.github.io/2016/09/07/WebGoat-install/index.html">
 <meta property="og:site_name" content="Star">
 <meta property="og:description" content="WebGoat 是 OWASP 组织研制出的用于进行 web 漏洞实验的应用平台，用来说明 web 应用中存在的安全漏洞。">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7l54687c4j30j5025wez.jpg">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7l4tebd2qj30gt02mq3e.jpg">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7l5azp2crj30s0045abh.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7l5b917d5j30s00633zw.jpg">
-<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7l5citwzzj30gy02lwes.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7l5i4d4kij30rz0ir405.jpg">
-<meta property="og:updated_time" content="2016-09-07T09:39:38.933Z">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/005CA6ZCgw1f7l54687c4j30j5025wez.jpg">
+<meta property="og:image" content="https://ww3.sinaimg.cn/large/005CA6ZCgw1f7l4tebd2qj30gt02mq3e.jpg">
+<meta property="og:image" content="https://ww3.sinaimg.cn/large/005CA6ZCgw1f7l5azp2crj30s0045abh.jpg">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/005CA6ZCgw1f7l5b917d5j30s00633zw.jpg">
+<meta property="og:image" content="https://ww4.sinaimg.cn/large/005CA6ZCgw1f7l5citwzzj30gy02lwes.jpg">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/005CA6ZCgw1f7l5i4d4kij30rz0ir405.jpg">
+<meta property="og:updated_time" content="2017-02-19T10:36:19.420Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WebGoat 安装">
 <meta name="twitter:description" content="WebGoat 是 OWASP 组织研制出的用于进行 web 漏洞实验的应用平台，用来说明 web 应用中存在的安全漏洞。">
-<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7l54687c4j30j5025wez.jpg">
+<meta name="twitter:image" content="https://ww1.sinaimg.cn/large/005CA6ZCgw1f7l54687c4j30j5025wez.jpg">
 
   
 
@@ -193,21 +193,21 @@
 <h1 id="3-安装-升级-JDK"><a href="#3-安装-升级-JDK" class="headerlink" title="3 安装/升级 JDK"></a>3 安装/升级 JDK</h1><p>WebGoat 运行在带有java 虚拟机的平台上，因此需要安装 JDK。<br>而且如果版本过低，会出错，最好还是升级 JDK 到最新版。升级 JDK 步骤和安装相同，不用卸载原来的 JDK。</p>
 <font color="red"> 如果是在 Windows 下安装，可自行绕过此步骤，毕竟双击 exe 谁都会<del>~</del> </font>
 
-<p>我原装 JDK 如下：<br><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7l54687c4j30j5025wez.jpg" alt=""></p>
+<p>我原装 JDK 如下：<br><img src="https://ww1.sinaimg.cn/large/005CA6ZCgw1f7l54687c4j30j5025wez.jpg" alt=""></p>
 <p>JDK 版本太低，在后续运行 WebGoat 出错，所以需要升级。</p>
 <h2 id="3-1-下载"><a href="#3-1-下载" class="headerlink" title="3.1 下载"></a>3.1 下载</h2><p>下载最新版 JDK，网址 <a href="http://www.oracle.com/technetwork/java/index.html" target="_blank" rel="external">http://www.oracle.com/technetwork/java/index.html</a><br>根据自己的机型选择对应的版本。</p>
-<p>将安装包移动到 <code>/usr/local/java</code> 目录下，并解压。<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7l4tebd2qj30gt02mq3e.jpg" alt=""></p>
+<p>将安装包移动到 <code>/usr/local/java</code> 目录下，并解压。<br><img src="https://ww3.sinaimg.cn/large/005CA6ZCgw1f7l4tebd2qj30gt02mq3e.jpg" alt=""></p>
 <h2 id="3-2-修改环境变量"><a href="#3-2-修改环境变量" class="headerlink" title="3.2 修改环境变量"></a>3.2 修改环境变量</h2><p>修改 <code>/etc/profile</code> 配置文件，在文件末尾添加如下代码，不要修改其他部分。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">JAVA_HOME=<span class="string">"/usr/local/java/jdk1.8.0_101"</span></div><div class="line">CLASSPATH=<span class="string">"./:/usr/local/java/jdk1.8.0_101/lib"</span></div><div class="line">PATH=<span class="variable">$PATH</span>:<span class="variable">$JAVA_HOME</span>/bin:<span class="variable">$CLASSPATH</span></div><div class="line"><span class="built_in">export</span> PATH</div></pre></td></tr></table></figure></p>
 <p>可能大家下载的 jdk 版本和我的不同，根据自己的修改jdk版本号。</p>
 <p>保存并退出，<code>source /etc/profile</code></p>
 <h2 id="3-3-设置成系统默认的jdk"><a href="#3-3-设置成系统默认的jdk" class="headerlink" title="3.3 设置成系统默认的jdk"></a>3.3 设置成系统默认的jdk</h2><figure class="highlight dts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">update-alternatives --install <span class="meta-keyword">/usr/</span>bin/javac javac <span class="meta-keyword">/usr/</span>local<span class="meta-keyword">/java/</span>jdk1<span class="number">.8</span><span class="number">.0</span>_101<span class="meta-keyword">/bin/</span>javac <span class="number">1071</span></div><div class="line">update-alternatives --install <span class="meta-keyword">/usr/</span>bin/java java <span class="meta-keyword">/usr/</span>local<span class="meta-keyword">/java/</span>jdk1<span class="number">.8</span><span class="number">.0</span>_101<span class="meta-keyword">/bin/</span>java <span class="number">1071</span></div><div class="line">update-alternatives --config java</div></pre></td></tr></table></figure>
 <p>最后一个 –config java 命令，shell会提示你选择哪个jdk作为默认的jdk，第一个带 * ，就是刚才设置的，直接enter就可以了。</p>
-<p><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1f7l5azp2crj30s0045abh.jpg" alt=""></p>
-<p><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7l5b917d5j30s00633zw.jpg" alt=""></p>
-<h2 id="3-4-查看是否安装-升级成功"><a href="#3-4-查看是否安装-升级成功" class="headerlink" title="3.4 查看是否安装/升级成功"></a>3.4 查看是否安装/升级成功</h2><p><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7l5citwzzj30gy02lwes.jpg" alt=""><br>说明安装/升级成功！！！！！</p>
+<p><img src="https://ww3.sinaimg.cn/large/005CA6ZCgw1f7l5azp2crj30s0045abh.jpg" alt=""></p>
+<p><img src="https://ww1.sinaimg.cn/large/005CA6ZCgw1f7l5b917d5j30s00633zw.jpg" alt=""></p>
+<h2 id="3-4-查看是否安装-升级成功"><a href="#3-4-查看是否安装-升级成功" class="headerlink" title="3.4 查看是否安装/升级成功"></a>3.4 查看是否安装/升级成功</h2><p><img src="https://ww4.sinaimg.cn/large/005CA6ZCgw1f7l5citwzzj30gy02lwes.jpg" alt=""><br>说明安装/升级成功！！！！！</p>
 <h1 id="4-安装-WebGoat"><a href="#4-安装-WebGoat" class="headerlink" title="4 安装 WebGoat"></a>4 安装 WebGoat</h1><p>下载简易安装 jar 可执行文件<br><a href="https://s3.amazonaws.com/webgoat-war/webgoat-container-7.0-SNAPSHOT-war-exec.jar" target="_blank" rel="external">https://s3.amazonaws.com/webgoat-war/webgoat-container-7.0-SNAPSHOT-war-exec.jar</a></p>
 <p>在终端运行如下命令：<br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">java</span> <span class="selector-tag">-jar</span> <span class="selector-tag">webgoat-container-7</span><span class="selector-class">.0</span><span class="selector-class">.1-war-exec</span><span class="selector-class">.jar</span></div></pre></td></tr></table></figure></p>
-<p>在浏览器访问 <a href="http://localhost:8080/WebGoat" target="_blank" rel="external">http://localhost:8080/WebGoat</a><br><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f7l5i4d4kij30rz0ir405.jpg" alt=""></p>
+<p>在浏览器访问 <a href="http://localhost:8080/WebGoat" target="_blank" rel="external">http://localhost:8080/WebGoat</a><br><img src="https://ww1.sinaimg.cn/large/005CA6ZCgw1f7l5i4d4kij30rz0ir405.jpg" alt=""></p>
 <p>可根据页面下方的用户名和密码登录 O(∩_∩)O~~</p>
 <h1 id="5-参考文献"><a href="#5-参考文献" class="headerlink" title="5 参考文献"></a>5 参考文献</h1><p><a href="https://github.com/WebGoat/WebGoat/blob/master/README.MD" target="_blank" rel="external">WebGoat: A deliberately insecure Web Application</a><br><a href="http://www.cnblogs.com/chineseboy/archive/2013/05/07/3064873.html" target="_blank" rel="external">debian 6 安装 JDK 、eclipse、 SDK 笔记</a></p>
 

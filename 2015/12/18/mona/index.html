@@ -12,7 +12,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="缓冲区溢出,调试器," />
+    <meta name="keywords" content="调试器,缓冲区溢出," />
   
 
   <meta name="description" content="本人最近写学shellcode编写，mona插件不可或缺，在此介绍mona插件用法">
@@ -21,17 +21,17 @@
 <meta property="og:url" content="http://huirong.github.io/2015/12/18/mona/index.html">
 <meta property="og:site_name" content="Star">
 <meta property="og:description" content="本人最近写学shellcode编写，mona插件不可或缺，在此介绍mona插件用法">
-<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1ez422rhcvwj30ho05gt9v.jpg">
-<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1ez424wnmi4j30vb048myt.jpg">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1ez4293rxj5j30i70by782.jpg">
-<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCjw1ez42ed5d1jj30k404ugne.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCjw1ez42k4ke5jj30ef04wwfs.jpg">
-<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1ez42uxxyxfj30c303yjrw.jpg">
-<meta property="og:updated_time" content="2016-04-16T12:02:29.289Z">
+<meta property="og:image" content="https://ww4.sinaimg.cn/large/005CA6ZCgw1ez422rhcvwj30ho05gt9v.jpg">
+<meta property="og:image" content="https://ww2.sinaimg.cn/large/005CA6ZCgw1ez424wnmi4j30vb048myt.jpg">
+<meta property="og:image" content="https://ww3.sinaimg.cn/large/005CA6ZCgw1ez4293rxj5j30i70by782.jpg">
+<meta property="og:image" content="https://ww2.sinaimg.cn/large/005CA6ZCjw1ez42ed5d1jj30k404ugne.jpg">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/005CA6ZCjw1ez42k4ke5jj30ef04wwfs.jpg">
+<meta property="og:image" content="https://ww4.sinaimg.cn/large/005CA6ZCgw1ez42uxxyxfj30c303yjrw.jpg">
+<meta property="og:updated_time" content="2017-02-19T10:37:17.123Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Immunity Debugger 插件 mona 使用">
 <meta name="twitter:description" content="本人最近写学shellcode编写，mona插件不可或缺，在此介绍mona插件用法">
-<meta name="twitter:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1ez422rhcvwj30ho05gt9v.jpg">
+<meta name="twitter:image" content="https://ww4.sinaimg.cn/large/005CA6ZCgw1ez422rhcvwj30ho05gt9v.jpg">
 
   
 
@@ -189,22 +189,22 @@
       <p>本人最近写学shellcode编写，mona插件不可或缺，在此介绍mona插件用法<br><a id="more"></a></p>
 <h1 id="Ⅰ、查找-pop-pop-ret"><a href="#Ⅰ、查找-pop-pop-ret" class="headerlink" title="Ⅰ、查找 pop pop ret"></a>Ⅰ、<font color="blue">查找 pop pop ret</font></h1><p>用Immunity Debugger附加上待调试的程序，这样的地址更具有通用性，不依赖操作系统<br>在命令行输入<br><figure class="highlight diff"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="addition">!mona rop</span></div></pre></td></tr></table></figure></p>
 <p>生成结果在 C:\D\mona-master\output\c ，log data中有显示</p>
-<p><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1ez422rhcvwj30ho05gt9v.jpg" alt=""></p>
+<p><img src="https://ww4.sinaimg.cn/large/005CA6ZCgw1ez422rhcvwj30ho05gt9v.jpg" alt=""></p>
 <p>以下是rop.txt中的内容</p>
-<p><img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1ez424wnmi4j30vb048myt.jpg" alt=""></p>
+<p><img src="https://ww2.sinaimg.cn/large/005CA6ZCgw1ez424wnmi4j30vb048myt.jpg" alt=""></p>
 <h1 id="Ⅱ、查找JMP-ESP-CALL-ESP-push-esp-ret"><a href="#Ⅱ、查找JMP-ESP-CALL-ESP-push-esp-ret" class="headerlink" title="Ⅱ、查找JMP ESP,CALL ESP, push esp;ret"></a>Ⅱ、<font color="blue">查找JMP ESP,CALL ESP, push esp;ret</font></h1><p>命令：</p>
 <figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">!mona <span class="keyword">jmp</span> -r <span class="built_in">esp</span></div></pre></td></tr></table></figure>
 <p>结果：</p>
-<p><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1ez4293rxj5j30i70by782.jpg" alt=""></p>
+<p><img src="https://ww3.sinaimg.cn/large/005CA6ZCgw1ez4293rxj5j30i70by782.jpg" alt=""></p>
 <h1 id="Ⅲ、计算SEH溢出长度"><a href="#Ⅲ、计算SEH溢出长度" class="headerlink" title="Ⅲ、计算SEH溢出长度"></a>Ⅲ、<font color="blue">计算SEH溢出长度</font></h1><h2 id="①-生成溢出字符串"><a href="#①-生成溢出字符串" class="headerlink" title="① 生成溢出字符串"></a>① 生成溢出字符串</h2><p>命令：</p>
 <figure class="highlight diff"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="addition">!mona pattern_create 5000</span></div></pre></td></tr></table></figure>
 <p>5000为字符串长度<br>结果：</p>
-<p><img src="http://ww2.sinaimg.cn/large/005CA6ZCjw1ez42ed5d1jj30k404ugne.jpg" alt=""></p>
+<p><img src="https://ww2.sinaimg.cn/large/005CA6ZCjw1ez42ed5d1jj30k404ugne.jpg" alt=""></p>
 <p>使用该字符串尝试溢出，得到seh的值为:35744134</p>
 <h2 id="②-计算溢出长度"><a href="#②-计算溢出长度" class="headerlink" title="② 计算溢出长度"></a>② 计算溢出长度</h2><p>首先查找查找nseh偏移，命令<br><figure class="highlight diff"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="addition">!mona pattern_offset 35744134</span></div></pre></td></tr></table></figure></p>
-<p><img src="http://ww1.sinaimg.cn/large/005CA6ZCjw1ez42k4ke5jj30ef04wwfs.jpg" alt=""><br>nseh的偏移为：584，则seh handler的偏移：584 + 4 =588</p>
+<p><img src="https://ww1.sinaimg.cn/large/005CA6ZCjw1ez42k4ke5jj30ef04wwfs.jpg" alt=""><br>nseh的偏移为：584，则seh handler的偏移：584 + 4 =588</p>
 <h1 id="Ⅳ、汇编指令转机器码"><a href="#Ⅳ、汇编指令转机器码" class="headerlink" title="Ⅳ、汇编指令转机器码"></a>Ⅳ、<font color="blue">汇编指令转机器码</font></h1><p>命令：<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">!mona assemble/<span class="keyword">asm</span> –s 汇编指令（多个指令用<span class="comment">#分隔）</span></div></pre></td></tr></table></figure></p>
-<p><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1ez42uxxyxfj30c303yjrw.jpg" alt=""></p>
+<p><img src="https://ww4.sinaimg.cn/large/005CA6ZCgw1ez42uxxyxfj30c303yjrw.jpg" alt=""></p>
 <h1 id="V、参考文献"><a href="#V、参考文献" class="headerlink" title="V、参考文献"></a>V、参考文献</h1><p><a href="http://www.hack80.com/thread-21042-1-1.html" target="_blank" rel="external">Immunity Debugger-mona插件使用</a></p>
 
     

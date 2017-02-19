@@ -21,15 +21,15 @@
 <meta property="og:url" content="http://huirong.github.io/2015/05/22/smashTheStack-io-level3/index.html">
 <meta property="og:site_name" content="Star">
 <meta property="og:description" content="密码：IFd92yzOnSMv9tkX">
-<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1eslav1k4bwj30io027q3r.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1eslavce0j0j30mc0c6776.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1eslavkosj2j30nn093jwt.jpg">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCgw1eslavpqx9dj30k80350tk.jpg">
-<meta property="og:updated_time" content="2016-04-16T11:25:26.617Z">
+<meta property="og:image" content="https://ww2.sinaimg.cn/large/005CA6ZCgw1eslav1k4bwj30io027q3r.jpg">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/005CA6ZCgw1eslavce0j0j30mc0c6776.jpg">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/005CA6ZCgw1eslavkosj2j30nn093jwt.jpg">
+<meta property="og:image" content="https://ww3.sinaimg.cn/large/005CA6ZCgw1eslavpqx9dj30k80350tk.jpg">
+<meta property="og:updated_time" content="2017-02-19T10:36:59.652Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SmashTheStack IO level3">
 <meta name="twitter:description" content="密码：IFd92yzOnSMv9tkX">
-<meta name="twitter:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1eslav1k4bwj30io027q3r.jpg">
+<meta name="twitter:image" content="https://ww2.sinaimg.cn/large/005CA6ZCgw1eslav1k4bwj30io027q3r.jpg">
 
   
 
@@ -186,7 +186,7 @@
     
       <p>密码：IFd92yzOnSMv9tkX<br><a id="more"></a><br>这个是最基本的缓冲区溢出，如果不明白缓冲区溢出的，可以自己百度。。。。。。</p>
 <h1 id="I、源码"><a href="#I、源码" class="headerlink" title="I、源码"></a>I、源码</h1><h2 id="①-源代码："><a href="#①-源代码：" class="headerlink" title="① 源代码："></a>① 源代码：</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//bla, based on work by beach</span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">good</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">puts</span>(<span class="string">"Win."</span>);</div><div class="line">    execl(<span class="string">"/bin/sh"</span>, <span class="string">"sh"</span>, <span class="literal">NULL</span>);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">bad</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"I'm so sorry, you're at %p and you want to be at %p\n"</span>, bad, good);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv, <span class="keyword">char</span> **envp)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">void</span> (*functionpointer)(<span class="keyword">void</span>) = bad;</div><div class="line">    <span class="keyword">char</span> buffer[<span class="number">50</span>];</div><div class="line">    <span class="keyword">if</span>(argc != <span class="number">2</span> || <span class="built_in">strlen</span>(argv[<span class="number">1</span>]) &lt; <span class="number">4</span>)</div><div class="line">        <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line"></div><div class="line">    <span class="built_in">memcpy</span>(buffer, argv[<span class="number">1</span>], <span class="built_in">strlen</span>(argv[<span class="number">1</span>]));</div><div class="line">    <span class="built_in">memset</span>(buffer, <span class="number">0</span>, <span class="built_in">strlen</span>(argv[<span class="number">1</span>]) - <span class="number">4</span>);</div><div class="line"></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"This is exciting we're going to %p\n"</span>, functionpointer);</div><div class="line">    functionpointer();</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="②-执行结果"><a href="#②-执行结果" class="headerlink" title="② 执行结果"></a>② 执行结果</h2><p><img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1eslav1k4bwj30io027q3r.jpg" alt=""></p>
+<h2 id="②-执行结果"><a href="#②-执行结果" class="headerlink" title="② 执行结果"></a>② 执行结果</h2><p><img src="https://ww2.sinaimg.cn/large/005CA6ZCgw1eslav1k4bwj30io027q3r.jpg" alt=""></p>
 <h2 id="③-分析结果"><a href="#③-分析结果" class="headerlink" title="③ 分析结果"></a>③ 分析结果</h2><p>最终要跳转到good()函数执行，调用 execl(“/bin/sh”, “sh”, NULL);<br>bad()函数的起始地址是0x80484a4，good()函数的起始地址是0x8048474<br>起初functionpointer是指向bad()函数的，需要构造输入，使buffer溢出，修改functionpointer的值</p>
 <h1 id="II、函数说明"><a href="#II、函数说明" class="headerlink" title="II、函数说明"></a>II、函数说明</h1><h2 id="①-memcpy"><a href="#①-memcpy" class="headerlink" title="① memcpy()"></a>① memcpy()</h2><p>【定义函数】void <em>memcpy(void</em>dest, const void *src, size_t n);<br>【函数说明】</p>
 <ol>
@@ -195,10 +195,10 @@
 <li>如果目标数组destin本身已有数据，执行memcpy（）后，将覆盖原有数据（最多覆盖n）。如果要追加数据，则每次执行memcpy后，要将目标数组地址增加到你要追加数据的地址。<br>注意，source和destin都不一定是数组，任意的可读写的空间均可。<br>【返回值】函数返回一个指向dest的指针。</li>
 </ol>
 <h2 id="②-memset"><a href="#②-memset" class="headerlink" title="② memset()"></a>② memset()</h2><p>【定义函数】void <em> memset( void </em> ptr, int value, size_t num );<br>【函数说明】<br> memset()会将ptr所指的内存区域的前num个字节的值都设置为value，然后返回指向ptr的指针。<br>memset()可以将一段内存空间全部设置为特定的值，所以经常用来初始化字符数组。<br>【返回值】返回指向 ptr 的指针。</p>
-<h1 id="III、找漏洞"><a href="#III、找漏洞" class="headerlink" title="III、找漏洞"></a>III、找漏洞</h1><h2 id="①-栈"><a href="#①-栈" class="headerlink" title="① 栈"></a>① 栈</h2><p><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1eslavce0j0j30mc0c6776.jpg" alt=""><br>ebp:0xbffffc88，esp:0xbffffc10，栈范围：0xbffffc10~0xbffffc88</p>
-<h2 id="②-内存"><a href="#②-内存" class="headerlink" title="② 内存"></a>② 内存</h2><p><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1eslavkosj2j30nn093jwt.jpg" alt=""><br>查看functionpointer的地址，分析其和buffer起始地址的距离<br>functionpointer在buffer前定义，先入栈，在高地址，functionpointer（0x80484a4）的地址为0xbffffc7c<br>buffer的起始地址为0xbffffc30，中间隔了76Byte</p>
+<h1 id="III、找漏洞"><a href="#III、找漏洞" class="headerlink" title="III、找漏洞"></a>III、找漏洞</h1><h2 id="①-栈"><a href="#①-栈" class="headerlink" title="① 栈"></a>① 栈</h2><p><img src="https://ww1.sinaimg.cn/large/005CA6ZCgw1eslavce0j0j30mc0c6776.jpg" alt=""><br>ebp:0xbffffc88，esp:0xbffffc10，栈范围：0xbffffc10~0xbffffc88</p>
+<h2 id="②-内存"><a href="#②-内存" class="headerlink" title="② 内存"></a>② 内存</h2><p><img src="https://ww1.sinaimg.cn/large/005CA6ZCgw1eslavkosj2j30nn093jwt.jpg" alt=""><br>查看functionpointer的地址，分析其和buffer起始地址的距离<br>functionpointer在buffer前定义，先入栈，在高地址，functionpointer（0x80484a4）的地址为0xbffffc7c<br>buffer的起始地址为0xbffffc30，中间隔了76Byte</p>
 <h2 id="③-构造输入"><a href="#③-构造输入" class="headerlink" title="③ 构造输入"></a>③ 构造输入</h2><p>需要先输入67个任意字符，到functionpointer前地址，0x8048474（good()函数起始地址）和0x80484a4（bad()函数起始地址）只有最后一个Byte不同，只用修改最后1Byte值，所以构造的输入：76<em>A+0x74<br>“$(python -c ‘print “A”</em>76 + “t” ‘ )”<br>（t的ascii码值：0x74）</p>
-<p><img src="http://ww3.sinaimg.cn/large/005CA6ZCgw1eslavpqx9dj30k80350tk.jpg" alt=""></p>
+<p><img src="https://ww3.sinaimg.cn/large/005CA6ZCgw1eslavpqx9dj30k80350tk.jpg" alt=""></p>
 
     
   </div>

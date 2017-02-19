@@ -21,13 +21,13 @@
 <meta property="og:url" content="http://huirong.github.io/2015/12/30/Using-Intel-Pin-tools-for-binary-instrumentation/index.html">
 <meta property="og:site_name" content="Star">
 <meta property="og:description" content="最近论文开始做试验了，需要用到二进制插装，学习过程与大家分享。">
-<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1ezhya70r2tj30zm04j3zc.jpg">
-<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1ezhyeydkzej30zo07n76x.jpg">
-<meta property="og:updated_time" content="2016-01-07T07:32:48.441Z">
+<meta property="og:image" content="https://ww2.sinaimg.cn/large/005CA6ZCgw1ezhya70r2tj30zm04j3zc.jpg">
+<meta property="og:image" content="https://ww2.sinaimg.cn/large/005CA6ZCgw1ezhyeydkzej30zo07n76x.jpg">
+<meta property="og:updated_time" content="2017-02-19T10:36:26.025Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux Pin使用之设置Yama安全模块">
 <meta name="twitter:description" content="最近论文开始做试验了，需要用到二进制插装，学习过程与大家分享。">
-<meta name="twitter:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1ezhya70r2tj30zm04j3zc.jpg">
+<meta name="twitter:image" content="https://ww2.sinaimg.cn/large/005CA6ZCgw1ezhya70r2tj30zm04j3zc.jpg">
 
   
 
@@ -182,9 +182,9 @@
 <p> Yama使用sysctl进行控制，/proc/sys/kernel/yama/ptrace_scope 可能的值及其相应解释如下：<br> <figure class="highlight basic"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">0 </span>=&gt; Classic ptrace: a process can PTRACE_ATTACH <span class="keyword">to</span> any other process running under the same uid, as long as it is dumpable.</div><div class="line"><span class="symbol">1 </span>=&gt; Restricted ptrace: a process can only PTRACE_ATTACH only its descendants although an inferior can <span class="keyword">call</span> prctl(PR_SET_PTRACER, debugger, …) <span class="keyword">to</span> allow the debugger <span class="keyword">to</span> <span class="keyword">call</span> PTRACE_ATTACH.</div><div class="line"><span class="symbol">2 </span>=&gt; Admin-only attach: only processes with CAP_SYS_PTRACE may use ptrace with PTRACE_ATTACH</div><div class="line"><span class="symbol">3 </span>=&gt; No attach: no processes may use ptrace with PTRACE_ATTACH nor via PTRACE_TRACEME.</div></pre></td></tr></table></figure></p>
 <p>想了解更多详细信息，请阅读<a href="https://www.kernel.org/doc/Documentation/security/Yama.txt" target="_blank" rel="external">关于Yama的Linux内核文档</a>。</p>
 <p>回到Pin，如果 /proc/sys/kernel/yama/ptrace_scope 的值设置为1sysctl kernel.yama.ptrace_scope=0，会有如下信息：</p>
-<p><img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1ezhya70r2tj30zm04j3zc.jpg" alt=""></p>
+<p><img src="https://ww2.sinaimg.cn/large/005CA6ZCgw1ezhya70r2tj30zm04j3zc.jpg" alt=""></p>
 <p>为了允许调试程序，需要使用 sysctl 设置 /proc/sys/kernel/yama/ptrace_scope 的值<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sysctl kernel<span class="selector-class">.yama</span><span class="selector-class">.ptrace_scope</span>=<span class="number">0</span></div></pre></td></tr></table></figure></p>
-<p><img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1ezhyeydkzej30zo07n76x.jpg" alt=""></p>
+<p><img src="https://ww2.sinaimg.cn/large/005CA6ZCgw1ezhyeydkzej30zo07n76x.jpg" alt=""></p>
 <p>OK！！！！可以成功运行Pin工具了。。。。</p>
 <h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p><a href="https://labs.portcullis.co.uk/blog/using-intel-pin-tools-for-binary-instrumentation/" target="_blank" rel="external">Using Intel Pin tools for binary instrumentation</a></p>
 

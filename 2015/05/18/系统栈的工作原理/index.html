@@ -35,13 +35,13 @@
 栈区：用于动态存数函数之间的调用关系，以保证被调用函数在返回时恢复到母函数中继续执行
 
 在window">
-<meta property="og:image" content="http://img.blog.csdn.net/20141011102913578?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvSGFwcHlIdWlyb25n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20141011104654009?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvSGFwcHlIdWlyb25n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20141011104702184?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvSGFwcHlIdWlyb25n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20141011105750677?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvSGFwcHlIdWlyb25n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20141011111650821">
-<meta property="og:image" content="http://img.blog.csdn.net/20141011111441312">
-<meta property="og:updated_time" content="2016-04-16T11:10:02.096Z">
+<meta property="og:image" content="https://img.blog.csdn.net/20141011102913578?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvSGFwcHlIdWlyb25n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="https://img.blog.csdn.net/20141011104654009?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvSGFwcHlIdWlyb25n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="https://img.blog.csdn.net/20141011104702184?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvSGFwcHlIdWlyb25n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="https://img.blog.csdn.net/20141011105750677?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvSGFwcHlIdWlyb25n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="https://img.blog.csdn.net/20141011111650821">
+<meta property="og:image" content="https://img.blog.csdn.net/20141011111441312">
+<meta property="og:updated_time" content="2017-02-19T10:37:46.412Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="系统栈的工作原理">
 <meta name="twitter:description" content="I、内存的不同用途不管什么样的操作系统、计算机结构， 一个进程使用的内存按照功能大致分为以下4个部分
@@ -52,7 +52,7 @@
 栈区：用于动态存数函数之间的调用关系，以保证被调用函数在返回时恢复到母函数中继续执行
 
 在window">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20141011102913578?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvSGFwcHlIdWlyb25n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta name="twitter:image" content="https://img.blog.csdn.net/20141011102913578?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvSGFwcHlIdWlyb25n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
   
 
@@ -210,12 +210,12 @@
 <li>栈区：用于动态存数函数之间的调用关系，以保证被调用函数在返回时恢复到母函数中继续执行</li>
 </ol>
 <p>在windows平台下，高级语言写出的程序经过编译连接后，最终变成PE文件（可执行文件）。当PE文件被装载运行后，就是进程。</p>
-<p>PE文件的机器代码会被载入到内存的代码区，处理器将到内存的 这一区域取指，然后送入到算数逻辑单元执行；如果代码请求开辟动态内存，则会在内存的堆区分配一块大小合适的区域返回给代码区的代码使用；当函数调用发生时，函数的调用关系在等信息会动态地保存在栈区， 以供处理器在执行完函数调用代码时，返回母函数。过程如图<br> <img src="http://img.blog.csdn.net/20141011102913578?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvSGFwcHlIdWlyb25n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""><br>如果把CPU比作一个有条不紊的工厂，我们可以得到如下类比：<br>CPU是完成工作的工人<br>数据区、栈区、堆区是则是存放 原料、成品等的场所<br>存在代码区的指令则告诉CPU做什么，如何做</p>
+<p>PE文件的机器代码会被载入到内存的代码区，处理器将到内存的 这一区域取指，然后送入到算数逻辑单元执行；如果代码请求开辟动态内存，则会在内存的堆区分配一块大小合适的区域返回给代码区的代码使用；当函数调用发生时，函数的调用关系在等信息会动态地保存在栈区， 以供处理器在执行完函数调用代码时，返回母函数。过程如图<br> <img src="https://img.blog.csdn.net/20141011102913578?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvSGFwcHlIdWlyb25n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""><br>如果把CPU比作一个有条不紊的工厂，我们可以得到如下类比：<br>CPU是完成工作的工人<br>数据区、栈区、堆区是则是存放 原料、成品等的场所<br>存在代码区的指令则告诉CPU做什么，如何做</p>
 <h1 id="II、函数调用时，栈的变化"><a href="#II、函数调用时，栈的变化" class="headerlink" title="II、函数调用时，栈的变化"></a>II、函数调用时，栈的变化</h1><p>通过以下例子研究一下函数调用和递归等性质是如何通过系统栈巧妙实现的</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span>  <span class="title">func_B</span><span class="params">(<span class="keyword">int</span> arg_B1, <span class="keyword">int</span> arg_B2)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">int</span> var_B1, var_B2;</div><div class="line">  var_B1=arg_B1+arg_B2;</div><div class="line">  var_B2=arg_B1-arg_B2;</div><div class="line">  <span class="keyword">return</span> var_B1\*var_B2;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span>  <span class="title">func_A</span><span class="params">(<span class="keyword">int</span> arg_A1, <span class="keyword">int</span> arg_A2)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">int</span> var_A;</div><div class="line">  var_A = func_B(arg_A1,arg_A2) + arg_A1 ;</div><div class="line">  <span class="keyword">return</span> var_A;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> \*\*argv, <span class="keyword">char</span> \*\*envp)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">int</span> var_main;</div><div class="line">  var_main=func_A(<span class="number">4</span>,<span class="number">3</span>);</div><div class="line">  <span class="keyword">return</span> var_main;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>经过编译后，各函数对用的机器指令在代码区的分布如左下，不同的函数可能相邻，可能不相邻。<br>当CPU执行调用fun_A 函数时，会从代码区中main函数对应的机器指令的区域跳转到fun_A 对应的机器指令区域，在那里取指并执行；当fun_A 返回时，又回到main的机器指令区域，条用fun_A后面的指令继续执行main函数的代码，CPU的执行轨迹如右下：</p>
-<p><img src="http://img.blog.csdn.net/20141011104654009?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvSGFwcHlIdWlyb25n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="">                     <img src="http://img.blog.csdn.net/20141011104702184?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvSGFwcHlIdWlyb25n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""></p>
-<p>在函数调用的过程中，伴随的系统栈的操作如下<br><img src="http://img.blog.csdn.net/20141011105750677?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvSGFwcHlIdWlyb25n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""></p>
+<p><img src="https://img.blog.csdn.net/20141011104654009?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvSGFwcHlIdWlyb25n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="">                     <img src="https://img.blog.csdn.net/20141011104702184?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvSGFwcHlIdWlyb25n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""></p>
+<p>在函数调用的过程中，伴随的系统栈的操作如下<br><img src="https://img.blog.csdn.net/20141011105750677?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvSGFwcHlIdWlyb25n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""></p>
 <ol>
 <li>在main函数调用fun_A的时候，首先在自己的栈中压入函数返回地址，然后为fun_A创建新栈帧压入系统栈。</li>
 <li>在fun_A调用fun_B的时候，同样自己的栈中压入函数返回地址，然后为fun_B创建新栈帧压入系统栈。</li>
@@ -230,8 +230,8 @@
 </ol>
 <p>调用时用到的指令序列如下</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"> ;调用前</div><div class="line">push 参数<span class="number">3</span>    ; 假设该函数有<span class="number">3</span>个参数，将从右向左依次入栈</div><div class="line">push 参数<span class="number">2</span>    </div><div class="line">push 参数<span class="number">1</span>    </div><div class="line">call 函数地址  ; call指令将同时完成两项工作：a）向栈中压入当前指令在内存中的位置，          ; 即保存返回地址；b）跳转到所调用函数的入口地址</div><div class="line"></div><div class="line">  ;函数入口处</div><div class="line">push ebp      ; 保存旧栈帧的底部</div><div class="line">mov ebp，esp    ; 设置新栈帧的底部（栈帧切换）</div><div class="line">sub esp，xxx    ; 设置新栈帧的顶部（抬高栈顶，为新栈帧开辟空间）</div></pre></td></tr></table></figure>
-<p><img src="http://img.blog.csdn.net/20141011111650821" alt=""></p>
-<p><img src="http://img.blog.csdn.net/20141011111441312" alt=""></p>
+<p><img src="https://img.blog.csdn.net/20141011111650821" alt=""></p>
+<p><img src="https://img.blog.csdn.net/20141011111441312" alt=""></p>
 
     
   </div>

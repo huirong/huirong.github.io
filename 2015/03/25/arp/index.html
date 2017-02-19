@@ -21,12 +21,12 @@
 <meta property="og:url" content="http://huirong.github.io/2015/03/25/arp/index.html">
 <meta property="og:site_name" content="Star">
 <meta property="og:description" content="详细讲解ARP欺骗的原理，实验在下篇博客">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1eqhy7qjsuzj30fb09r0t9.jpg">
-<meta property="og:updated_time" content="2016-04-16T09:01:29.557Z">
+<meta property="og:image" content="https://ww3.sinaimg.cn/large/005CA6ZCjw1eqhy7qjsuzj30fb09r0t9.jpg">
+<meta property="og:updated_time" content="2017-02-19T10:37:44.715Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ARP欺骗原理">
 <meta name="twitter:description" content="详细讲解ARP欺骗的原理，实验在下篇博客">
-<meta name="twitter:image" content="http://ww3.sinaimg.cn/large/005CA6ZCjw1eqhy7qjsuzj30fb09r0t9.jpg">
+<meta name="twitter:image" content="https://ww3.sinaimg.cn/large/005CA6ZCjw1eqhy7qjsuzj30fb09r0t9.jpg">
 
   
 
@@ -190,7 +190,7 @@
 <li>当A接收到B伪造的ARP应答，就会更新本地的ARP缓存（A被欺骗了），这时B就伪装成网关了。</li>
 <li>B同样向网关发送一个ARP应答，应答包中发送方IP地址四192.168.10.2（A的IP地址），MAC地址是03-03-03-03-03-03（A的MAC地址本来应该是 02-02-02-02-02-02，这里被伪造了）。</li>
 <li>当网关收到B伪造的ARP应答，也会更新本地ARP缓存（网关也被欺骗了），这时B就伪装成了A。</li>
-<li>样主机A和网关都被主机B欺骗，A和网关之间通讯的数据都经过了B。主机B完全可以知道他们之间说的什么：）。<br><img src="http://ww3.sinaimg.cn/large/005CA6ZCjw1eqhy7qjsuzj30fb09r0t9.jpg" alt=""><br>就是，A向网关发送数据包，先会发给B，在由B转发给网关<br>网关向A发送数据包，也先会发给B，在由B转发给A<h1 id="IV、参考文献"><a href="#IV、参考文献" class="headerlink" title="IV、参考文献"></a>IV、参考文献</h1><a href="http://baike.baidu.com/subview/32698/16532303.htm" target="_blank" rel="external">ARP（地址解析协议）</a><br><a href="http://baike.baidu.com/view/155386.htm" target="_blank" rel="external">ARP欺骗</a></li>
+<li>样主机A和网关都被主机B欺骗，A和网关之间通讯的数据都经过了B。主机B完全可以知道他们之间说的什么：）。<br><img src="https://ww3.sinaimg.cn/large/005CA6ZCjw1eqhy7qjsuzj30fb09r0t9.jpg" alt=""><br>就是，A向网关发送数据包，先会发给B，在由B转发给网关<br>网关向A发送数据包，也先会发给B，在由B转发给A<h1 id="IV、参考文献"><a href="#IV、参考文献" class="headerlink" title="IV、参考文献"></a>IV、参考文献</h1><a href="http://baike.baidu.com/subview/32698/16532303.htm" target="_blank" rel="external">ARP（地址解析协议）</a><br><a href="http://baike.baidu.com/view/155386.htm" target="_blank" rel="external">ARP欺骗</a></li>
 </ol>
 
     
