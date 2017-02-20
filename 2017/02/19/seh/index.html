@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>结构化异常处理 SEH | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="缓冲区溢出,加密与解密," />
+  
+
+  <meta name="description" content="结构化异常处理（Structured Exception Handing，SEH）是 Windows 操作系统处理程序错误或异常的技术，SEH 是 Windows 操作系统的一种系统机制，与特定的程序设计语言无关。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="结构化异常处理 SEH">
+<meta property="og:url" content="https://huirong.github.io/2017/02/19/seh/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="结构化异常处理（Structured Exception Handing，SEH）是 Windows 操作系统处理程序错误或异常的技术，SEH 是 Windows 操作系统的一种系统机制，与特定的程序设计语言无关。">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005CA6ZCly1fcwpuh4b7qj30ci02gmwz">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005CA6ZCly1fcx0hkd0syj30f00fi74c">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005CA6ZCgy1fcx5enheb8j30e70crt8t">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005CA6ZCgy1fcx0q8di86j30c803emwx">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005CA6ZCgy1fcx28cgmgxj31kw0yeagl">
+<meta property="og:updated_time" content="2017-02-20T11:49:12.257Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="结构化异常处理 SEH">
+<meta name="twitter:description" content="结构化异常处理（Structured Exception Handing，SEH）是 Windows 操作系统处理程序错误或异常的技术，SEH 是 Windows 操作系统的一种系统机制，与特定的程序设计语言无关。">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/005CA6ZCly1fcwpuh4b7qj30ci02gmwz">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?13fd5daa6d82a4022fb7211641792382";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-SEH-分类"><span class="toc-text">1 SEH 分类</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-终止处理-termination-handling"><span class="toc-text">1.1 终止处理(termination handling)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-1-语法"><span class="toc-text">1.1.1 语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-2-局部展开"><span class="toc-text">1.1.2 局部展开</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-3-关键字-leave"><span class="toc-text">1.1.3 关键字 __leave</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-异常处理（exception-handling）"><span class="toc-text">1.2 异常处理（exception handling）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-1-语法"><span class="toc-text">1.2.1 语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-2-系统异常处理流程"><span class="toc-text">1.2.2 系统异常处理流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-3-EXCEPTION-EXECUTE-HANDLER"><span class="toc-text">1.2.3 EXCEPTION_EXECUTE_HANDLER</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-4-全局展开"><span class="toc-text">1.2.4 全局展开</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-SEH-相关数据结构"><span class="toc-text">2 SEH 相关数据结构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-TIB-结构"><span class="toc-text">2.1 TIB 结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-EXCEPTION-REGISTRATION结构"><span class="toc-text">2.2 EXCEPTION_REGISTRATION结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-EXCEPTION-POINTERS、EXCEPTION-RECORD、CONTEXT结构"><span class="toc-text">2.3 EXCEPTION_POINTERS、EXCEPTION_RECORD、CONTEXT结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-异常处理链结构图"><span class="toc-text">2.4 异常处理链结构图</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-参考文献"><span class="toc-text">3 参考文献</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-seh" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">结构化异常处理 SEH</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.02.19</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/加密与解密/">加密与解密</a>
+  </span>
+
+
+
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>结构化异常处理（Structured Exception Handing，SEH）是 Windows 操作系统处理程序错误或异常的技术，SEH 是 Windows 操作系统的一种系统机制，与特定的程序设计语言无关。<br><a id="more"></a></p>
+<h1 id="1-SEH-分类"><a href="#1-SEH-分类" class="headerlink" title="1 SEH 分类"></a>1 SEH 分类</h1><p>当使用SEH时，代码执行与操作系统和编译器紧密相关，且编译器的工作量大于操作系统。<br>在进入和离开异常处理代码块时，编译器必须生成一些特殊的代码，以及产生一些关于支持 SEH 的数据结构表，还必须提供回调函数给操作系统调用，以便系统遍历异常代码块。变歧义还负责准备进程的栈框架（stack frame）和其他一些内部信息，这些信息都是操作系统需要使用或引用的。</p>
+<p>SEH 实际上包含两个方面的功能：</p>
+<ol>
+<li><p><font color="red">终止处理（termination handling）</font><br> 语法形式</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class">__try </span>&#123;</div><div class="line">    <span class="comment">// 受保护模块</span></div><div class="line">&#125;</div><div class="line"><span class="class">__finally </span>&#123;</div><div class="line">    <span class="comment">//终止处理模块</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p><font color="red">异常处理（exception handling）</font><br> 语法形式</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">__try</span> &#123;</div><div class="line">    <span class="comment">// 受保护模块</span></div><div class="line">&#125;</div><div class="line"><span class="selector-tag">__except</span>(exception filter) &#123;</div><div class="line">    <span class="comment">//异常处理模块</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p><font color="red"> Tips：不要混淆结构化异常处理与 C++ 异常处理。</font>C++异常处理在形式上表现为使用关键字 catch 和 throw ，这和结构化异常处理的形式不同，Microsoft Visual C++ 支持异常处理，它在内部实际上是利用编译器和 Windows 操作系统的结构化异常处理功能。</p>
+<h2 id="1-1-终止处理-termination-handling"><a href="#1-1-终止处理-termination-handling" class="headerlink" title="1.1 终止处理(termination handling)"></a>1.1 终止处理(termination handling)</h2><h3 id="1-1-1-语法"><a href="#1-1-1-语法" class="headerlink" title="1.1.1 语法"></a>1.1.1 语法</h3><figure class="highlight dts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class">__try </span>&#123;</div><div class="line">    <span class="comment">// 受保护模块</span></div><div class="line">&#125; <span class="class">__finally </span>&#123;</div><div class="line">    <span class="comment">//终止处理模块</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>__try</strong> 和 <strong>__finally</strong> 关键字标记了终止处理程序的两个部分（受保护代码和终止处理程序），不管受保护代码是如何退出的，即无论在受保护代码中使用了 return，还是 goto ，又或者是 longjump语句（除非调用 ExitProcess，ExitThread，TerminateProcess，TerminateThread来终止进程或县城），终止处理程序都会被调用，即__finally 代码块都能执行。</p>
+<h3 id="1-1-2-局部展开"><a href="#1-1-2-局部展开" class="headerlink" title="1.1.2 局部展开"></a>1.1.2 局部展开</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;windows.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">func</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">int</span> num = <span class="number">0</span>;</div><div class="line"></div><div class="line">    <span class="number">__</span><span class="keyword">try</span> &#123;</div><div class="line">        num = <span class="number">5</span>;</div><div class="line">        <span class="keyword">return</span> num;</div><div class="line">        num = <span class="number">15</span>;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"__try num = "</span> &lt;&lt; num &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="number">__f</span>inally &#123;</div><div class="line">        num = <span class="number">25</span>;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"__finally execution and num = "</span> &lt;&lt; num &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    num = <span class="number">35</span>;</div><div class="line">    <span class="keyword">return</span> num;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"main num = "</span> &lt;&lt; func() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="https://ws1.sinaimg.cn/large/005CA6ZCly1fcwpuh4b7qj30ci02gmwz" alt=""></p>
+<p>结果分析：</p>
+<ul>
+<li>func 中的 try 代码块中有一个 return 语句，这个return语句告诉编译器，在这里要退出当前函数并返回 num 变量的值，因此 num = 15 这个赋值语句和 cout 语句<font color="red"> 不会执行 </font> 。</li>
+<li>根据 1.1.1 小节中说法，无论 try 是如何退出的，finally 都会执行。当 return 语句试图退出 try 块时，编译器会让 finally 代码块在它之前执行。即  <font color="red">编译器保障 finally 代码块在 try 块中的函数退出语句 return 之前执行</font>。因此会先执行赋值语句 num = 35，然后输出 “__finally execution and num = 35”。</li>
+<li>finally 代码块执行完以后，函数就可以返回了。因为 try 代码块中包含一个 return 语句，所以 <font color="red">finally 块之后的代码都没有机会执行 </font> ，因此这个函数的返回值是 5 ，而不是 35。</li>
+</ul>
+<p>编译器是如何保证 finally 块可以在 try 代码块退出前被执行？<br>当编译器检查程序代码时，会发现 try 代码块里有个 return 语句，于是，生成一些代码现将返回值（本例中为 5 ）保存在一个由编译器创建的临时变量里，然后在执行 finally 代码块，这个过程称为 <strong><font color="red">局部展开</font></strong> 。更确切地说，当系统因为 try 代码块中的代码提前退出而执行 finally 代码块时，就会发生局部展开。一旦 finally 代码块执行完毕，编译器所创建的临时变量的值就会返回给函数的调用者。</p>
+<p> <strong>Tips：应该尽量避免在 try 块中使用 return，goto，break，continue 语句，减少系统开销。</strong></p>
+<ul>
+<li>因为，为了让整个机制运行起来，编译器必须生成一些额外代码，而系统也必须执行一些额外的工作。在不同 CPU 体系结构上，让终止处理工作起来的步骤也不同。</li>
+<li>如果代码控制流正常低离开 try 代码块进入 finally 代码块，那么进入 finally 代码块的额外开销是最小的。</li>
+</ul>
+<h3 id="1-1-3-关键字-leave"><a href="#1-1-3-关键字-leave" class="headerlink" title="1.1.3 关键字 __leave"></a>1.1.3 关键字 __leave</h3><p>在try块中使用__leave关键字会使程序跳转到try块的结尾，从而自然的进入finally块，所以不会产生任何额外开销。</p>
+<h2 id="1-2-异常处理（exception-handling）"><a href="#1-2-异常处理（exception-handling）" class="headerlink" title="1.2 异常处理（exception handling）"></a>1.2 异常处理（exception handling）</h2><h3 id="1-2-1-语法"><a href="#1-2-1-语法" class="headerlink" title="1.2.1 语法"></a>1.2.1 语法</h3><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">__try</span> &#123;</div><div class="line">    <span class="comment">// 受保护模块</span></div><div class="line">&#125;</div><div class="line"><span class="selector-tag">__except</span>(exception filter) &#123;</div><div class="line">    <span class="comment">//异常处理模块</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><font color="red">Tips：</font> try 块后面必须跟一个 finally 代码块或 except 代码块。但是 try 块后不能同时有 finally 块和except 块，也不能同时有多个 finally 块或 except 块。不过，却可以将 try-finally 块嵌套于 try-except 块中，反之亦然。</p>
+<p>exception filter 必定为以下三个标识符之一，这些标识符在 Microsoft Windows 的 Excpt.h 文件中定义</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">标识</th>
+<th>值 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">EXCEPTION_EXECUTE_HANDLER</td>
+<td>1  </td>
+</tr>
+<tr>
+<td style="text-align:center">EXCEPTION_EXECUTE_SEARCH</td>
+<td>0  </td>
+</tr>
+<tr>
+<td style="text-align:center">EXCEPTION_CONTINUE_EXECUTION</td>
+<td>-1 </td>
+</tr>
+</tbody>
+</table>
+<p>下面是两种基本使用方法：<br><strong>(1)直接使用过滤器的三个返回值之一</strong><br><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">__try</span> &#123;   </div><div class="line">    …… </div><div class="line">&#125; </div><div class="line"><span class="selector-tag">__except</span> ( EXCEPTION_EXECUTE_HANDLER ) &#123;</div><div class="line">    …… </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>(2)自定义过滤器</strong><br><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">__try</span> &#123;     </div><div class="line">    ……</div><div class="line">&#125;  </div><div class="line"><span class="selector-tag">__except</span> ( MyFilter( GetExceptionCode() ) ) &#123;</div><div class="line">    …… </div><div class="line">&#125;   </div><div class="line"><span class="selector-tag">LONG</span> <span class="selector-tag">MyFilter</span> ( DWORD dwExceptionCode )  &#123;    </div><div class="line">    <span class="selector-tag">if</span> ( dwExceptionCode == EXCEPTION_ACCESS_VIOLATION )&#123;</div><div class="line">        <span class="selector-tag">return</span> <span class="selector-tag">EXCEPTION_EXECUTE_HANDLER</span></div><div class="line">    &#125;<span class="selector-tag">else</span>&#123;</div><div class="line">        return EXCEPTION_CONTINUE_SEARCH</div><div class="line">    &#125;        </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="1-2-2-系统异常处理流程"><a href="#1-2-2-系统异常处理流程" class="headerlink" title="1.2.2 系统异常处理流程"></a>1.2.2 系统异常处理流程</h3><p>不同的标识符，系统处理流程不一样，系统处理异常的过程如下图所示：<br><img src="https://ws1.sinaimg.cn/large/005CA6ZCly1fcx0hkd0syj30f00fi74c" alt=""><br> Tips：1.1 小节中提到，不要在终止处理程序中使用 return，goto，continue，break 语句， <strong> <font color="red"> 但是在异常处理程序的 try 块中，这些语句不会带来局部展开这样的额外开销。 </font> </strong></p>
+<h3 id="1-2-3-EXCEPTION-EXECUTE-HANDLER"><a href="#1-2-3-EXCEPTION-EXECUTE-HANDLER" class="headerlink" title="1.2.3 EXCEPTION_EXECUTE_HANDLER"></a>1.2.3 EXCEPTION_EXECUTE_HANDLER</h3><p>EXCEPTION_EXECUTE_HANDLER 相当于告诉系统，“我知道这个异常，并预计这个异常在某种情况下会发生，同时已经写了一些代码来处理它，让这些代码现在就执行吧。”于是，系统执行全局展开（global unwind）,程序跳转到except代码块中执行， <strong> <font color="red"> 当 except 块中的代码执行完毕后，代码从 except 块后的第一句代码继续。 </font> </strong></p>
+<h3 id="1-2-4-全局展开"><a href="#1-2-4-全局展开" class="headerlink" title="1.2.4 全局展开"></a>1.2.4 全局展开</h3><p>全局展开流程图如下:</p>
+<p><img src="https://ws1.sinaimg.cn/large/005CA6ZCgy1fcx5enheb8j30e70crt8t" alt=""></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;windows.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">static</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> nStep = <span class="number">1</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">FunB</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">int</span> x,y = <span class="number">0</span>;</div><div class="line">    <span class="number">__</span><span class="keyword">try</span>&#123;</div><div class="line">        x = <span class="number">5</span> / y;</div><div class="line">    &#125;</div><div class="line">    <span class="number">__f</span>inally&#123;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"Step "</span> &lt;&lt; nStep++ &lt;&lt; <span class="string">" : 执行Function_B的finally块的内容"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">FunA</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="number">__</span><span class="keyword">try</span>&#123;</div><div class="line">        FunB();</div><div class="line">    &#125;</div><div class="line">    <span class="number">__f</span>inally&#123;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"Step "</span> &lt;&lt; nStep++ &lt;&lt; <span class="string">" : 执行Function_A的finally块的内容"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">long</span> <span class="title">MyExcepteFilter</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"Step "</span> &lt;&lt; nStep++ &lt;&lt; <span class="string">" : 执行main的异常过滤器"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">return</span> EXCEPTION_EXECUTE_HANDLER;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="number">__</span><span class="keyword">try</span>&#123;</div><div class="line">        FunA();</div><div class="line">    &#125;</div><div class="line">    <span class="number">__</span>except ( MyExcepteFilter() )&#123;</div><div class="line">         <span class="built_in">cout</span> &lt;&lt; <span class="string">"Step "</span> &lt;&lt; nStep++ &lt;&lt; <span class="string">" : 执行main的except块的内容"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="https://ws1.sinaimg.cn/large/005CA6ZCgy1fcx0q8di86j30c803emwx" alt=""></p>
+<p><strong>暂停全局展开</strong><br>如果程序中出现异常，且已经找到过滤器值为EXCEPTION_EXECUTE_HANDLER所对应的try块，此时系统会进行全局展开，在正常情况下，系统会执行该try块以内的所有finally过程，然后再执行该try块对应的异常处理过程。但如果在某个finally中放入一个return，就可以阻止全局展开。</p>
+<h1 id="2-SEH-相关数据结构"><a href="#2-SEH-相关数据结构" class="headerlink" title="2 SEH 相关数据结构"></a>2 SEH 相关数据结构</h1><h2 id="2-1-TIB-结构"><a href="#2-1-TIB-结构" class="headerlink" title="2.1 TIB 结构"></a>2.1 TIB 结构</h2><p> TEB（Thread Environment Block，线程环境块）在Windows9X系列中称为TIB（Thread Information Block，线程信息块），它记录着线程的重要信息。每一个线程对应一个TEB结构，在Windows2000 DDK中定义为：<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">typedef <span class="class"><span class="keyword">struct</span> <span class="title">_NT_TIB</span> &#123;</span></div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">_EXCEPTION_REGISTRATION_RECORD</span> *<span class="title">ExceptionList</span>;</span></div><div class="line">    PVOID StackBase;</div><div class="line">    PVOID StackLimit;</div><div class="line">    PVOID SubSystemTib;</div><div class="line">    <span class="class"><span class="keyword">union</span> &#123;</span></div><div class="line">        PVOID FiberData;</div><div class="line">        DWORD Version;</div><div class="line">    &#125;;</div><div class="line">    PVOID ArbitraryUserPointer;</div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">_NT_TIB</span> *<span class="title">Self</span>;</span></div><div class="line">&#125; NT_TIB;</div></pre></td></tr></table></figure></p>
+<p>与异常处理相关的项是指向_EXCEPTION_REGISTRATION_RECORD 结构的指针*ExceptionList，正好位于TEB的偏移0处。Windows在创建线程时，操作系统均会为每个线程分配TEB，而且都将FS段选择器指向当前线程的TEB数据，即TEB总是由[FS：0]指向的。</p>
+<h2 id="2-2-EXCEPTION-REGISTRATION结构"><a href="#2-2-EXCEPTION-REGISTRATION结构" class="headerlink" title="2.2 EXCEPTION_REGISTRATION结构"></a>2.2 EXCEPTION_REGISTRATION结构</h2><p>TEB 偏移量为 00h 的 <code>_EXCEPTION_REGISTRATION_RECORD</code> 主要用于描述线程异常处理过程的地址，多个结果的链表表述多个线程异常李处过程的嵌套层次关系，其定义如下：<br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">_EXCEPTION_REGISTRATION <span class="meta">struc</span></div><div class="line">    prev <span class="built_in">dd</span> ?       <span class="comment">;指向前一个EXCEPTION_REGISTRATION结构的指针</span></div><div class="line">    handler <span class="built_in">dd</span> ?        <span class="comment">;当前异常处理回调函数的地址</span></div><div class="line">_EXCEPTION_REGISTRATION ends</div></pre></td></tr></table></figure></p>
+<p>其中，prev是指向前一个EXCEPTION_REGISTRATION（简称ERR）的指针，形成一个链状结构；handler指向异常处理代码，当系统遇到一个它不知道如何处理的异常时，它就查找异常处理链表。每个线程都有它自己的异常处理链表。</p>
+<h2 id="2-3-EXCEPTION-POINTERS、EXCEPTION-RECORD、CONTEXT结构"><a href="#2-3-EXCEPTION-POINTERS、EXCEPTION-RECORD、CONTEXT结构" class="headerlink" title="2.3 EXCEPTION_POINTERS、EXCEPTION_RECORD、CONTEXT结构"></a>2.3 EXCEPTION_POINTERS、EXCEPTION_RECORD、CONTEXT结构</h2><p>当一个异常发生时，操作系统向一起异常的线程的栈中压入 <strong>EXCEPTION_POINTERS</strong> 结构，EXCEPTION_POINTERS 结构包含两个指针，一个指向 EXCEPTION_RECORD 结构，一个指向 CONTEXT 结构.<br><figure class="highlight elm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">typedef struct _EXCEPTION_POINTERS &#123;</div><div class="line">    <span class="type">PEXCEPTION_RECORD</span> <span class="type">ExceptionRecord</span>; //指向<span class="type">ExceptionRecord</span>的指针</div><div class="line">    <span class="type">PCONTEXT</span> <span class="type">ContextRecord</span>; //指向<span class="type">Context</span>结构的指针</div><div class="line">&#125; <span class="type">EXCEPTION_POINTERS</span>, *<span class="type">PEXCEPTION_POINTERS</span>;</div></pre></td></tr></table></figure></p>
+<p><strong>EXCEPTION_RECORD 结构</strong>包含有关最近发生的异常的详细信息，这些信息独立于 CPU，其结构如下：<br><figure class="highlight elm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">typedef struct _EXCEPTION_RECORD &#123;</div><div class="line">    <span class="type">DWORD</span>    <span class="type">ExceptionCode</span>;     //异常码，以<span class="type">STATUS_</span>或<span class="type">EXCEPTION_</span>开头，可自定义。（sehdef.inc）</div><div class="line">    <span class="type">DWORD</span> <span class="type">ExceptionFlags</span>;      //异常标志。0可修复；1不可修复；2正在展开，不要试图修复</div><div class="line">    struct _EXCEPTION_RECORD *<span class="type">ExceptionRecord</span>; //指向嵌套的异常结构，通常是异常中又引发异常</div><div class="line">    <span class="type">PVOID</span> <span class="type">ExceptionAddress</span>;    //异常发生的地址</div><div class="line">    <span class="type">DWORD</span> <span class="type">NumberParameters</span>;    //下面<span class="type">ExceptionInformation</span>所含有的dword数目</div><div class="line">    <span class="type">ULONG_PTR</span> <span class="type">ExceptionInformation</span>[<span class="type">EXCEPTION_MAXIMUM_PARAMETERS</span>];    //附加消息，如读或写冲突</div><div class="line">&#125; <span class="type">EXCEPTION_RECORD</span>;</div></pre></td></tr></table></figure></p>
+<p>CONTEXT 结构是 Win32 API 一个几乎唯一与处理器相关的结构，包括了线程运行时处理各主要寄存器的完整镜像，用于保存线程运行时环境。</p>
+<figure class="highlight elm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">typedef struct _CONTEXT &#123;</div><div class="line">     <span class="type">DWORD</span> <span class="type">ContextFlags</span>; //用来表示该结构中的哪些域有效</div><div class="line">     <span class="type">DWORD</span>   <span class="type">Dr0</span>, <span class="type">Dr2</span>, <span class="type">Dr3</span>, <span class="type">Dr4</span>, <span class="type">Dr5</span>, <span class="type">Dr6</span>, <span class="type">Dr7</span>; //调试寄存器</div><div class="line">     <span class="type">FLOATING_SAVE_AREA</span> <span class="type">FloatSave</span>; //浮点寄存器区</div><div class="line">     <span class="type">DWORD</span>   <span class="type">SegGs</span>, <span class="type">SegFs</span>, <span class="type">SegEs</span>, <span class="type">Seg</span> <span class="type">Ds</span>; //段寄存器</div><div class="line">     <span class="type">DWORD</span>   <span class="type">Edi</span>, <span class="type">Esi</span>, <span class="type">Ebx</span>, <span class="type">Edx</span>, <span class="type">Ecx</span>, <span class="type">Eax</span>; //通用寄存器组</div><div class="line">     <span class="type">DWORD</span>   <span class="type">Ebp</span>, <span class="type">Eip</span>, <span class="type">SegCs</span>, <span class="type">EFlags</span>, <span class="type">Esp</span>, <span class="type">SegSs</span>; //控制寄存器组</div><div class="line"></div><div class="line">     //扩展寄存器，只有特定的处理器才有</div><div class="line">     <span class="type">BYTE</span>    <span class="type">ExtendedRegisters</span>[<span class="type">MAXIMUM_SUPPORTED_EXTENSION</span>];</div><div class="line">&#125; <span class="type">CONTEXT</span>;</div></pre></td></tr></table></figure>
+<h2 id="2-4-异常处理链结构图"><a href="#2-4-异常处理链结构图" class="headerlink" title="2.4 异常处理链结构图"></a>2.4 异常处理链结构图</h2><p><img src="https://ws1.sinaimg.cn/large/005CA6ZCgy1fcx28cgmgxj31kw0yeagl" alt=""></p>
+<h1 id="3-参考文献"><a href="#3-参考文献" class="headerlink" title="3 参考文献"></a>3 参考文献</h1><ul>
+<li>《Windows 核心编程（第 5 版）》</li>
+<li>《加密与解密》</li>
+</ul>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="https://huirong.github.io/2017/02/19/seh/index.html" data-title="结构化异常处理 SEH" data-url="https://huirong.github.io/2017/02/19/seh/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"huirong"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
