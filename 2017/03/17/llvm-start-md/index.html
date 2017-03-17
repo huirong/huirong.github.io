@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>安装 LLVM | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="LLVM," />
+  
+
+  <meta name="description" content="LLVM 相关概念请参考
+
+英文原版 The Architecture of Open Source Application:LLVM
+中文翻译 LLVM简介 - The Architecture of Open Source Application本文仅记录 LLVM 的安装过程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="安装 LLVM">
+<meta property="og:url" content="https://huirong.github.io/2017/03/17/llvm-start-md/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="LLVM 相关概念请参考
+
+英文原版 The Architecture of Open Source Application:LLVM
+中文翻译 LLVM简介 - The Architecture of Open Source Application本文仅记录 LLVM 的安装过程。">
+<meta property="og:updated_time" content="2017-03-17T14:07:42.762Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="安装 LLVM">
+<meta name="twitter:description" content="LLVM 相关概念请参考
+
+英文原版 The Architecture of Open Source Application:LLVM
+中文翻译 LLVM简介 - The Architecture of Open Source Application本文仅记录 LLVM 的安装过程。">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?13fd5daa6d82a4022fb7211641792382";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-安装小提示"><span class="toc-text">1 安装小提示</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-LLVM-安装"><span class="toc-text">2 LLVM 安装</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-下载源码"><span class="toc-text">2.1 下载源码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-编译安装"><span class="toc-text">2.2 编译安装</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-参考文献"><span class="toc-text">3 参考文献</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-llvm-start-md" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">安装 LLVM</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.03.17</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/LLVM/">LLVM</a>
+  </span>
+
+
+
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>LLVM 相关概念请参考</p>
+<ul>
+<li>英文原版 <a href="http://www.aosabook.org/en/llvm.html" target="_blank" rel="external">The Architecture of Open Source Application:LLVM</a></li>
+<li>中文翻译 <a href="http://www.chenhf.com/lang/llvm-intro" target="_blank" rel="external">LLVM简介 - The Architecture of Open Source Application</a><br>本文仅记录 LLVM 的安装过程。<a id="more"></a>
+<h1 id="1-安装小提示"><a href="#1-安装小提示" class="headerlink" title="1 安装小提示"></a>1 安装小提示</h1></li>
+</ul>
+<ol>
+<li><p>最好<font color="red">不要</font> 在虚拟机上安装 LLVM，LLVM 比较吃内存，在虚拟机上很容易出现 <font color="red">“Memory exhausted”</font>  错误，若在物理机上遇到此错误，解决方法参见 <a href="http://stackoverflow.com/questions/25197570/llvm-clang-compile-error-with-memory-exhausted" target="_blank" rel="external">llvm/clang compile error with Memory exhausted</a>。</p>
+</li>
+<li><p>llvm为了防止编译的中间结果分布在码源目录中，影响码源的结构。因此不支持目录内编译。需要在码源目录外创建额外的编译目录（假设名字为build），build 至少 30G，<strong><font color="red">请预留 30G 磁盘空间</font></strong> ,编译需花费一个多小时，请严肃对待。<br>笔者等待了一个多小时，最后内存不足，”mmap:failed to allocate 1660253772 bytes for output file:cannot allocate memory”。</p>
+</li>
+<li><p>llvm+clang 3.6以前的版本可是使用./configure来进行编译，3.6以后的版本，只能使用cmake进行编译。安装之前，使用 <code>sudo apt-get install cmake</code> 命令安装cmake。</p>
+</li>
+</ol>
+<p>安装之前，阅读以上要点。<br>安装之前，阅读以上要点。<br>安装之前，阅读以上要点。</p>
+<h1 id="2-LLVM-安装"><a href="#2-LLVM-安装" class="headerlink" title="2 LLVM 安装"></a>2 LLVM 安装</h1><p>LLVM 官方安装教程参见 <a href="http://llvm.org/docs/GettingStarted.html" target="_blank" rel="external">Getting Started with the LLVM System</a></p>
+<p>首先创建存在 LLVM 的文件夹，假设命令为 llvm。</p>
+<h2 id="2-1-下载源码"><a href="#2-1-下载源码" class="headerlink" title="2.1 下载源码"></a>2.1 下载源码</h2><ul>
+<li><p>(1)下载 LLVM 源码</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd llvm</div><div class="line">svn co http:<span class="regexp">//</span>llvm.org<span class="regexp">/svn/</span>llvm-project<span class="regexp">/llvm/</span>trunk llvm</div></pre></td></tr></table></figure>
+</li>
+<li><p>(2)下载 clang</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd llvm/tools</div><div class="line">svn co <span class="symbol">http:</span>/<span class="regexp">/llvm.org/svn</span><span class="regexp">/llvm-project/cfe</span><span class="regexp">/trunk clang</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>(3)下载 LLD linker [可选]</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd llvm/tools</div><div class="line">svn co <span class="symbol">http:</span>/<span class="regexp">/llvm.org/svn</span><span class="regexp">/llvm-project/lld</span><span class="regexp">/trunk lld</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>(4)下载 Polly 循环优化器 [可选]:</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd llvm/tools</div><div class="line">svn co <span class="symbol">http:</span>/<span class="regexp">/llvm.org/svn</span><span class="regexp">/llvm-project/polly</span><span class="regexp">/trunk polly</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>(5)下载 Compiler-RT (required to build the sanitizers) [可选]:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">cd</span> llvm/projects</div><div class="line">svn <span class="keyword">co</span> http://llvm.org/svn/llvm-project/<span class="keyword">compiler</span>-rt/trunk <span class="keyword">compiler</span>-rt</div></pre></td></tr></table></figure>
+</li>
+<li><p>(6)下载 Libomp (需 OpenMP 支持) [可选]:</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd llvm/projects</div><div class="line">svn co <span class="symbol">http:</span>/<span class="regexp">/llvm.org/svn</span><span class="regexp">/llvm-project/openmp</span><span class="regexp">/trunk openmp</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>(7)下载 libcxx 和 libcxxabi [可选]:</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cd llvm/projects</div><div class="line">svn co <span class="symbol">http:</span>/<span class="regexp">/llvm.org/svn</span><span class="regexp">/llvm-project/libcxx</span><span class="regexp">/trunk libcxx</span></div><div class="line">svn co http:/<span class="regexp">/llvm.org/svn</span><span class="regexp">/llvm-project/libcxxabi</span><span class="regexp">/trunk libcxxabi</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>(8)下载测试组件（Test Suite）源码[可选]</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> llvm/projects</div><div class="line">svn co http://llvm.org/svn/llvm-project/<span class="built_in">test</span>-suite/trunk <span class="built_in">test</span>-suite</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="2-2-编译安装"><a href="#2-2-编译安装" class="headerlink" title="2.2 编译安装"></a>2.2 编译安装</h2><ul>
+<li>llvm+clang 3.6以前的版本可是使用./configure来进行编译，3.6以后的版本，只能使用cmake进行编译。</li>
+<li>llvm为了防止编译的中间结果分布在码源目录中，影响码源的结构。因此不支持目录内编译。需要在码源目录外创建额外的编译目录。</li>
+</ul>
+<p>在 llvm 同级目录新建 build 文件夹，用于编译 llvm 源码，即该目录下，有两个文件夹：llvm(LLVM和clang等源码),build。</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">cd</span> build</div><div class="line">cmake -G <span class="string">"Unix Makefiles"</span> ../llvm</div><div class="line"><span class="keyword">make</span></div><div class="line">sudo <span class="keyword">make</span> install</div></pre></td></tr></table></figure>
+<p>cmake 命令格式：<br><code>cmake -G &lt;generator&gt; [options] &lt;path to llvm sources&gt;</code><br>常见的 generators 如下:</p>
+<ul>
+<li>Unix Makefiles — for generating make-compatible parallel makefiles.</li>
+<li>Ninja — for generating Ninja build files. Most llvm developers use Ninja.</li>
+<li>Visual Studio — for generating Visual Studio projects and solutions.</li>
+<li>Xcode — for generating Xcode projects.</li>
+</ul>
+<h1 id="3-参考文献"><a href="#3-参考文献" class="headerlink" title="3 参考文献"></a>3 参考文献</h1><ul>
+<li><a href="http://llvm.org/docs/GettingStarted.html" target="_blank" rel="external">Getting Started with the LLVM System</a></li>
+<li><a href="http://www.cnblogs.com/Long-w/p/6345028.html" target="_blank" rel="external">llvm+clang编译安装</a></li>
+<li><a href="http://stackoverflow.com/questions/25197570/llvm-clang-compile-error-with-memory-exhausted" target="_blank" rel="external">llvm/clang compile error with Memory exhausted</a></li>
+</ul>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="https://huirong.github.io/2017/03/17/llvm-start-md/index.html" data-title="安装 LLVM" data-url="https://huirong.github.io/2017/03/17/llvm-start-md/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"huirong"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
