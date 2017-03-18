@@ -27,7 +27,7 @@
 
 英文原版 The Architecture of Open Source Application:LLVM
 中文翻译 LLVM简介 - The Architecture of Open Source Application本文仅记录 LLVM 的安装过程。">
-<meta property="og:updated_time" content="2017-03-17T14:07:42.762Z">
+<meta property="og:updated_time" content="2017-03-18T02:00:34.968Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="安装 LLVM">
 <meta name="twitter:description" content="LLVM 相关概念请参考
@@ -236,7 +236,7 @@
 <li>llvm为了防止编译的中间结果分布在码源目录中，影响码源的结构。因此不支持目录内编译。需要在码源目录外创建额外的编译目录。</li>
 </ul>
 <p>在 llvm 同级目录新建 build 文件夹，用于编译 llvm 源码，即该目录下，有两个文件夹：llvm(LLVM和clang等源码),build。</p>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">cd</span> build</div><div class="line">cmake -G <span class="string">"Unix Makefiles"</span> ../llvm</div><div class="line"><span class="keyword">make</span></div><div class="line">sudo <span class="keyword">make</span> install</div></pre></td></tr></table></figure>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">cd</span> build</div><div class="line">cmake -G <span class="string">"Unix Makefiles"</span> ../llvm</div><div class="line"><span class="keyword">make</span> -<span class="keyword">j</span> <span class="number">2</span></div><div class="line">sudo <span class="keyword">make</span> install</div></pre></td></tr></table></figure>
 <p>cmake 命令格式：<br><code>cmake -G &lt;generator&gt; [options] &lt;path to llvm sources&gt;</code><br>常见的 generators 如下:</p>
 <ul>
 <li>Unix Makefiles — for generating make-compatible parallel makefiles.</li>

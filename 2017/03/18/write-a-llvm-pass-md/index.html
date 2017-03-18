@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>编写简单的LLVM Pass | Star</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="LLVM," />
+  
+
+  <meta name="description" content="LLVM Pass 框架是 LLVM 系统重要的组成部分，每个 Pass 完成特定的优化或转变工作，多个 Pass 协同工作实现 LLVM 系统的优化和转换。编写 LLVM 的官方教程参见 Writing an LLVM Pass。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编写简单的LLVM Pass">
+<meta property="og:url" content="https://huirong.github.io/2017/03/18/write-a-llvm-pass-md/index.html">
+<meta property="og:site_name" content="Star">
+<meta property="og:description" content="LLVM Pass 框架是 LLVM 系统重要的组成部分，每个 Pass 完成特定的优化或转变工作，多个 Pass 协同工作实现 LLVM 系统的优化和转换。编写 LLVM 的官方教程参见 Writing an LLVM Pass。">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005CA6ZCly1fdqsfrhdkuj30k3039my0.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005CA6ZCgy1fdqsls2e5dj30k400l3ye.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005CA6ZCly1fdqsoj7pfqj30jz01yq38.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005CA6ZCly1fdqsz74o6rj30k104gaas.jpg">
+<meta property="og:updated_time" content="2017-03-18T02:59:45.345Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="编写简单的LLVM Pass">
+<meta name="twitter:description" content="LLVM Pass 框架是 LLVM 系统重要的组成部分，每个 Pass 完成特定的优化或转变工作，多个 Pass 协同工作实现 LLVM 系统的优化和转换。编写 LLVM 的官方教程参见 Writing an LLVM Pass。">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/005CA6ZCly1fdqsfrhdkuj30k3039my0.jpg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=028c63b1" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/huirong.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?13fd5daa6d82a4022fb7211641792382";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-设置-build-环境"><span class="toc-text">1 设置 build 环境</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-基本代码"><span class="toc-text">2 基本代码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-使用-opt-运行-Pass"><span class="toc-text">3 使用 opt 运行 Pass</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-常见的-Pass"><span class="toc-text">4 常见的 Pass</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-参考文献"><span class="toc-text">5 参考文献</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-write-a-llvm-pass-md" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">编写简单的LLVM Pass</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.03.18</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>star</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/LLVM/">LLVM</a>
+  </span>
+
+
+
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>LLVM Pass 框架是 LLVM 系统重要的组成部分，每个 Pass 完成特定的优化或转变工作，多个 Pass 协同工作实现 LLVM 系统的优化和转换。<br>编写 LLVM 的官方教程参见 <a href="http://llvm.org/docs/WritingAnLLVMPass.html" target="_blank" rel="external">Writing an LLVM Pass</a>。<br><a id="more"></a></p>
+<h1 id="1-设置-build-环境"><a href="#1-设置-build-环境" class="headerlink" title="1 设置 build 环境"></a>1 设置 build 环境</h1><p>llvm 源码包含 HelloPass 源码，编译安装 llvm 后，HelloPass 已编译链接为 LLVMHello.so ，因此本文为了重现编写简单 LLVM Pass 的全过程，从 0 开始编写 LLVM Pass，功能和Hello相同，只是换个名字 Test。</p>
+<ul>
+<li>在 llvm/lib/Transforms 目录下新建 Test 文件夹</li>
+<li><code>cd llvm/lib/Transforms/Test</code></li>
+<li><p>新建 CMakeLists.txt，内容如下</p>
+  <figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">add_llvm_loadable_module( </span>LLVMTest</div><div class="line">    Test.cpp</div><div class="line"></div><div class="line">    PLUGIN_TOOL</div><div class="line">    <span class="meta">opt</span></div><div class="line">)</div></pre></td></tr></table></figure>
+</li>
+<li><p>在 lib/Transforms/CMakeLists.txt 中添加代码 <code>add_subdirectory(Test)</code></p>
+</li>
+</ul>
+<p>通过这种方式，当前文件夹下的 star.cpp 被编译链接为共享对象 $(LEVEL)/lib/LLVMTest.so，使用 opt 工具的 -load 选项动态加载。</p>
+<h1 id="2-基本代码"><a href="#2-基本代码" class="headerlink" title="2 基本代码"></a>2 基本代码</h1><p>在 cd llvm/lib/Transforms/Test 目录下新建 Test.cpp。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"llvm/Pass.h"</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"llvm/IR/Function.h"</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"llvm/Support/raw_ostream.h"</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> llvm;</div><div class="line"></div><div class="line"><span class="keyword">namespace</span> &#123;</div><div class="line"><span class="keyword">struct</span> Test : <span class="keyword">public</span> FunctionPass &#123;</div><div class="line">  <span class="keyword">static</span> <span class="keyword">char</span> ID;</div><div class="line">  Test() : FunctionPass(ID) &#123;&#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">runOnFunction</span><span class="params">(Function &amp;F)</span> override </span>&#123;</div><div class="line">    errs() &lt;&lt; <span class="string">"Test: "</span>;</div><div class="line">    errs().write_escaped(F.getName()) &lt;&lt; <span class="string">'\n'</span>;</div><div class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">  &#125;</div><div class="line">&#125;; <span class="comment">// end of struct Test</span></div><div class="line">&#125;  <span class="comment">// end of anonymous namespace</span></div><div class="line"></div><div class="line"><span class="keyword">char</span> Test::ID = <span class="number">0</span>;</div><div class="line"><span class="keyword">static</span> RegisterPass&lt;Test&gt; X(<span class="string">"Test"</span>, <span class="string">"Test Pass"</span>,</div><div class="line">                             <span class="literal">false</span> <span class="comment">/* Only looks at CFG */</span>,</div><div class="line">                             <span class="literal">false</span> <span class="comment">/* Analysis Pass */</span>);</div></pre></td></tr></table></figure>
+<p>llvm为了防止编译的中间结果分布在码源目录中，影响码源的结构。因此不支持目录内编译。需要在码源目录外创建额外的编译目录，文中为 build。</p>
+<p>进入 build 文件夹，重新执行 make<br><img src="https://ws1.sinaimg.cn/large/005CA6ZCly1fdqsfrhdkuj30k3039my0.jpg" alt=""><br>结束之后在同一目录下执行 make<br><img src="https://ws1.sinaimg.cn/large/005CA6ZCgy1fdqsls2e5dj30k400l3ye.jpg" alt=""></p>
+<p>然后在 build/lib/ 文件夹下会生成 LLVMTest.so<br><img src="https://ws1.sinaimg.cn/large/005CA6ZCly1fdqsoj7pfqj30jz01yq38.jpg" alt=""></p>
+<h1 id="3-使用-opt-运行-Pass"><a href="#3-使用-opt-运行-Pass" class="headerlink" title="3 使用 opt 运行 Pass"></a>3 使用 opt 运行 Pass</h1><p>新建 cpp 文件，使用 clang++ 编译为 bc 文件<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">opt -load ..ildb/LLVMTest<span class="selector-class">.so</span> -Test &lt; star<span class="selector-class">.bc</span> &gt; /dev/null</div></pre></td></tr></table></figure></p>
+<p><img src="https://ws1.sinaimg.cn/large/005CA6ZCly1fdqsz74o6rj30k104gaas.jpg" alt=""></p>
+<h1 id="4-常见的-Pass"><a href="#4-常见的-Pass" class="headerlink" title="4 常见的 Pass"></a>4 常见的 Pass</h1><ul>
+<li><a href="http://llvm.org/doxygen/classllvm_1_1ImmutablePass.html" target="_blank" rel="external">ImmutablePass</a></li>
+<li><a href="http://llvm.org/doxygen/classllvm_1_1ModulePass.html" target="_blank" rel="external">ModulePass</a></li>
+<li><a href="http://llvm.org/doxygen/classllvm_1_1CallGraphSCCPass.html" target="_blank" rel="external">CallGraphSCCPass</a></li>
+<li><a href="http://llvm.org/doxygen/classllvm_1_1Pass.html" target="_blank" rel="external">FunctionPass</a></li>
+<li><a href="http://llvm.org/docs/WritingAnLLVMPass.html#the-looppass-class" target="_blank" rel="external">LoopPass</a></li>
+<li><a href="http://llvm.org/docs/WritingAnLLVMPass.html#the-regionpass-class" target="_blank" rel="external">RegionPass</a></li>
+<li><a href="http://llvm.org/docs/WritingAnLLVMPass.html#the-basicblockpass-class" target="_blank" rel="external">BasicBlockPass</a></li>
+<li><a href="http://llvm.org/docs/WritingAnLLVMPass.html#the-machinefunctionpass-class" target="_blank" rel="external">MachineFunctionPass</a></li>
+</ul>
+<h1 id="5-参考文献"><a href="#5-参考文献" class="headerlink" title="5 参考文献"></a>5 参考文献</h1><p><a href="http://llvm.org/docs/WritingAnLLVMPass.html" target="_blank" rel="external">Writing an LLVM Pass</a></p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">走过的，路过的，请支持一下我 n(*≧▽≦*)n</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+  <section class="duoshuo-comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="https://huirong.github.io/2017/03/18/write-a-llvm-pass-md/index.html" data-title="编写简单的LLVM Pass" data-url="https://huirong.github.io/2017/03/18/write-a-llvm-pass-md/index.html"></div>
+    <!-- 多说评论框 end -->
+  </section>
+
+
+
+
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"huirong"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
